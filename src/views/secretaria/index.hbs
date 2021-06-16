@@ -1,0 +1,232 @@
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+      <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/dataTables/jquery.dataTables.min.css" type="text/css">
+      <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
+      <link rel="stylesheet" href="/dataTables/configDataTables.min.css" type="text/css">
+      
+   </head>
+
+	<body>
+      {{> loader}}
+
+      <header class="header">
+         <div class="header__container">
+            <img src="img/profile.svg" alt="" class="header__img">
+
+            <a href="#" class="header__logo">Carlos Andrés Villacreses Parrales</a>
+
+            {{!-- <div class="header__search">
+               <input type="search" placeholder="Search" class="header__input">
+               <i class='bx bx-search header__icon'></i>
+            </div> --}}
+
+            <div class="header__toggle">
+               <i class='bx bx-menu' id="header-toggle"></i>
+            </div>
+         </div>
+      </header>
+
+      <div class="nav" id="navbar">
+         <nav class="nav__container">
+            <div>
+               <a href="#" class="nav__link nav__logo">
+                  <i class='bx bxs-church nav__icon' ></i>
+                  <span class="nav__logo-name">Bienvenido</span>
+               </a>
+
+               <div class="nav__list">
+                  <div class="nav__items">
+                     <h3 class="nav__subtitle">Profile</h3>
+
+                     <a href="#" class="nav__link active">
+                        <i class='bx bx-home nav__icon' ></i>
+                        <span class="nav__name">Home</span>
+                     </a>
+                     
+                     <div class="nav__dropdown">
+                        <a href="#" class="nav__link">
+                           <i class='bx bx-user nav__icon' ></i>
+                           <span class="nav__name">Profile</span>
+                           <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                        </a>
+
+                        <div class="nav__dropdown-collapse">
+                           <div class="nav__dropdown-content">
+                                 <a href="#" class="nav__dropdown-item">Passwords</a>
+                                 <a href="#" class="nav__dropdown-item">Mail</a>
+                                 <a href="#" class="nav__dropdown-item">Accounts</a>
+                           </div>
+                        </div>
+                     </div>
+
+                     <a href="#" class="nav__link">
+                        <i class='bx bx-message-rounded nav__icon' ></i>
+                        <span class="nav__name">Messages</span>
+                     </a>
+                  </div>
+
+                  <div class="nav__items">
+                     <h3 class="nav__subtitle">Menu</h3>
+
+                     <div class="nav__dropdown">
+                        <a href="#" class="nav__link">
+                           <i class='bx bx-bell nav__icon' ></i>
+                           <span class="nav__name">Notifications</span>
+                           <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                        </a>
+
+                        <div class="nav__dropdown-collapse">
+                           <div class="nav__dropdown-content">
+                              <a href="#" class="nav__dropdown-item">Blocked</a>
+                              <a href="#" class="nav__dropdown-item">Silenced</a>
+                              <a href="#" class="nav__dropdown-item">Publish</a>
+                              <a href="#" class="nav__dropdown-item">Program</a>
+                           </div>
+                        </div>
+
+                     </div>
+
+                     <a href="#" class="nav__link">
+                        <i class='bx bx-compass nav__icon' ></i>
+                        <span class="nav__name">Explore</span>
+                     </a>
+                     <a href="#" class="nav__link">
+                        <i class='bx bx-bookmark nav__icon' ></i>
+                        <span class="nav__name">Saved</span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+
+            <a href="#" class="nav__link nav__logout">
+               <i class='bx bx-log-out nav__icon' ></i>
+               <span class="nav__name">Log Out</span>
+            </a>
+         </nav>
+      </div>
+
+      {{!-- <main>
+         <section>
+               <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt vel illum fuga unde cum, voluptates magni molestias eveniet culpa autem ut, totam veniam, suscipit tempore ullam pariatur est at asperiores?</p>
+               <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt vel illum fuga unde cum, voluptates magni molestias eveniet culpa autem ut, totam veniam, suscipit tempore ullam pariatur est at asperiores?</p>
+               <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt vel illum fuga unde cum, voluptates magni molestias eveniet culpa autem ut, totam veniam, suscipit tempore ullam pariatur est at asperiores?</p>
+         </section>
+      </main> --}}
+
+      <div class="container p-30">
+         <div class="row">
+               <div class="col-md-12 main-datatable">
+                  <div class="card_body">
+                     <div class="row d-flex">
+                           <div class="col-sm-4 createSegment"> 
+                           <a class="btn dim_button create_new"> 
+                              <span class="glyphicon glyphicon-plus">
+                                 <i class='bx bx-book-add bx-tada' ></i>
+                              </span> 
+                              Añadir
+                           </a>
+                           </div>
+                           <div class="col-sm-8 add_flex">
+                              <div class="form-group searchInput">
+                                 <label for="email">Buscar:</label>
+                                 <input type="search" class="form-control" id="filterbox" placeholder=" ">
+                              </div>
+                           </div> 
+                     </div>
+                     <div class="overflow-x">
+                           <table style="width:100%;" id="filtertable" class="table cust-datatable dataTable no-footer">
+                              <thead>
+                                 <tr>
+                                       <th style="min-width:50px;">ID</th>
+                                       <th style="min-width:150px;">Name</th>
+                                       <th style="min-width:150px;">Mode</th>
+                                       <th style="min-width:100px;">Event</th>
+                                       <th style="min-width:100px;">Date</th>
+                                       <th style="min-width:150px;">Status</th>
+                                       <th style="min-width:150px;">Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>1</td>
+                                    <td>Dummy</td>
+                                    <td><span class="mode mode_process">Processing</span></td>
+                                    <td>Journey</td>
+                                    <td>17-Apr-2020</td>
+                                    <td><span class="mode mode_on">Active</span></td>
+                                    <td>
+                                       {{!-- <div class="btn-group">
+                                          <a class="dropdown-toggle dropdown_icon" data-toggle="dropdown">
+                                             <i class="fa fa-pencil-square-o"></i> </a>
+                                          <ul class="dropdown-menu">
+                                                <li>
+                                                   <a href="#" target="_blank">
+                                                      Dummy Details
+                                                   </a>
+                                                </li>
+                                                <li>
+                                                   <a href="#" target="_blank">
+                                                      Dummy Details
+                                                   </a>
+                                                </li>  
+                                                <li>
+                                                   <a href="#" target="_blank">
+                                                      Dummy Details
+                                                   </a>
+                                                </li>  
+                                          </ul>
+                                       </div> --}}
+                                       <span class="actionCust">
+                                          <a href="#">
+                                             <i class="far fa-file-alt"></i>
+                                          </a>
+                                       </span>
+                                       <span class="actionCust">
+                                          <a href="#">
+                                             <i class="far fa-file-pdf"></i>
+                                          </a>
+                                       </span>
+                                       <div class="btn-group">
+                                          <a class="dropdown-toggle dropdown_icon" data-toggle="dropdown">
+                                             <i class="fas fa-ellipsis-v"></i>
+                                          </a>
+                                          <ul class="dropdown-menu dropdown_more">
+                                             <li>
+                                                <a href="#" target="_black">
+                                                   <i class="far fa-edit options"></i>Editar
+                                                </a>
+                                             </li>
+                                             <li>
+                                                <a href="#" target="_black">
+                                                   <i class="far fa-trash-alt options"></i>Eliminar
+                                                </a>
+                                             </li>
+                                             {{!-- <li>
+                                                <a href="#" target="_black">
+                                                   <i class="fa fa-list options"></i>Activity
+                                                </a>
+                                             </li> --}}
+                                          </ul>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                     </div>
+                  </div>
+               </div>
+         </div>
+      </div>
+
+      <br><br>
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/sweetalert2/sweetalert2.min.js"></script>
+      <script src="/dataTables/jquery.dataTables.min.js"></script>
+      <script src="/fontawesome/js/all.min.js"></script>
+      <script src="/js/navSecretaria.min.js"></script>
+      <script src="/dataTables/configDataTables.min.js"></script>
+      {{!-- <script src="/js/validation.js"></script> --}}

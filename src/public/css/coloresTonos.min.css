@@ -1,0 +1,48 @@
+:root {
+   --body-font: 'Poppins', sans-serif !important;
+   /* --body-font: 'Assistant', sans-serif !important; */
+   
+   --bodyColor: rgba(248, 248, 248, 0.5);
+   --rojoRosaBajo: #ff7979;
+   --amarilloAqua: #f5dd74;
+   --azulBajo: #7a9ef8;
+   --blanco: #fff;
+   --negro: #000;
+   --grisPizarra: #555;
+   --verde: #009345;
+   --rojo: #BE1D2D;
+   --amarillo: #FEDD14;
+   --rosado: #F7B8D5;
+   --morado: #7F3F96;
+   --grisLobo: #888;
+   --negroSuave: #333;
+   --azulCielo: #4158d0;
+   --verdeHoja: #04d357;
+   --rojoRosa: #fa4d4d;
+   --plomoPerla: #999;
+   --plomoOscuro: #515365;
+   --whiteLigth: #F4F0FA;
+   --azulMarino: #308eec;
+   --rojoEscarlata: #ee3434;
+   --rojoCereza: #ff6666;
+   --verdeBajo: #18a854;
+   --verdeHojaBajo: #2ecc71;
+   
+   --grisPerla: rgba(206, 206, 206, 0.7);
+   --transparentColor: rgba(255, 255, 255, 0.8);
+   --verdeBajo: #00b09b;
+   --verdeAgua: #54e0d0;
+   --rojoBajo: #e70c0c;
+   --rojoOscuro: #d80027;
+   --azulOscuro: #1d387e;
+   --verdeHojaOscuro: #12a54d;
+   --verdeTurquesa: #0dd3bc;
+   --verdeEsmeralda: #0e8b7d;
+   --verdeClaro: #38ef7d;
+   --verdeOscuro: #027a70;
+   --verdePeriquito: #45c277;
+   --turquesaCerceta: #11998e;
+   --turquesaAgua: #60cfc6;
+   --celesteBajo: #8bafda;
+   --whiteLighten: #f8f8fc;
+}
