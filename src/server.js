@@ -56,8 +56,12 @@ app.use(flash());
 
 //Variables globales
 app.use((req, res, next) => {   
-   res.locals.alerts = req.flash('alerts');
-   res.locals.aviso_alerts = req.flash('aviso_alerts');
+   res.locals.success_msg = req.flash('success_msg');
+   res.locals.error_msg = req.flash('error_msg');
+   res.locals.warning_msg = req.flash('warning_msg');
+   res.locals.info_msg = req.flash('info_msg');
+   res.locals.error = req.flash('error');
+
    res.locals.modalHide = req.flash('modalHide');
    res.locals.modalShow = req.flash('modalShow');
 
@@ -69,14 +73,13 @@ app.use((req, res, next) => {
 //Rutas
 app.use(require('./routes/index.routes'));
 // app.use('/e', require('./routes/estudiantes.routes'));
-// app.use('/d', require('./routes/docentes.routes'));
 
 //Archivos estáticos
 app.use(express.static(path.join(__dirname + '/public')));
 
 // Error 404 - Not Found
-// app.get('*', (req, res) => {
-//    res.status(404).render('404');
-// });
+app.get('*', (req, res) => {
+   res.status(404).render('404');
+});
 
 module.exports = app;

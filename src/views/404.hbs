@@ -1,0 +1,30 @@
+      <link rel="stylesheet" href="/css/404.min.css" type="text/css">
+      
+   </head>
+
+	<body>
+      {{> loader}}
+
+      <div class="container">
+         <div class="left">
+            <h1>
+               Error 404
+            </h1>
+
+            <h2>
+               Page not found
+            </h2>
+
+            <p>
+               La página que buscas no existe o ha sucedido un error inesperado.
+               Comunicate con el administrador de la página o regresa a inicio.
+            </p>
+            
+            <button onclick="window.location.href='/login'">Ir a inicio</button>
+         </div>
+         <div class="right">
+            <img src="/img/404.svg" alt="Error 404" />
+         </div>
+      </div>
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
