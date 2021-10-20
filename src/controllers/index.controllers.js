@@ -3,6 +3,10 @@ const indexControllers = {};
 const connectionDB = require('../database');
 const encryptPass = require('../helpers/encryptPass');
 
+indexControllers.renderIndex = async (req, res) => {
+   res.render('index');
+};
+
 indexControllers.renderLogin = async (req, res) => {
    res.render('login');
 };

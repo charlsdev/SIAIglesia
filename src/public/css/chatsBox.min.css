@@ -1,0 +1,26 @@
+/** Icono flotante */
+.iconChat {
+   position: fixed;
+   right: 20px;
+   /* left: 20px; */
+   bottom: 15px;
+   height: 65px;
+   width: 65px;
+   /* background: linear-gradient(to bottom left, var(--turquesaCerceta), var(--verdeHojaBajo), var(--turquesaCerceta)); */
+   text-align: center;
+   line-height: 55px;
+   border-radius: 50px;
+   font-size: 25px;
+   color: var(--blanco);
+   cursor: pointer;
+   z-index: 2000;
+}
+
+.iconChat img {
+   position: absolute;
+   width: 80%;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   /* transition: all .4s ease; */
+}

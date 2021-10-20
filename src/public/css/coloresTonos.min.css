@@ -2,12 +2,15 @@
    --body-font: 'Poppins', sans-serif !important;
    
    --bodyColor: rgba(248, 248, 248, 0.5);
+   --footer: rgba(248, 248, 248, 0.7);
    --rojoRosaBajo: #ff7979;
    --amarilloAqua: #f5dd74;
    --azulBajo: #7a9ef8;
+   --azulBajoOp: rgb(122, 158, 248, 0.7);
    --blanco: #fff;
    --negro: #000;
    --grisPizarra: #555;
+   --grisOpacity: rgba(104, 104, 104, 0.55);
    --verde: #009345;
    --rojo: #BE1D2D;
    --amarillo: #FEDD14;
@@ -26,6 +29,12 @@
    --rojoCereza: #ff6666;
    --verdeBajo: #18a854;
    --verdeHojaBajo: #2ecc71;
+
+   --first-color: #26A69A;
+   --first-color-lighter: #ECF3F2;
+   --title-color: #11443F;
+   --text-color: #5B7B78;
+   --body-color: #F5FFFE;
    
    --grisPerla: rgba(206, 206, 206, 0.7);
    --transparentColor: rgba(255, 255, 255, 0.8);
