@@ -114,6 +114,10 @@ indexControllers.registerNewUser = async (req, res) => {
    }
 };
 
+indexControllers.renderContacts = async (req, res) => {
+   res.render('contacts');
+};
+
 
 
 

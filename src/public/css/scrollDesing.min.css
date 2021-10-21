@@ -6,7 +6,7 @@
 
 /* *Estilos barra (thumb) de scroll */
 *::-webkit-scrollbar-thumb {
-   background: var(--verdeEsmeralda);
+   background: var(--azulMarino);
    border-radius: 4px;
 }
 
@@ -15,7 +15,7 @@
 }
 
 *::-webkit-scrollbar-thumb:hover {
-   background: var(--rojoRosaBajo);
+   background: var(--azulBajoOp);
    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
 }
 
