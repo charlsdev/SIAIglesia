@@ -76,6 +76,10 @@ footer{
    margin-right: 10px;
 }
 
+.box__footer a b{
+   color: var(--negroSuave);
+}
+
 .box__footer .facebookF:hover {
 	color: #2953bd !important;
 }

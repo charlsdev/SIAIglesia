@@ -6,7 +6,9 @@ const {
    renderLogin,
    renderRegister,
    registerNewUser,
+   renderHistory,
    renderContacts,
+   renderGalery,
 
    renderIndexSec,
    searchUsers
@@ -18,6 +20,8 @@ router.get('/login', renderLogin);
 router.get('/register', renderRegister);
 router.post('/register', registerNewUser);
 
+router.get('/history', renderHistory);
+router.get('/galery', renderGalery);
 router.get('/contacts', renderContacts);
 
 router.get('/search', searchUsers);

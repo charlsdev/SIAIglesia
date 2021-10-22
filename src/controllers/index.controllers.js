@@ -114,6 +114,14 @@ indexControllers.registerNewUser = async (req, res) => {
    }
 };
 
+indexControllers.renderHistory = async (req, res) => {
+   res.render('history');
+};
+
+indexControllers.renderGalery = async (req, res) => {
+   res.render('galery');
+};
+
 indexControllers.renderContacts = async (req, res) => {
    res.render('contacts');
 };
