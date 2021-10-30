@@ -23,6 +23,11 @@ input[type="date" i],
    color: transparent;
 }
 
+input[type="time" i],
+.form__div-input select {
+   color: transparent;
+}
+
 /*=== Shapes ===*/
 /* .shape1,
 .shape2 {
@@ -133,6 +138,8 @@ input[type="date" i],
 }
 
 .form__div.focus input[type="date" i],
+.form__div.focus input[type="time" i],
+.form__div.focus input[type="number" i],
 .form__div.focus select {
    color: var(--negroSuave);
 }

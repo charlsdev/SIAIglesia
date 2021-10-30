@@ -1,0 +1,155 @@
+.imgTrans {
+   display: flex;
+   height: 100%;
+   align-items: center;
+   justify-content: center;
+}
+
+/* .drag-area {
+   border: 2px dashed #5b86e5;
+   width: 480px;
+   height: 300px;
+   border-radius: 5px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+}
+.drag-area.active {
+   border: 2px dashed var(--rojoCereza);
+}
+.drag-area .iconDrag {
+   font-size: 100px;
+   color: #36d1dc;
+}
+.drag-area header {
+   font-size: .95rem;
+   font-weight: 500;
+   color: var(--negro);
+}
+.drag-area span {
+   font-size: 1rem;
+   font-weight: 600;
+   color: var(--negro);
+   margin: 10px 0 15px 0;
+}
+.drag-area button {
+   padding: 7px 18px;
+   font-size: 1rem;
+   font-weight: 500;
+   border: none;
+   outline: none;
+   background: linear-gradient(to right, #36d1dc, #5b86e5);
+   color: var(--blanco);
+   border-radius: 10px;
+   cursor: pointer;
+}
+.drag-area img {
+   height: 100%;
+   width: 100%;
+   object-fit: cover;
+   border-radius: 5px;
+} */
+
+
+.containerImg {
+   width: 430px;
+   /* height: 350px; */
+   position: relative;
+}
+.containerImg .wrapperImg {
+   position: relative;
+   height: 275px;
+   width: 100%;
+   border-radius: 10px;
+   background: var(--blanco);
+   border: 2px dashed #5b86e5;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   overflow: hidden;
+}
+.wrapperImg.active {
+   border: none;
+}
+.wrapperImg.active .image {
+   border: 2px dashed var(--rojoCereza);
+}
+.wrapperImg.active .content {
+   display: none;
+}
+.wrapperImg .image {
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+.wrapperImg .content {
+   text-align: center;
+}
+.wrapperImg img {
+   height: 100%;
+   width: 100%;
+   object-fit: cover;
+   border-radius: 10px;
+}
+.wrapperImg .icon {
+   font-size: 100px;
+   color: #36d1dc;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+.wrapperImg .text {
+   font-size: .95rem;
+   font-weight: 500;
+   color: #5b5b7b;
+}
+.wrapperImg #cancel-btn i {
+   position: absolute;
+   font-size: 2.5rem;
+   right: 10px;
+   top: 10px;
+   color: #36d1dc;
+   cursor: pointer;
+   display: none;
+}
+.wrapperImg.active:hover #cancel-btn i {
+   display: block;
+}
+.wrapperImg #cancel-btn i:hover {
+   color: #e74c3c;
+}
+.wrapperImg .file-name {
+   position: absolute;
+   bottom: 0px;
+   width: 100%;
+   padding: 8px 0;
+   font-size: 18px;
+   color: var(--blanco);
+   display: none;
+   background: linear-gradient(to right, #36d1dc, #5b86e5);
+   text-align: center;
+}
+.wrapperImg.active:hover .file-name {
+   display: block;
+}
+.containerImg #custom-btn {
+   margin-top: 10px;
+   display: none;
+   width: 60%;
+   /* height: 50px; */
+   border: none;
+   outline: none;
+   border-radius: 10px;
+   color: var(--blanco);
+   font-size: 1rem;
+   font-weight: 500;
+   letter-spacing: 1px;
+   text-transform: uppercase;
+   cursor: pointer;
+   background: linear-gradient(to right, #36d1dc, #5b86e5);
+   padding: 7px 18px;
+}

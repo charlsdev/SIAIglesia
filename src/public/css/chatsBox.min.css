@@ -1,26 +1,58 @@
 /** Icono flotante */
 .iconChat {
    position: fixed;
-   right: 20px;
+   right: 35px;
    /* left: 20px; */
-   bottom: 15px;
+   bottom: 25px;
    height: 65px;
    width: 65px;
-   /* background: linear-gradient(to bottom left, var(--turquesaCerceta), var(--verdeHojaBajo), var(--turquesaCerceta)); */
+   /* background: linear-gradient(to bottom left, #fe9bb3, #c0a4ff, #41deb7); */
+   background: #ff799b;
    text-align: center;
    line-height: 55px;
    border-radius: 50px;
    font-size: 25px;
    color: var(--blanco);
    cursor: pointer;
-   z-index: 2000;
+   /* z-index: 2000; */
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
-.iconChat img {
-   position: absolute;
-   width: 80%;
-   top: 50%;
+/* .iconChat img { */
+.iconChat i {
+   /* position: absolute; */
+   /* width: 80%; */
+   /* top: 50%;
    left: 50%;
-   transform: translate(-50%, -50%);
-   /* transition: all .4s ease; */
+   transform: translate(-50%, -50%); */
+   
+   font-size: 2.5rem;
+}
+
+.iconChat:before,
+.iconChat:after {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   background-color: #fe9bb3;
+   border-radius: 50%;
+   z-index: -1;
+   opacity: 0.7;
+}
+.iconChat:before {
+   animation: iconChat 2s ease-out infinite;
+}
+.iconChat:after {
+   animation: iconChat 2s 1s ease-out infinite;
+}
+@keyframes iconChat {
+   100% {
+      /* transform: scale(2.5); */
+      transform: scale(2);
+      opacity: 0;
+   }
 }

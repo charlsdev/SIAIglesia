@@ -4,7 +4,7 @@ const path = require('path');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
-var fs = require('fs');
+// var fs = require('fs');
 const session = require('express-session');
 const passport = require('passport');
 // const multer = require('multer');
@@ -29,10 +29,6 @@ app.set('view engine', '.hbs');
 
 //Middlewares
 app.use(cors());
-//Guardar las solicitudes HTTP de Morgan en un archivo
-app.use(morgan('combined', {
-   stream: fs.createWriteStream(path.join(__dirname, '../morgandoc.log'), { flags: 'a' })
-}));
 app.use(morgan('dev'));
 // app.use(multer({
 //    dest: path.join(__dirname, 'public/profile/temp')

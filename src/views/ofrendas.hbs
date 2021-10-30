@@ -1,0 +1,249 @@
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+      <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/socialsBar.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/chatsBox.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/index.min.css" type="text/css">      
+      {{!-- <link rel="stylesheet" href="/css/timeline.min.css" type="text/css"> --}}
+      <link rel="stylesheet" href="/css/footer.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/sweet.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/drapArea.min.css" type="text/css">
+
+   </head>
+
+   <body>
+      {{> loader}}
+
+      {{> socialsBar}}
+      {{> header}}
+
+      <div class="container formTop">
+         <div class="row tittleOf d-flex justify-content-center">
+            <div class="col-md-7 heading">
+               <h3>OFRENDAS E INTENCIONES</h3>
+            </div>
+         </div>
+
+         {{!-- Mensajes aviso --}}
+         <div class="row">
+            <div class="col-md-6  mb-2">
+               <div class="alert alert-info alert-dismissible fade show" role="alert">
+                  <strong>Importante</strong>
+                  <p style="font-size: 0.87em; color: #333; text-align: justify;">
+                     Los pagos se realizan a través de tranferencias bancarias, los datos para la tranferencia se ubica en la parte inferior derecha.
+                  </p>
+               </div>
+            </div>
+
+            <div class="col-md-6  mb-2">
+               <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Importante</strong>
+                  <p style="font-size: 0.87em; color: #333; text-align: justify;">
+                     Para evitar conflictos con su pago, envie una sola vez el comprobante.
+                  </p>
+               </div>
+            </div>
+         </div>
+
+         {{!-- Formulario de envio --}}
+         <form action="/ofrendas" method="POST" enctype="multipart/form-data">
+            {{!-- Alertas de error de datos --}}
+            <div class="row">
+               <div class="col-md-6 mx-auto">
+                  {{> alerts}}
+                  {{> errors}}
+               </div>
+            </div>
+
+            {{!-- Tipo de ofrenda --}}
+            <div class="row">
+               <div class="col-md-4 mx-auto">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-donate-heart bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Tipo de intención</label>
+                        <select class="form__input" name="tipIntencion" id="tipIntencion" required>
+                           <option value selected disabled>Seleccionar...</option>
+                           <option value="Ofrenda">Ofrenda</option>
+                           <option value="Acción de gracias">Acción de gracias</option>
+                           <option value="Salud">Salud</option>
+                           <option value="Difunto">Difunto</option>
+                           <option value="Familia">Familia</option>
+                           <option value="Aniversario Familiar">Aniversario Familiar</option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            {{!-- Datos de la ofrenda --}}
+            <div class="row">
+               {{!-- Datos iniciales --}}
+               <div class="col-md-6">
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-calendar bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Fecha</label>
+                           <input type="date" class="form__input" id="fechaOf" name="fechaOf" onchange="diaSemana();" required>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-time-five bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Hora</label>
+                           <select class="form__input" name="horaOf" id="horaOf" required>
+                              <option value selected disabled>Seleccione hora...</option>
+                              <option value="05:00 FAE">05:00 FAE</option>
+                              <option value="05:00 PARRALES Y GUALE">05:00 PARRALES Y GUALE</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-credit-card-front bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">A nombre de</label>
+                           <input type="text" class="form__input" name="nameOf" id="nameOf" onkeypress="return letra(event)" value="{{cedulaN}}" required>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-money bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Monto</label>
+                           <input type="number" class="form__input" name="montoOf" id="montoOf" maxlength="5" value="{{cedulaN}}" required>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               {{!-- Comprobante de transferencia --}}
+               <div class="col-md-6 imgTrans">
+                  {{!-- <div class="drag-area">
+                     <div class="iconDrag">
+                        <i class='bx bx-cloud-upload' ></i>
+                     </div>
+                     <header>Arrastrar y soltar para cargar archivo</header>
+                     <span>OR</span>
+                     <button type="button">Buscar Archivo</button>
+                     <input type="file" name="comprobanteOf" id="comprobanteOf" required hidden>
+                  </div> --}}
+
+                  <div class="containerImg">
+                     <div class="wrapperImg">
+                        <div class="image">
+                           <img class="imgTrans"/>
+                        </div>
+                        <div class="content">
+                           <div class="icon">
+                              <i class='bx bx-cloud-upload' ></i>
+                           </div>
+                           <div class="text">¡Aún no se ha elegido ningún archivo!</div>
+                        </div>
+                        <div id="cancel-btn">
+                           <i class='bx bx-x' ></i>
+                        </div>
+                        <div class="file-name">Nombre de archivo aquí</div>
+                     </div>
+                     {{!-- <center> --}}
+                        <button type="button" onclick="defaultBtnActive()" id="custom-btn">
+                           Buscar archivo
+                        </button>
+                     {{!-- </center> --}}
+                     <input id="default-btn" name="comprobanteOf" type="file" hidden required/>
+                  </div>
+               </div>               
+            </div>
+
+            <div class="row d-flex justify-content-center mt-3">
+               <div class="col-md-3">
+                  <input type="submit" class="form__buttonOf" id="Enviar" value="Enviar">
+               </div>
+            </div>
+         </form>
+      </div>
+
+      {{> footer}}
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/sweetalert2/sweetalert2.min.js"></script>
+      <script src="/swiper/gsap.min.js"></script>
+      <script src="/swiper/swiper-bundle.min.js"></script>
+      <script src="/js/index.min.js"></script>
+      <script src="/js/login.min.js"></script>
+      <script src="/js/validation.min.js"></script>
+      <script src="/js/drapArea.min.js"></script>
+
+      {{> chatsBox}}
+
+      <script>
+         function alertSMS() {
+            Swal.fire({
+               title: `<p style="font-size: 1.5rem; text-transform: uppercase;">Depósito o transferencia <br>bancaria</p>`,
+               html: '<p style="font-size: .87rem; text-align: justify; margin: 0 15px; padding-bottom: 10px;">Envíe el comprobante de su donación al WhatsApp <b>0997955011</b> o al email <b>psantamariamadre.2021@gmail.com</b> para confirmar su pago.</p> <p style="font-size: .87rem; text-align: justify; margin: 0 15px; padding-bottom: 10px;">Le recordamos los datos de nuestra cuenta:</p> <p style="font-size: .87rem; text-align: justify; margin: 0 15px; padding: 0 25px 10px 25px;"> <b>Tipo de Cuenta:</b> Cuenta Corriente <br> <b>Titular de la cuenta: </b>Parroquia Santa María Madre<br><b>RUC: </b> 1391720750001<br><b>Entidad bancaria: </b>Banco BanEcuador<br><b>Número de Cuenta: </b>3001167193</p> <p style="font-size: .87rem; text-align: justify; margin: 0 15px; padding-bottom: 10px;"><b>Nota:</b> Para el registro de sus intenciones de misa, el horario estará habilitado hasta 30 minutos antes de la hora correspondiente.</p>',
+               showCloseButton: true,
+               showConfirmButton: false,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 110,
+               imageAlt: 'SMM Iglesia',
+               width: 750,
+               allowOutsideClick: false
+            })
+         }
+
+         window.addEventListener("load", function(){
+            alertSMS();
+         });
+      </script>
+
+      <script>
+         var todayAdd = `{{nowFecha}}`;
+
+         function fechaDateEditMat() {
+            var elem = document.getElementById("fechaOf");
+
+            function restric(e){
+               e.value = todayAdd;
+               e.setAttribute("min", todayAdd);
+            }
+
+            restric(elem);
+         }
+
+         fechaDateEditMat();
+      </script>
+      
+      <script>
+         var dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+         function diaSemana() {
+            var x = document.getElementById("fechaOf");
+            alert("Día: " + dias[x.valueAsDate.getDay()]);
+         }
+      </script>

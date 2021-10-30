@@ -3,6 +3,9 @@ const indexControllers = {};
 const connectionDB = require('../database');
 const encryptPass = require('../helpers/encryptPass');
 
+const moment = require('moment');
+moment.locale('es');
+
 indexControllers.renderIndex = async (req, res) => {
    res.render('index');
 };
@@ -124,6 +127,22 @@ indexControllers.renderGalery = async (req, res) => {
 
 indexControllers.renderContacts = async (req, res) => {
    res.render('contacts');
+};
+
+indexControllers.renderOfrendas = async (req, res) => {
+   let nowFecha = moment()
+      .format('YYYY-MM-DD');
+
+   res.render('ofrendas', {
+      nowFecha
+   });
+};
+
+indexControllers.saveOfrendas = async (req, res) => {
+   // Body
+   console.log(req.body);
+   // Archivos
+   console.log(req.file);
 };
 
 
