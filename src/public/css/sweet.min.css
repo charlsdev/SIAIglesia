@@ -47,13 +47,28 @@
 }
 
 .form__buttonOf:hover {
-   background: linear-gradient(to right, #5b86e5, #36d1dc);;
+   background: linear-gradient(to right, #5b86e5, #36d1dc);
    border-radius: 2px 30px;
+}
+
+.tittleH3 h3 {
+   font-family: 'Baloo Tamma', cursive;
+   text-align: center;
+   color: var(--negro);
+   font-size: 1.25rem;
+   letter-spacing: .5px;
+   font-weight: 600;
 }
 
 @media (max-width: 820px) {
    .containerCard {
       margin-top: 64px;
+   }
+}
+
+@media only screen and (max-width: 767px) {
+   .dateOfrendas {
+      margin-bottom: 1.8rem;
    }
 }
 

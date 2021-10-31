@@ -1,0 +1,191 @@
+{{!-- <div class="drag-area">
+   <div class="iconDrag">
+      <i class='bx bx-cloud-upload' ></i>
+   </div>
+   <header>Arrastrar y soltar para cargar archivo</header>
+   <span>OR</span>
+   <button type="button">Buscar Archivo</button>
+   <input type="file" name="comprobanteOf" id="comprobanteOf" required hidden>
+</div> --}}
+
+{{!-- Datos de la ofrenda --}}
+            <div class="row dateOfrendas">
+               {{!-- Datos iniciales --}}
+               <div class="col-md-6 dateTrans">
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-calendar bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Fecha</label>
+                           <input type="date" class="form__input" id="fechaOf" name="fechaOf" onchange="diaSemana();" required>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-time-five bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Hora</label>
+                           <select class="form__input horaSelect" name="horaOf" id="horaOf" required>
+                              <option value selected disabled>Seleccione hora...</option>
+                              <option value="05:00 FAE">05:00 FAE</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-credit-card-front bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">A nombre de</label>
+                           <input type="text" class="form__input" name="nameOf" id="nameOf" onkeypress="return letra(event)" value="{{cedulaN}}" required>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form__div form__div-one">
+                        <div class="form__icon">
+                           <i class='bx bx-money bx-tada' ></i>
+                        </div>
+
+                        <div class="form__div-input">
+                           <label for="" class="form__label">Monto</label>
+                           <input type="number" class="form__input" name="montoOf" id="montoOf" maxlength="5" value="{{cedulaN}}" required>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               {{!-- Comprobante de transferencia --}}
+               <div class="col-md-6 imgTrans">
+                  <div class="containerImg">
+                     <div class="wrapperImg">
+                        <div class="image">
+                           <img class="imgTrans"/>
+                        </div>
+                        <div class="content">
+                           <div class="icon">
+                              <i class='bx bx-cloud-upload' ></i>
+                           </div>
+                           <div class="text">¡Aún no se ha elegido ningún archivo!</div>
+                        </div>
+                        <div id="cancel-btn">
+                           <i class='bx bx-x' ></i>
+                        </div>
+                        <div class="file-name">Nombre de archivo aquí</div>
+                     </div>
+                     
+                     <button type="button" onclick="defaultBtnActive()" id="custom-btn">
+                        Buscar archivo
+                     </button>
+
+                     <input id="default-btn" name="comprobanteOf" type="file" hidden required/>
+                  </div>
+               </div>
+            </div>
+
+            <div class="row mb-2 d-flex align-content-center dateOfrendas">
+               <div class="col-md-12 tittleH3">
+                  <h3>DETALLE DE RECIBO</h3>
+               </div>
+            </div>
+
+            <div class="row pl-3 pr-3 dateOfrendas">
+               <div class="col-md-3">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-credit-card-front bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Cédula</label>
+                        <input type="text" class="form__input" name="cedula" id="cedula" onkeypress="return numeros(event)" onkeyUp="return Cedula(this);" maxlength="10" value="{{cedula}}" required>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-md-4">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-user-circle bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Apellidos</label>
+                        <input type="text" class="form__input" id="apellidos" name="apellidos" value="{{apellidos}}" onkeypress="return letra(event)" required>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-md-4">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-user-circle bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Nombres</label>
+                        <input type="text" class="form__input" id="nombres" name="nombres" value="{{nombres}}" onkeypress="return letra(event)" required>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="row pl-3 pr-3 dateOfrendas">
+               <div class="col-md-3">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-phone-call bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Teléfono</label>
+                        <input type="text" class="form__input" name="telefono" id="telefono" value="{{telefono}}" onkeypress="return números(event)" required>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-md-4">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-current-location bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Dirección</label>
+                        <input type="text" class="form__input" id="direccion" name="direccion" value="{{direccion}}" onkeypress="return letra(event)" required>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-md-4">
+                  <div class="form__div form__div-one">
+                     <div class="form__icon">
+                        <i class='bx bx-envelope-open bx-tada' ></i>
+                     </div>
+
+                     <div class="form__div-input">
+                        <label for="" class="form__label">Email</label>
+                        <input type="email" class="form__input" id="email" name="email" value="{{email}}" required>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="row d-flex justify-content-center mt-3">
+               <div class="col-md-3">
+                  <input type="submit" class="form__buttonOf" id="Enviar" value="Enviar">
+               </div>
+            </div>
