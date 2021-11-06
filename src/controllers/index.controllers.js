@@ -1,10 +1,18 @@
+const { nanoid } = require('nanoid');
+const path = require('path');
+const fse = require('fs-extra');
+const moment = require('moment');
+moment.locale('es');
+
 const indexControllers = {};
 
 const connectionDB = require('../database');
 const encryptPass = require('../helpers/encryptPass');
 
-const moment = require('moment');
-moment.locale('es');
+const {
+   cedulaVal,
+   emailVer
+} = require('../helpers/validations');
 
 indexControllers.renderIndex = async (req, res) => {
    res.render('index');
@@ -51,7 +59,8 @@ indexControllers.registerNewUser = async (req, res) => {
       errors.push({
          title: 'Campos vacios', 
          info: 'danger', 
-         text: 'Los campos no pueden ir vacíos o con espacios...'});
+         text: 'Los campos no pueden ir vacíos o con espacios...'
+      });
    }
 
    if (password != conf_password) {
@@ -139,10 +148,149 @@ indexControllers.renderOfrendas = async (req, res) => {
 };
 
 indexControllers.saveOfrendas = async (req, res) => {
-   // Body
-   console.log(req.body);
-   // Archivos
-   console.log(req.file);
+   const errors = [];
+   let nowFecha = moment()
+      .format('YYYY-MM-DD');
+
+   const {
+      tipIntencion,
+      fechaOf,
+      horaOf,
+      nameOf,
+      montoOf,
+      cedula,
+      apellidos,
+      nombres,
+      telefono,
+      direccion,
+      email
+   } = req.body;
+
+   var tipIntencionV = tipIntencion,
+      fechaOfV = (fechaOf) ? fechaOf.trim() : 'xxx',
+      horaOfV = (horaOf) ? horaOf.trim() : 'xxx',
+      nameOfV = (nameOf) ? nameOf.trim() : 'xxx',
+      montoOfV = montoOf.trim(),
+      cedulaV = cedula.trim(),
+      apellidosV = apellidos.trim(),
+      nombresV = nombres.trim(),
+      telefonoV = telefono.trim(),
+      direccionV = direccion.trim(),
+      emailV = email.trim();
+
+   if (tipIntencionV == undefined || fechaOfV == '' || horaOfV == undefined || nameOfV == '' || montoOfV == '' || cedulaV == '' || apellidosV == '' || nombresV == '' || telefonoV == '' || direccionV == '' || emailV == '') {
+      errors.push({
+         title: 'Campos vacios', 
+         info: 'danger', 
+         text: 'Los campos no pueden ir vacíos o con espacios...'
+      });
+   } else {
+      if (!cedulaVal(cedulaV)) {
+         errors.push({
+            title: 'Cédula incorrecta', 
+            info: 'danger', 
+            text: 'La cédula proporcionada es incorrecta o no válida...'
+         });
+      }
+
+      if (!emailVer(emailV)) {
+         errors.push({
+            title: 'Correo incorrecto', 
+            info: 'danger', 
+            text: 'El correo proporcionado es incorrecto o no válido...'
+         });
+      }
+   }
+
+   if (errors.length > 0) {
+      if (req.file) {
+         const tempPathFiles = req.file.path;
+         await fse.unlink(tempPathFiles);   
+      }
+
+      res.render('ofrendas', {
+         errors,
+         nowFecha
+      });
+   } else {
+      const idComp = `Comprobante - ${nanoid(12)}`;
+
+      const extFiles = path.extname(req.file.originalname).toLowerCase();
+      // const nameFiles = path.basename(req.file.originalname, extFiles);
+      const nameEndFiles = `${idComp}${extFiles}`;
+      const destinationFiles = path.resolve(`src/public/comprobantes/${nameEndFiles}`);
+      const tempPathFiles = req.file.path;
+      
+      try {
+         await fse.copy(tempPathFiles, destinationFiles);
+
+         let newOfrenda, reviewID, idOfrenda;
+
+         const ID = async () => {
+            idOfrenda = `COP - ${nanoid(12)}`;
+
+            reviewID = await connectionDB.query('SELECT idOfrenda FROM ofrendas WHERE idOfrenda = ?', idOfrenda);
+
+            if (reviewID.length > 0) {
+               ID();
+            } else {
+               if (tipIntencionV == 'Ofrenda') {
+                  newOfrenda = {
+                     idOfrenda:  idOfrenda,
+                     tipItencion:  tipIntencionV,
+                     montoOf:  montoOfV,
+                     cedula:  cedulaV,
+                     apellidos:  apellidosV,
+                     nombres:  nombresV,
+                     telefono:  telefonoV,
+                     dirección:  direccionV,
+                     email:  emailV,
+                     comprobanteOf: nameEndFiles
+                  };
+               } else {
+                  newOfrenda = {
+                     idOfrenda:  idOfrenda,
+                     tipItencion:  tipIntencionV,
+                     fechaOf:  fechaOfV,
+                     horaOf:  horaOfV,
+                     nameOf:  nameOfV,
+                     montoOf:  montoOfV,
+                     cedula:  cedulaV,
+                     apellidos:  apellidosV,
+                     nombres:  nombresV,
+                     telefono:  telefonoV,
+                     dirección:  direccionV,
+                     email:  emailV,
+                     comprobanteOf: nameEndFiles
+                  };
+               }
+      
+               const saveOfrenda = await connectionDB.query('INSERT INTO ofrendas set ?', [newOfrenda]);
+               console.log(saveOfrenda);
+      
+               if (saveOfrenda) {
+                  req.flash('success_msg', 'Ofrenda registrada con éxito...');
+                  res.redirect('/ofrendas');
+               } else {
+                  req.flash('error_msg', 'No se ha podido registrar su ofrenda...');
+                  res.redirect('/ofrendas');
+               }
+            }
+         };
+
+         ID();
+      } catch (e) {
+         console.log(e);
+         req.flash('error_msg', '¡Upsss! Error interno x_x, vuelva a subir su ofrenda...');
+         res.redirect('/ofrendas');
+      }
+
+      await fse.unlink(tempPathFiles);
+   }
+
+   
+
+
 };
 
 

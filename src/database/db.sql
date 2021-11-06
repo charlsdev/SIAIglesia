@@ -131,3 +131,24 @@ CREATE TABLE `confirmacion` (
    KEY `fk_cedulaUser` (`idCedula`),
    CONSTRAINT `fk_cedulaUser` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Creamos la tabla `Ofrendas`
+--
+CREATE TABLE `ofrendas` (
+   `idOfrenda` varchar(18) NOT NULL,
+   `tipItencion` varchar(25) NOT NULL,
+   `fechaOf` varchar(10) DEFAULT NULL,
+   `horaOf` varchar(25) DEFAULT NULL,
+   `nameOf` varchar(75) DEFAULT NULL,
+   `montoOf` int(3) NOT NULL,
+   `cedula` varchar(10) NOT NULL,
+   `apellidos` varchar(75) NOT NULL,
+   `nombres` varchar(75) NOT NULL,
+   `telefono` varchar(10) NOT NULL,
+   `dirección` varchar(75) NOT NULL,
+   `email` varchar(75) NOT NULL,
+   `comprobanteOf` varchar(150) NOT NULL,
+   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+   PRIMARY KEY (`idOfrenda`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
