@@ -1,4 +1,5 @@
-const { nanoid } = require('nanoid');
+const { nanoid, customAlphabet } = require('nanoid');
+const passport = require('passport');
 const path = require('path');
 const fse = require('fs-extra');
 const moment = require('moment');
@@ -16,10 +17,6 @@ const {
 
 indexControllers.renderIndex = async (req, res) => {
    res.render('index');
-};
-
-indexControllers.renderLogin = async (req, res) => {
-   res.render('login');
 };
 
 indexControllers.renderRegister = async (req, res) => {
@@ -148,7 +145,9 @@ indexControllers.renderOfrendas = async (req, res) => {
 };
 
 indexControllers.saveOfrendas = async (req, res) => {
-   const errors = [];
+   const errors = [], 
+      nanoID = customAlphabet('0123456789abcdefghijklmnñopqrstuvwxyz', 18);
+
    let nowFecha = moment()
       .format('YYYY-MM-DD');
 
@@ -227,7 +226,8 @@ indexControllers.saveOfrendas = async (req, res) => {
          let newOfrenda, reviewID, idOfrenda;
 
          const ID = async () => {
-            idOfrenda = `COP - ${nanoid(12)}`;
+            // idOfrenda = `COP - ${nanoid(12)}`;
+            idOfrenda = `60${nanoID()}`;
 
             reviewID = await connectionDB.query('SELECT idOfrenda FROM ofrendas WHERE idOfrenda = ?', idOfrenda);
 
@@ -245,7 +245,8 @@ indexControllers.saveOfrendas = async (req, res) => {
                      telefono:  telefonoV,
                      dirección:  direccionV,
                      email:  emailV,
-                     comprobanteOf: nameEndFiles
+                     comprobanteOf: nameEndFiles,
+                     estado: 'Aceptado'
                   };
                } else {
                   newOfrenda = {
@@ -261,7 +262,8 @@ indexControllers.saveOfrendas = async (req, res) => {
                      telefono:  telefonoV,
                      dirección:  direccionV,
                      email:  emailV,
-                     comprobanteOf: nameEndFiles
+                     comprobanteOf: nameEndFiles,
+                     estado: 'Pendiente'
                   };
                }
       
@@ -293,6 +295,27 @@ indexControllers.saveOfrendas = async (req, res) => {
 
 };
 
+indexControllers.renderLogin = async (req, res) => {
+   res.render('login');
+};
+
+indexControllers.userLogin = passport.authenticate('local.login', {
+   failureRedirect: '/login',
+   successRedirect: '/table',
+   badRequestMessage: 'Credenciales incorrectas!!!',
+   failureFlash: true
+});
+
+
+
+
+
+indexControllers.exitLogout = (req, res) => {
+   req.logout();
+   req.flash('warning_msg', 'Sesión cerrada. Vuelva pronto!');
+   res.redirect('/login');
+};
+
 
 
 
@@ -306,7 +329,7 @@ indexControllers.searchUsers = async (req, res) => {
 };
 
 indexControllers.renderIndexSec = async (req, res) => {
-   res.render('secretaria/index');
+   res.render('secretaria/welcome');
 };
 
 module.exports = indexControllers;

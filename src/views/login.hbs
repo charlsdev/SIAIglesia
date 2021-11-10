@@ -15,8 +15,11 @@
          <div class="form">
             <img src="/img/login.svg" alt="" class="form__img">
 
-            <form action="" class="form__content">
+            <form action="/login" method="POST" class="form__content">
                <h1 class="form__title">Bienvenido</h1> <hr>
+
+               {{> alerts}}
+               {{> errors}}
 
                <div class="form__div form__div-one">
                   <div class="form__icon">
@@ -26,7 +29,7 @@
 
                   <div class="form__div-input">
                      <label for="" class="form__label">Cédula</label>
-                     <input type="text" class="form__input">
+                     <input type="text" class="form__input" name="username" required>
                   </div>
                </div>
 
@@ -38,7 +41,7 @@
 
                   <div class="form__div-input">
                      <label for="" class="form__label">Contraseña</label>
-                     <input type="password" class="form__input" autocomplete="on">
+                     <input type="password" class="form__input" name="password" autocomplete="on" required>
                   </div>
                </div>
                <br>

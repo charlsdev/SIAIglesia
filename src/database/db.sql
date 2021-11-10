@@ -136,7 +136,7 @@ CREATE TABLE `confirmacion` (
 -- Creamos la tabla `Ofrendas`
 --
 CREATE TABLE `ofrendas` (
-   `idOfrenda` varchar(18) NOT NULL,
+   `idOfrenda` varchar(20) NOT NULL,
    `tipItencion` varchar(25) NOT NULL,
    `fechaOf` varchar(10) DEFAULT NULL,
    `horaOf` varchar(25) DEFAULT NULL,
@@ -149,6 +149,7 @@ CREATE TABLE `ofrendas` (
    `dirección` varchar(75) NOT NULL,
    `email` varchar(75) NOT NULL,
    `comprobanteOf` varchar(150) NOT NULL,
+   `estado` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`idOfrenda`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

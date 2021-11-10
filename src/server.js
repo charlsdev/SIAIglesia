@@ -4,15 +4,13 @@ const path = require('path');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
-// var fs = require('fs');
 const session = require('express-session');
 const passport = require('passport');
-// const multer = require('multer');
 const cors = require('cors');
 
 //Inicializaciones
 const app = express();
-// require('./config/passport');
+require('./config/passport');
 
 //Configuraciones
 app.set('port', process.env.PORT || 4000);
@@ -30,9 +28,6 @@ app.set('view engine', '.hbs');
 //Middlewares
 app.use(cors());
 app.use(morgan('dev'));
-// app.use(multer({
-//    dest: path.join(__dirname, 'public/profile/temp')
-// }).single('photo'));                        // Nombre del input [photoProfile]
 app.use(express.json());                           //Interpreta los JSON que lleguen a mi aplicación
 app.use(express.urlencoded({extended: false}));    //Para poder interpretar los datos de los form
 app.use(methodOverride('_method'));
@@ -57,9 +52,6 @@ app.use((req, res, next) => {
    res.locals.warning_msg = req.flash('warning_msg');
    res.locals.info_msg = req.flash('info_msg');
    res.locals.error = req.flash('error');
-
-   res.locals.modalHide = req.flash('modalHide');
-   res.locals.modalShow = req.flash('modalShow');
 
    // En caso de no haber ninguna alerta
    res.locals.user = req.user || null;

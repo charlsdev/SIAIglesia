@@ -10,6 +10,7 @@ const uploadComprobante = multer({
 const {
    renderIndex,
    renderLogin,
+   userLogin,
    renderRegister,
    registerNewUser,
    renderHistory,
@@ -18,6 +19,8 @@ const {
    renderOfrendas,
    saveOfrendas,
 
+   exitLogout,
+
    renderIndexSec,
    searchUsers
 } = require('../controllers/index.controllers');
@@ -25,6 +28,7 @@ const {
 router.get('/', renderIndex);
 
 router.get('/login', renderLogin);
+router.post('/login', userLogin);
 router.get('/register', renderRegister);
 router.post('/register', registerNewUser);
 
@@ -33,6 +37,9 @@ router.get('/galery', renderGalery);
 router.get('/contacts', renderContacts);
 router.get('/ofrendas', renderOfrendas);
 router.post('/ofrendas', uploadComprobante.single('comprobanteOf'), saveOfrendas);
+
+
+router.get('/exit', exitLogout);
 
 router.get('/search', searchUsers);
 router.get('/table', renderIndexSec);
