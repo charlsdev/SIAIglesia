@@ -1,13 +1,16 @@
 <header class="header">
    <div class="header__container">
-      <img src="img/profile.svg" alt="" class="header__img">
+      <img src="/img/{{photoProfile}}" alt="" class="header__img">
 
-      <a href="#" class="header__logo">Carlos Andrés Villacreses Parrales</a>
+      <div class="header__logo">
+         {{nombres}} {{apellidos}}
 
-      {{!-- <div class="header__search">
-         <input type="search" placeholder="Search" class="header__input">
-         <i class='bx bx-search header__icon'></i>
-      </div> --}}
+         {{#if est}}
+            <span class="badge badge-pill badge-success ml-2">Activo</span>
+         {{else}}
+            <span class="badge badge-pill badge-danger ml-2">Desactivado</span>
+         {{/if}}
+      </div>
 
       <div class="header__toggle">
          <i class='bx bx-menu' id="header-toggle"></i>
@@ -18,36 +21,43 @@
 <div class="nav" id="navbar">
    <nav class="nav__container">
       <div>
-         <a href="#" class="nav__link nav__logo">
+         <div class="nav__link nav__logo">
             <i class='bx bxs-church nav__icon' ></i>
             <span class="nav__logo-name">Bienvenido</span>
-         </a>
+         </div>
 
          <div class="nav__list">
             <div class="nav__items">
-               <h3 class="nav__subtitle">Profile</h3>
+               <h3 class="nav__subtitle">Menu</h3>
 
-               <a href="#" class="nav__link active">
+               <a href="/s/welcome" class="nav__link active">
                   <i class='bx bx-home nav__icon' ></i>
-                  <span class="nav__name">Home</span>
+                  <span class="nav__name">Inicio</span>
                </a>
-               
+
                <div class="nav__dropdown">
-                  <a href="#" class="nav__link">
-                     <i class='bx bx-user nav__icon' ></i>
-                     <span class="nav__name">Profile</span>
+                  <div class="nav__link">
+                     <i class='bx bx-donate-heart nav__icon' ></i>
+                     <span class="nav__name">Servicios</span>
                      <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
-                  </a>
+                  </div>
 
                   <div class="nav__dropdown-collapse">
                      <div class="nav__dropdown-content">
-                           <a href="#" class="nav__dropdown-item">Passwords</a>
-                           <a href="#" class="nav__dropdown-item">Mail</a>
-                           <a href="#" class="nav__dropdown-item">Accounts</a>
+                        <a href="#" class="nav__dropdown-item">Ofrendas</a>
+                        <a href="#" class="nav__dropdown-item">Bautizos</a>
+                        <a href="#" class="nav__dropdown-item">Comuniones</a>
+                        <a href="#" class="nav__dropdown-item">Confirmaciones</a>
+                        <a href="#" class="nav__dropdown-item">Matrimonios</a>
                      </div>
                   </div>
                </div>
 
+               <a href="/s/eventos" class="nav__link">
+                  <i class='bx bx-calendar-event nav__icon' ></i>
+                  <span class="nav__name">Eventos</span>
+               </a>
+               
                <a href="#" class="nav__link">
                   <i class='bx bx-message-rounded nav__icon' ></i>
                   <span class="nav__name">Messages</span>
@@ -55,34 +65,28 @@
             </div>
 
             <div class="nav__items">
-               <h3 class="nav__subtitle">Menu</h3>
+               <h3 class="nav__subtitle">Profile</h3>
 
                <div class="nav__dropdown">
-                  <a href="#" class="nav__link">
-                     <i class='bx bx-bell nav__icon' ></i>
-                     <span class="nav__name">Notifications</span>
+                  <div class="nav__link">
+                     <i class='bx bx-user nav__icon' ></i>
+                     <span class="nav__name">Mi Perfil</span>
                      <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
-                  </a>
+                  </div>
 
                   <div class="nav__dropdown-collapse">
                      <div class="nav__dropdown-content">
-                        <a href="#" class="nav__dropdown-item">Blocked</a>
-                        <a href="#" class="nav__dropdown-item">Silenced</a>
-                        <a href="#" class="nav__dropdown-item">Publish</a>
-                        <a href="#" class="nav__dropdown-item">Program</a>
+                        <a href="#" class="nav__dropdown-item">Mis datos</a>
+                        <a href="#" class="nav__dropdown-item">Contraseña</a>
+                        {{!-- <a href="#" class="nav__dropdown-item">Accounts</a> --}}
                      </div>
                   </div>
-
                </div>
 
-               <a href="#" class="nav__link">
-                  <i class='bx bx-compass nav__icon' ></i>
-                  <span class="nav__name">Explore</span>
-               </a>
-               <a href="#" class="nav__link">
-                  <i class='bx bx-bookmark nav__icon' ></i>
-                  <span class="nav__name">Saved</span>
-               </a>
+               {{!-- <a href="#" class="nav__link">
+                  <i class='bx bx-message-rounded nav__icon' ></i>
+                  <span class="nav__name">Messages</span>
+               </a> --}}
             </div>
          </div>
       </div>

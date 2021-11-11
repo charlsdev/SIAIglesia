@@ -289,10 +289,6 @@ indexControllers.saveOfrendas = async (req, res) => {
 
       await fse.unlink(tempPathFiles);
    }
-
-   
-
-
 };
 
 indexControllers.renderLogin = async (req, res) => {
@@ -301,11 +297,30 @@ indexControllers.renderLogin = async (req, res) => {
 
 indexControllers.userLogin = passport.authenticate('local.login', {
    failureRedirect: '/login',
-   successRedirect: '/table',
+   successRedirect: '/verification',
    badRequestMessage: 'Credenciales incorrectas!!!',
    failureFlash: true
 });
 
+
+indexControllers.verificationSesion = (req, res) => {
+   const privilegioUser = req.user.privilegio;
+   
+   if (privilegioUser == 'Secretaria') {
+      res.redirect('/s');
+   } else {
+      if (privilegioUser == 'Sacerdote') {
+         res.redirect('/c');
+      } else {
+         if (privilegioUser == 'Administrador') {
+            res.redirect('/a');
+         } else {
+            req.flash('error_msg', '¡Upsss! No posees los permisos necesarios para realizar esta acción...');
+            res.redirect('/login');
+         }
+      }
+   }
+};
 
 
 
@@ -326,10 +341,6 @@ indexControllers.searchUsers = async (req, res) => {
    res.json({
       users
    });
-};
-
-indexControllers.renderIndexSec = async (req, res) => {
-   res.render('secretaria/welcome');
 };
 
 module.exports = indexControllers;

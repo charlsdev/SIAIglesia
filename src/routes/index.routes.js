@@ -5,12 +5,13 @@ const path = require('path');
 const multer = require('multer');
 const uploadComprobante = multer({
    dest: path.join(__dirname, '../public/comprobantes/temp')
-});                        // Nombre del input [photoProfile]
+});
 
 const {
    renderIndex,
    renderLogin,
    userLogin,
+   verificationSesion,
    renderRegister,
    registerNewUser,
    renderHistory,
@@ -20,15 +21,21 @@ const {
    saveOfrendas,
 
    exitLogout,
+   
 
-   renderIndexSec,
    searchUsers
 } = require('../controllers/index.controllers');
 
+const {
+   isAuthenticated,
+   isNotAuthenticated
+} = require('../helpers/middlewareSesion');
+
 router.get('/', renderIndex);
 
-router.get('/login', renderLogin);
-router.post('/login', userLogin);
+router.get('/login', isNotAuthenticated, renderLogin);
+router.post('/login', isNotAuthenticated, userLogin);
+
 router.get('/register', renderRegister);
 router.post('/register', registerNewUser);
 
@@ -38,10 +45,18 @@ router.get('/contacts', renderContacts);
 router.get('/ofrendas', renderOfrendas);
 router.post('/ofrendas', uploadComprobante.single('comprobanteOf'), saveOfrendas);
 
+router.get('/verification', isAuthenticated, verificationSesion);
+
+
+
+
 
 router.get('/exit', exitLogout);
 
+
+
+
+
 router.get('/search', searchUsers);
-router.get('/table', renderIndexSec);
 
 module.exports = router;

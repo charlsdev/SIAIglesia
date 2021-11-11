@@ -1,0 +1,75 @@
+.img__iglesia {
+   width: 150px;
+}
+
+.animation {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-wrap: wrap;
+}
+
+.animation .counter {
+   height: 125px;
+   width: 210px;
+   text-align: center;
+   padding: 0 20px;
+   padding-top: 30px;
+   background: var(--blanco);
+   border-radius: 20px;
+   margin: 20px 30px;
+   border: 5ox solid #f0f0f0;
+   position: relative;
+}
+
+.animation .counter::after {
+   content: '';
+   position: absolute;
+   top: 3px;
+   left: -6px;
+   height: 86%;
+   width: 100%;
+   border: 5px solid #666;
+   border-radius: 20px;
+   transform: rotate(-15deg);
+   z-index: -1;
+}
+
+.animation .counter-number {
+   padding: 2px 0;
+   display: block;
+   font-size: 1.25rem;
+   font-weight: bold;
+   border-radius: 15px;
+   background: var(--blanco);
+   color: var(--grisPizarra);
+}
+
+.animation h3 {
+   font-size: 1.1rem;
+   margin: 15px 0;
+   color: var(--negroSuave);
+   letter-spacing: .5px;
+   text-transform: capitalize;
+   font-weight: 600;
+}
+
+.animation .counter:nth-child(1) {
+   background: var(--verdeHojaBajo);
+}
+
+.animation .counter:nth-child(2) {
+   background: var(--rojoRosaBajo);
+}
+
+.animation .counter:nth-child(3) {
+   background: var(--amarilloAqua);
+}
+
+.animation .counter:nth-child(4) {
+   background: var(--moradoBajo);
+}
+
+.animation .counter:nth-child(5) {
+   background: var(--azulBajo);
+}
