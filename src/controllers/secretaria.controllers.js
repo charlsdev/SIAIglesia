@@ -7,14 +7,14 @@ secretariaControllers.redirectWelcome = async (req, res) => {
 };
 
 secretariaControllers.renderWelcome = async (req, res) => {
+   var h = new Date().getHours(),
+      m = new Date().getMinutes(),
+      s = new Date().getSeconds();
+
    const {
       cedula,
       apellidos,
       nombres,
-      fechNacimiento,
-      genero,
-      telefono,
-      email,
       privilegio,
       estado,
       photoProfile,
@@ -44,9 +44,44 @@ secretariaControllers.renderWelcome = async (req, res) => {
    }
 
    res.render('secretaria/welcome', {
-      cedula, apellidos, nombres, fechNacimiento, genero, telefono, email, privilegio, estado, photoProfile,
+      h, m, s,
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, ofr, bau, comu, conf, mat
    });
+};
+
+secretariaControllers.renderOfrendas = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let est = (estado == 'Enabled') ? true : false;
+
+   res.render('secretaria/ofrendas', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est
+   });
+};
+
+secretariaControllers.getOfrendas = async (req, res) => {
+   let searchOfrendas;
+
+   try {
+      searchOfrendas = await connectionDB
+         .query(` SELECT *
+                  FROM ofrendas 
+                  WHERE tipItencion = "Ofrenda"
+                  ORDER BY fechaOf DESC`);
+
+      res.send(searchOfrendas);
+   } catch (e) {
+      console.log(e);
+   }
 };
 
 module.exports = secretariaControllers;

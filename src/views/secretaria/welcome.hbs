@@ -4,6 +4,7 @@
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
       <link rel="stylesheet" href="/css/counterAnimation.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/clock.min.css" type="text/css">
       
    </head>
 
@@ -12,6 +13,8 @@
       {{> navBarS}}
 
       <div class="container p-30">
+         {{> clock}}
+
          <div class="animation">
             <div class="counter">
                <div class="counter-number">{{ofr}}</div>
@@ -39,11 +42,11 @@
             </div>
          </div>
 
-         <div class="row mt-3">
+         {{!-- <div class="row mt-3">
             <div class="col-md-12 d-flex justify-content-center">
                <img src="/img/SMMIglesia.png" alt="Imagen de la iglesia" class="img__iglesia">
             </div>
-         </div>
+         </div> --}}
       </div>
 
       {{!-- <br><br> --}}
@@ -53,6 +56,7 @@
       <script src="/bootstrap/js/bootstrap.min.js"></script>
       <script src="/sweetalert2/sweetalert2.min.js"></script>
       <script src="/fontawesome/js/all.min.js"></script>
+      <script src="/js/navSecretaria.min.js"></script>
 
       <script type="text/javascript">
          $(document).ready(function() {
@@ -68,4 +72,30 @@
                });
             });
          });
+      
+         let hour = parseInt({{h}}),
+            min = parseInt({{m}}),
+            sec = parseInt({{s}});
+      
+         setInterval(() => {
+            if (sec < 59) {
+               sec = sec + 1;
+            } else {
+               sec = 0;
+               if (min < 59) {
+                  min = min + 1;
+               } else {
+                  min = 0;
+                  if (h < 23) {
+                     h = h + 1;
+                  } else {
+                     h = 0;
+                  }
+               }
+            }
+
+            document.querySelector(".hour_num").innerText = (hour > 9) ? hour : `0${hour}`;
+            document.querySelector(".min_num").innerText = (min > 9) ? min : `0${min}`;
+            document.querySelector(".sec_num").innerText = (sec > 9) ? sec : `0${sec}`;
+         }, 1000);
       </script>

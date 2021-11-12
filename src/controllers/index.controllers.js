@@ -238,6 +238,7 @@ indexControllers.saveOfrendas = async (req, res) => {
                   newOfrenda = {
                      idOfrenda:  idOfrenda,
                      tipItencion:  tipIntencionV,
+                     fechaOf:  nowFecha,
                      montoOf:  montoOfV,
                      cedula:  cedulaV,
                      apellidos:  apellidosV,

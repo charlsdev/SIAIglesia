@@ -1,0 +1,247 @@
+.tableUI {
+   margin: 15px 0;
+   /* max-width: 100%; */
+}
+.tableList {
+   font-size: 0.95rem;
+   width: 100%;
+}
+.tableList tbody {
+   text-align: center;
+}
+.select:not(.is-multiple):not(.is-loading)::after {
+   display: none;
+}
+a.dropdown-item:hover{
+   width: auto;
+}
+.dataTables_info,
+.dataTables_length label {
+   font-size: 0.85rem;
+   font-weight: 600 !important;
+}
+.dataTables_filter {
+   width: 100%;
+   display: flex;
+   align-items: center;
+   /* position: relative; */
+   justify-content: flex-end;
+   /* margin: 20px 0px; */
+   padding: 0px 4px;
+}
+.dataTables_filter:after {
+   font-family: 'FontAwesome';
+   color: #d4d4d4;
+   position: relative;
+   content: "\f002";
+   right: 25px;
+   bottom: 4px;
+}
+.dataTables_filter label {
+   /* width: 100%; */
+   font-weight: 600 !important;
+}
+.dataTables_filter input {
+   /* border-radius: 1.5rem; */
+   /* width: 50% !important; */
+   border: 1px solid #e5e5e5;
+   border-radius: 50px;
+   margin-left: 8px;
+   height: 34px;
+   width: 100%;
+   padding: 0px 25px 0px 10px;
+   transition: all .6s ease;
+   font-size: 0.95rem;
+}
+.select select::after {
+   display: none;
+}
+.pagination-list {
+   font-size: 0.85rem;
+}
+.pagination-list #listOfrendas_previous a,
+.pagination-list #listOfrendas_next a {
+   border-radius: 15px !important;
+}
+.pagination-list li a,
+.pagination-list li span {
+   border-radius: 50%;
+   font-weight: 600;
+}
+.table {
+   border-radius: .3rem;
+   /* width: 100%; */
+}
+.table thead {
+   /* background-color: var(--verdeBajo); */
+   background-color: #ffcad5;
+   text-transform: uppercase;
+   text-align: center;
+}
+.table tbody {
+   font-size: 0.85rem;
+   background-color: var(--bodyColor);
+}
+.table tbody td {
+   padding-left: 18px;
+   padding-right: 18px;
+   /* font-style: italic; */
+   letter-spacing: .2px;
+}
+.table tbody td img {
+   width: 35px;
+   height: 35px;
+   border-radius: 50%;
+   object-fit: cover;
+   overflow: hidden;
+}
+.table tbody td button {
+   border-radius: 50%;
+   margin-left: 5px;
+   margin-right: 5px;
+   /* width: 30px; */
+}
+/* items Dropwdound */
+.menuD {
+   font-size: 0.85rem;
+   border-radius: 0.5rem;
+   border: 1.5px solid #009786;
+}
+.dropdown-toggle::after {
+   display: none;
+}
+.btnPoint:focus {
+   outline: none;
+   box-shadow: none;
+}
+.dropdown-item:hover {
+   color: #009786 !important;
+   font-weight: 600;
+   transition: 0.25s;
+}
+/* .action {
+   padding: 10px 15px 10px 18px;
+   align-items: center;
+} */
+.mode {
+   padding: 4px 10px;
+   line-height: 13px;
+   color: #fff;
+   font-weight: 500;
+   border-radius: 1rem;
+   -webkit-border-radius: 1rem;
+   -moz-border-radius: 1rem;
+   -ms-border-radius: 1rem;
+   -o-border-radius: 1rem;
+   font-size: 11px;
+   letter-spacing: 0.4px;
+   width: 95px;
+}
+/* Design input */
+.form__div,
+.datepicker {
+   position: relative;
+   height: 48px;
+   margin-bottom: 1.5rem;
+}
+.datepicker {
+   width: 100%;
+}
+.form__input,
+.form__textarea {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   font-size: 0.8rem;
+   border: 1.5px solid var(--plomoPerla);
+   border-radius: 0.5rem;
+   outline: none;
+   padding: 1rem;
+   background: none;
+   z-index: 1;
+}
+.form__textarea {
+   resize: none;
+   overflow: hidden;
+}
+.form__select {
+   position: relative;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   font-size: 0.8rem;
+   border: 1.5px solid var(--plomoPerla);
+   border-radius: 0.5rem;
+   outline: none;
+   background: none;
+   z-index: 1;
+}
+.form__label {
+   position: absolute;
+   left: 1rem;
+   top: 0.8rem;
+   padding: 0 0.25rem;
+   background-color: var(--blanco);
+   color: var(--plomoPerla);
+   font-size: 0.95rem;
+   transition: 0.3s;
+}
+/*Input focus move up label*/
+.datepicker > .form__input:focus + .form__label,
+.form__input:focus + .form__label,
+.form__select:focus + .form__label,
+.form__textarea:focus + .form__label {
+   top: -0.5rem;
+   left: 0.8rem;
+   color: var(--verdeBajo);
+   font-size: 0.8rem;
+   font-weight: 500;
+   z-index: 10;
+}
+/*Input focus sticky top label*/
+.datepicker > .form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label,
+.form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label,
+.form__textarea:not(:placeholder-shown).form__textarea:not(:focus) + .form__label {
+   top: -0.5rem;
+   left: 0.8rem;
+   font-size: 0.8rem;
+   font-weight: 500;
+   z-index: 10;
+   color: var(--azulCielo);
+}
+.form__select:focus + .form__label {
+   z-index: 12;
+}
+.form__select:not(:placeholder-shown).form__select:not(:focus) + .form__label {
+   top: -0.5rem;
+   left: 0.8rem;
+   font-size: 0.8rem;
+   font-weight: 500;
+   z-index: 12;
+   color: var(--azulCielo);
+}
+/*Input focus*/
+:is(.form__input, .form__textarea, .nice-select):focus {
+   border: 2px solid var(--verdeBajo) !important;
+}
+.niceselectPro {
+   padding-top: 3px;
+   height: 100% !important;
+   border: 1.5px solid var(--plomoPerla) !important;
+   z-index: 11;
+   background-color: rgba(255, 255, 255, 0.5) !important;
+}
+#dd-w-0 .dd-n {
+   text-decoration: none;
+}
+#dd-w-0 .dd-c .dd-s:hover {
+   background-color: #00b09bc9 !important;
+}
+@media screen and (max-width: 990px) {
+   .tableList tbody {
+      text-align: left;
+   }
+}
