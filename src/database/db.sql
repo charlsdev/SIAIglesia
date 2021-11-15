@@ -153,3 +153,17 @@ CREATE TABLE `ofrendas` (
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`idOfrenda`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Creamos la tabla `Eventos`
+--
+CREATE TABLE `eventos` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `fecha` varchar(10) NOT NULL,
+   `descripcion` varchar(255) NOT NULL,
+   `cedUser` varchar(10) NOT NULL,
+   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+   PRIMARY KEY (`id`),
+   KEY `fk_idEvents` (`cedUser`),
+   CONSTRAINT `fk_idEvents` FOREIGN KEY (`cedUser`) REFERENCES `usuarios` (`cedula`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,14 +1,15 @@
       <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
-      {{!-- <link rel="stylesheet" href="/dataTables/jquery.dataTables.min.css" type="text/css"> --}}
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
       <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/events.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
 
-      <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
+      {{!-- <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
-      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/> --}}
       
    </head>
 
@@ -19,33 +20,36 @@
       <div class="container p-30">
          <div class="row">
             <div class="col-md-12 tittleSEC">
-               <div class="service__title">ofrendas e intenciones</div>
+               <div class="service__title">Eventos</div>
             </div>
          </div>
 
-         {{!-- <div class="row">
+         <div class="row">
             <div class="col-md-3">
                <button class="btn__Add"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
-         </div> --}}
+         </div>
+         
+         <div class="row mt-3">
+            <div class="col-md-6">
+               <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <div class="tittle__alert">
+                     <strong>Aviso</strong>
+                     <p class="subtittle__alert">Junio 26, 2021</p>
+                  </div>
+                  <p class="parrafo__alert">
+                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, similique tenetur molestiae iste ducimus laudantium voluptates provident earum fugit debitis minus fuga voluptatum quasi quam harum blanditiis repellendus iusto nisi!
+                  </p>
+                  <div class="btn__alerts">
+                     <button class="btn__Edit" onclick="editEvent(`id`)">
+                        <i class='bx bx-message-square-edit bx-tada' ></i>
+                     </button>
 
-         <div class="row tableUI">
-            <div class="col-md-12">
-               <table id="listOfrendas" class="table is-striped table-striped table-bordered tableList">
-                  <thead>
-                     <tr>
-                        {{!-- <th scope="col">ID</th> --}}
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Cédula</th>
-                        <th nowrap scope="col">Nombres Completos</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col">Estado</th>
-                        {{!-- <th scope="col">Teléfono</th> --}}
-                        {{!-- <th scope="col"></th> --}}
-                     </tr>
-                  </thead>
-               </table>
+                     <button class="btn__Delete" onclick="deleteEvent(`id`)">
+                        <i class='bx bx-message-square-minus bx-tada' ></i>
+                     </button>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
@@ -59,12 +63,12 @@
       <script src="/fontawesome/js/all.min.js"></script>
       <script src="/js/navSecretaria.min.js"></script>
 
-      <script src="/dataTables/jquery.dataTables.min.js"></script>
+      {{!-- <script src="/dataTables/jquery.dataTables.min.js"></script>
       <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
       <script src="/dataTables/dataTables.responsive.min.js"></script>
-      <script src="/dataTables/theme/responsive.bulma.min.js"></script>
+      <script src="/dataTables/theme/responsive.bulma.min.js"></script> --}}
 
-      <script>
+      {{!-- <script>
          $(document).ready(function() {
             listDocentes = $('#listOfrendas').DataTable({
                destroy: true,
@@ -130,5 +134,75 @@
                "colvis": "Visibilidad"
 
             }
+         }
+      </script> --}}
+
+      <div class="modal fade" id="modalAddEvents" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Añadir evento</h5>
+                  {{!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                  </button> --}}
+                  </div>
+               <div class="modal-body body__modal">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-calendar-check bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Fecha</label>
+                              <input type="date" class="form__input" id="fech_events" name="fech_events" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one content__TA" style="margin-bottom: 1rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-notepad bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Descripción</label>
+                              <textarea class="form__input" name="description_events" id="description_events" oninput="autoSize(this)"></textarea>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal-footer footer__modal">
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                  <button type="button" class="btn__Send">Enviar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
+
+      <script>
+         const openModalAdd = document.querySelector('.btn__Add');
+
+         openModalAdd.onclick = () => {
+            $('#codigoClass').val('');
+            $('#modalAddEvents').modal('show');
+         }
+
+         const content__TA = document.querySelector('.content__TA');
+
+         function autoSize(textarea) {
+            textarea.style.height = "44px";
+            content__TA.style.height = "42px";
+            textarea.style.height = (textarea.scrollHeight)+"px";
+            content__TA.style.height = (textarea.scrollHeight)+"px";
          }
       </script>

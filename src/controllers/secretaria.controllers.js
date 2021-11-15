@@ -84,4 +84,22 @@ secretariaControllers.getOfrendas = async (req, res) => {
    }
 };
 
+secretariaControllers.renderEventos = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let est = (estado == 'Enabled') ? true : false;
+
+   res.render('secretaria/eventos', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est
+   });
+};
+
 module.exports = secretariaControllers;

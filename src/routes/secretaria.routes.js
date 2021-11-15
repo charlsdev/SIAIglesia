@@ -5,7 +5,8 @@ const {
    redirectWelcome,
    renderWelcome,
    renderOfrendas,
-   getOfrendas
+   getOfrendas,
+   renderEventos
 } = require('../controllers/secretaria.controllers');
 
 const {
@@ -15,7 +16,10 @@ const {
 
 router.get('/', isAuthenticated, authSecretaria, redirectWelcome);
 router.get('/welcome', isAuthenticated, authSecretaria, renderWelcome);
+
 router.get('/ofrendas', isAuthenticated, authSecretaria, renderOfrendas);
 router.get('/getOfrendas', isAuthenticated, authSecretaria, getOfrendas);
+
+router.get('/eventos', isAuthenticated, authSecretaria, renderEventos);
 
 module.exports = router;
