@@ -30,12 +30,21 @@
    --rojoCereza: #ff6666;
    --verdeBajo: #18a854;
    --verdeHojaBajo: #2ecc71;
-
    --first-color: #26A69A;
    --first-color-lighter: #ECF3F2;
    --title-color: #11443F;
    --text-color: #5B7B78;
    --body-color: #F5FFFE;
+   
+   /** Colores Bootstrap **/
+   --primary: #188ae2;
+   --danger: #f34943;
+   --info: #35b8e0;
+   --warning: #fdc644;
+   --success: #31ce77;
+   --purple: #6b5eae;
+   --pink: #ff679b;
+   --ash: #3b3e47;
    
    --grisPerla: rgba(206, 206, 206, 0.7);
    --transparentColor: rgba(255, 255, 255, 0.8);

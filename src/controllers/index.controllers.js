@@ -16,7 +16,21 @@ const {
 } = require('../helpers/validations');
 
 indexControllers.renderIndex = async (req, res) => {
-   res.render('index');
+   let listEvents;
+
+   try {
+      listEvents = await connectionDB.query(`SELECT * 
+                                             FROM eventos
+                                             ORDER BY fecha ASC`);
+   } catch (e) {
+      console.log(e);
+      req.flash('error_msg', 'No se ha podido cargar el contenido...');
+      res.redirect('/s/welcome');
+   }
+
+   res.render('index', {
+      listEvents
+   });
 };
 
 indexControllers.renderRegister = async (req, res) => {
@@ -269,7 +283,7 @@ indexControllers.saveOfrendas = async (req, res) => {
                }
       
                const saveOfrenda = await connectionDB.query('INSERT INTO ofrendas set ?', [newOfrenda]);
-               console.log(saveOfrenda);
+               //console.log(saveOfrenda);
       
                if (saveOfrenda) {
                   req.flash('success_msg', 'Ofrenda registrada con éxito...');

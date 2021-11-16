@@ -110,12 +110,14 @@
    transition: .3s;
 }
 
-.footer__modal .btn__Send {
+.footer__modal .btn__Send,
+.footer__modal .btn__Update {
    color: var(--azulMarino);
    border: 1px solid var(--azulMarino);
 }
 
-.footer__modal .btn__Send:hover {
+.footer__modal .btn__Send:hover,
+.footer__modal .btn__Update:hover {
    color: var(--blanco);
    background: var(--azulMarino);
    transition: .3s;
@@ -126,4 +128,5 @@ textarea {
    overflow: hidden;
    min-height: 44px;
    max-height: 100%;
+   font-size: .78rem !important;
 }

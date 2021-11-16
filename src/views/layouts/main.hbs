@@ -28,6 +28,27 @@
 
       {{{body}}}
 
+      <script src="/blockUI/jquery.blockUI.js"></script>
+      <script>
+         bloqueointerface = function(){
+            $.blockUI({
+               message: `<div class="loader-wrapperSend">
+                           <div class="loading">
+                              {{!-- <span>Cargando...</span> --}}
+                           </div>
+                        </div>`,
+               css: {
+                  'z-index': '1200',
+                  'position': 'inherit'
+               }
+            });
+         };
+
+         desbloqueointerface = function(){
+            $.unblockUI();
+         };
+      </script>
+
       <script src="/js/loader.min.js"></script>
    </body>
 </html>

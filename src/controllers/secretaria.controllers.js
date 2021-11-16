@@ -1,3 +1,6 @@
+const moment = require('moment');
+moment.locale('es');
+
 const secretariaControllers = {};
 
 const connectionDB = require('../database');
@@ -94,12 +97,211 @@ secretariaControllers.renderEventos = async (req, res) => {
       photoProfile,
    } = req.user;
 
-   let est = (estado == 'Enabled') ? true : false;
+   let listEvents,
+      nowFecha = moment()
+         .format('YYYY-MM-DD'),
+      est = (estado == 'Enabled') ? true : false;
+
+   try {
+      listEvents = await connectionDB.query(`SELECT * 
+                                             FROM eventos
+                                             ORDER BY fecha ASC`);
+   } catch (e) {
+      console.log(e);
+      req.flash('error_msg', 'No se ha podido cargar el contenido...');
+      res.redirect('/s/welcome');
+   }
 
    res.render('secretaria/eventos', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
-      est
+      est, nowFecha,
+      listEvents
    });
+};
+
+secretariaControllers.saveEvento = async (req, res) => {
+   const {
+      colorEv,
+      fechaEv,
+      descriptionEv
+   } = req.body;
+
+   var colorEvents = colorEv.trim(),
+      fechaEvents = fechaEv.trim(),
+      descriptionEvents = descriptionEv.trim();
+
+   if (fechaEvents == '' || descriptionEvents == '' || colorEvents == '') {
+      res.json({
+         tittle: 'CAMPOS VACÍOS',
+         icon: 'info',
+         description: 'Los campos no pueden ir vacíos o con espacios'
+      });
+   } else {
+      const newEvents = {
+         color: colorEvents,
+         fecha: fechaEvents,
+         descripcion: descriptionEvents,
+         cedUser: req.user.cedula
+      };
+
+      try {
+         const saveEvents = await connectionDB.query('INSERT INTO eventos SET ?', [newEvents]);
+         // console.log(saveEvents);
+
+         if (saveEvents) {
+            res.json({
+               tittle: 'EVENTO PUBLICADO',
+               icon: '/img/SMMIglesia.png',
+               description: 'El evento ha sido guardado y publicado con éxito.'
+            });
+         } else {
+            res.json({
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! No se ha podido guardar el evento.'
+            });
+         }
+      } catch (error) {
+         res.json({
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.deleteEvento = async (req, res) => {
+   const {
+      idEvent
+   } = req.body;
+   
+   var idEv = idEvent.trim();
+
+   if (idEvent == '') {
+      res.json({
+         tittle: 'CAMPOS VACÍOS',
+         icon: 'info',
+         description: 'Los campos no pueden ir vacíos o con espacios'
+      });
+   } else {
+      try {
+         const deleteEven = await connectionDB.query('DELETE FROM eventos WHERE ID = ?', idEv);
+         // console.log(deleteEven);
+
+         if (deleteEven) {
+            res.json({
+               tittle: 'EVENTO ELIMINADO',
+               icon: '/img/SMMIglesia.png',
+               description: 'El evento ha sido eliminado con éxito.'
+            });
+         } else {
+            res.json({
+               tittle: 'ERROR DELETE',
+               icon: 'error',
+               description: 'Upss! No se ha podido eliminar el evento.'
+            });
+         }
+      } catch (e) {
+         console.log(e);
+         res.json({
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.searchEvento = async (req, res) => {
+   const {
+      idEvent
+   } = req.query;
+
+   try {
+      const resEvent = await connectionDB.query(`  SELECT * 
+                                                   FROM eventos 
+                                                   WHERE id = ?`, idEvent);
+      console.log(resEvent[0]);
+      
+      if (resEvent) {
+         res.json({
+            res: 'data',
+            data: resEvent[0]
+         });
+      } else {
+         res.json({
+            res: 'not data',
+            tittle: 'EVENTO NO ENCONTRADO',
+            icon: 'info',
+            description: 'Upss! El evento a buscar no existe.'
+         });
+      }
+   } catch (e) {
+      console.log(e);
+      res.json({
+         res: 'not data',
+         tittle: 'SERVER ERROR',
+         icon: 'error',
+         description: 'Upss! Error interno x_x. Intentelo más luego.'
+      });
+   }
+};
+
+secretariaControllers.updateEvento = async (req, res) => {
+   const {
+      idEv,
+      colorEv,
+      fechaEv,
+      descriptionEv
+   } = req.body;
+
+   var idEvents = idEv.trim(),
+      colorEvents = colorEv.trim(),
+      fechaEvents = fechaEv.trim(),
+      descriptionEvents = descriptionEv.trim();
+
+   if (idEvents == '' || fechaEvents == '' || descriptionEvents == '' || colorEvents == '') {
+      res.json({
+         tittle: 'CAMPOS VACÍOS',
+         icon: 'info',
+         description: 'Los campos no pueden ir vacíos o con espacios'
+      });
+   } else {
+      const updateEvents = {
+         color: colorEvents,
+         fecha: fechaEvents,
+         descripcion: descriptionEvents,
+         cedUser: req.user.cedula
+      };
+
+      try {
+         const saveEvents = await connectionDB.query(`UPDATE eventos 
+                                                      SET ?
+                                                      WHERE id = ?`, [updateEvents, idEvents]);
+         console.log(saveEvents);
+
+         if (saveEvents) {
+            res.json({
+               tittle: 'EVENTO ACTUALIZADO',
+               icon: '/img/SMMIglesia.png',
+               description: 'El evento ha sido actualizado y publicado con éxito.'
+            });
+         } else {
+            res.json({
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! No se ha podido actualizar el evento.'
+            });
+         }
+      } catch (error) {
+         res.json({
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
 };
 
 module.exports = secretariaControllers;

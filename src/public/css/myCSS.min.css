@@ -1,0 +1,139 @@
+.badge {
+   padding: 5px 15px;
+   font-size: .72rem;
+   font-weight: 500;
+   letter-spacing: .5px;
+}
+
+.radio label {
+   display: inline-block;
+   padding-left: 8px;
+   position: relative;
+   font-weight: normal;
+   margin-bottom: 0;
+}
+.radio label::before {
+   -o-transition: border 0.5s ease-in-out;
+   -webkit-transition: border 0.5s ease-in-out;
+   background-color: var(--blanco);
+   border-radius: 50%;
+   /* border: 2px solid #98a6ad; */
+   border: 2px solid var(--grisLobo);
+   content: "";
+   display: inline-block;
+   height: 18px;
+   left: 0;
+   margin-left: -18px;
+   position: absolute;
+   transition: border 0.5s ease-in-out;
+   width: 18px;
+   outline: none !important;
+}
+.radio label::after {
+   -moz-transition: -moz-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   -ms-transform: scale(0, 0);
+   -o-transform: scale(0, 0);
+   -o-transition: -o-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   -webkit-transform: scale(0, 0);
+   -webkit-transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   /* background-color: var(--plomoOscuro); */
+   background-color: var(--grisPizarra);
+   border-radius: 50%;
+   content: " ";
+   display: inline-block;
+   height: 10px;
+   left: 6px;
+   margin-left: -20px;
+   position: absolute;
+   top: 4px;
+   transform: scale(0, 0);
+   transition: -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   transition: transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33),
+      -webkit-transform 0.1s cubic-bezier(0.8, -0.33, 0.2, 1.33);
+   width: 10px;
+}
+.radio input[type="radio"] {
+   cursor: pointer;
+   opacity: 0;
+   z-index: 1;
+   outline: none !important;
+}
+.radio input[type="radio"]:disabled + label {
+   opacity: 0.65;
+}
+.radio input[type="radio"]:focus + label::before {
+   outline-offset: -2px;
+   outline: 5px auto -webkit-focus-ring-color;
+   outline: thin dotted;
+}
+.radio input[type="radio"]:checked + label::after {
+   -webkit-transform: scale(1, 1);
+   transform: scale(1, 1);
+}
+.radio input[type="radio"]:disabled + label::before {
+   cursor: not-allowed;
+}
+.radio-primary input[type="radio"] + label::after {
+   background-color: var(--primary);
+}
+.radio-primary input[type="radio"]:checked + label::before {
+   border-color: var(--primary);
+}
+.radio-primary input[type="radio"]:checked + label::after {
+   background-color: var(--primary);
+}
+.radio-danger input[type="radio"] + label::after {
+   background-color: var(--danger);
+}
+.radio-danger input[type="radio"]:checked + label::before {
+   border-color: var(--danger);
+}
+.radio-danger input[type="radio"]:checked + label::after {
+   background-color: var(--danger);
+}
+.radio-info input[type="radio"] + label::after {
+   background-color: var(--info);
+}
+.radio-info input[type="radio"]:checked + label::before {
+   border-color: var(--info);
+}
+.radio-info input[type="radio"]:checked + label::after {
+   background-color: var(--info);
+}
+.radio-warning input[type="radio"] + label::after {
+   background-color: var(--warning);
+}
+.radio-warning input[type="radio"]:checked + label::before {
+   border-color: var(--warning);
+}
+.radio-warning input[type="radio"]:checked + label::after {
+   background-color: var(--warning);
+}
+.radio-success input[type="radio"] + label::after {
+   background-color: var(--success);
+}
+.radio-success input[type="radio"]:checked + label::before {
+   border-color: var(--success);
+}
+.radio-success input[type="radio"]:checked + label::after {
+   background-color: var(--success);
+}
+.radio-purple input[type="radio"] + label::after {
+   background-color: var(--purple);
+}
+.radio-purple input[type="radio"]:checked + label::before {
+   border-color: var(--purple);
+}
+.radio-purple input[type="radio"]:checked + label::after {
+   background-color: var(--purple);
+}
+.radio-pink input[type="radio"] + label::after {
+   background-color: var(--pink);
+}
+.radio-pink input[type="radio"]:checked + label::before {
+   border-color: var(--pink);
+}
+.radio-pink input[type="radio"]:checked + label::after {
+   background-color: var(--pink);
+}

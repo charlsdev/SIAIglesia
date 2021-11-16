@@ -19,7 +19,7 @@ app.engine('.hbs', exphbs({
    extname: '.hbs',
    layoutsDir: path.join(app.get('views'), 'layouts'),
    partialsDir: path.join(app.get('views'), 'partials'),
-   helpers: require('./helpers/timeagoFormat'),
+   helpers: require('./helpers/handlebarsHelpers'),
    defaultLayout: 'main'
 }));
 

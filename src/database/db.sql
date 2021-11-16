@@ -159,6 +159,7 @@ CREATE TABLE `ofrendas` (
 --
 CREATE TABLE `eventos` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
+   `color` varchar(15) NOT NULL,
    `fecha` varchar(10) NOT NULL,
    `descripcion` varchar(255) NOT NULL,
    `cedUser` varchar(10) NOT NULL,

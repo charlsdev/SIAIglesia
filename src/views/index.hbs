@@ -7,6 +7,7 @@
       <link rel="stylesheet" href="/css/footer.min.css" type="text/css">
       <link rel="stylesheet" href="/css/services.min.css" type="text/css">
       <link rel="stylesheet" href="/css/ofrendas.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/events.min.css" type="text/css">
 
    </head>
 
@@ -111,6 +112,33 @@
             </div>
          </div>
       </main>
+
+      {{#if listEvents}}
+         <div class="container mt-4">
+            <div class="row">
+               <div class="col-md-12 tittleSEC">
+                  <div class="section-title" style="margin-bottom: .25rem;">Eventos</div>
+               </div>
+
+               <div class="row mt-3">
+                  {{#each listEvents}}
+                     <div class="col-md-6">
+                        <div class="alert alert-{{color}} alert-dismissible fade show" role="alert">
+                           <div class="tittle__alert">
+                              <strong>Evento #{{#counter @index}} {{/counter}}</strong>
+                              <p class="subtittle__alert">{{timeDate fecha}}</p>
+                           </div>
+                           <p class="parrafo__alert">
+                              {{descripcion}}
+                           </p>
+                        </div>
+                     </div>
+                  {{/each}}
+               
+               </div>
+            </div>
+         </div>
+      {{/if}}
 
       {{> ofrendas}}
       {{> services}}

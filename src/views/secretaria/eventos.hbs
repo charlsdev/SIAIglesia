@@ -5,11 +5,7 @@
       <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
       <link rel="stylesheet" href="/css/events.min.css" type="text/css">
       <link rel="stylesheet" href="/css/register.min.css" type="text/css">
-
-      {{!-- <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
-      <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
-      <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
-      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/> --}}
+      <link rel="stylesheet" href="/css/myCSS.min.css" type="text/css">
       
    </head>
 
@@ -17,7 +13,7 @@
       {{> loader}}
       {{> navBarS}}
 
-      <div class="container p-30">
+      <div class="container p-30 mb-4">
          <div class="row">
             <div class="col-md-12 tittleSEC">
                <div class="service__title">Eventos</div>
@@ -31,30 +27,53 @@
          </div>
          
          <div class="row mt-3">
-            <div class="col-md-6">
-               <div class="alert alert-success alert-dismissible fade show" role="alert">
-                  <div class="tittle__alert">
-                     <strong>Aviso</strong>
-                     <p class="subtittle__alert">Junio 26, 2021</p>
-                  </div>
-                  <p class="parrafo__alert">
-                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, similique tenetur molestiae iste ducimus laudantium voluptates provident earum fugit debitis minus fuga voluptatum quasi quam harum blanditiis repellendus iusto nisi!
-                  </p>
-                  <div class="btn__alerts">
-                     <button class="btn__Edit" onclick="editEvent(`id`)">
-                        <i class='bx bx-message-square-edit bx-tada' ></i>
-                     </button>
+            {{#if listEvents}}
+               {{#each listEvents}}
+                  <div class="col-md-6">
+                     <div class="alert alert-{{color}} alert-dismissible fade show" role="alert">
+                        <div class="tittle__alert">
+                           <strong>Evento #{{#counter @index}} {{/counter}}</strong>
+                           <p class="subtittle__alert">{{timeDate fecha}}</p>
+                        </div>
+                        <p class="parrafo__alert">
+                           {{descripcion}}
+                        </p>
+                        <div class="btn__alerts">
+                           <button class="btn__Edit" onclick="editEvent(`{{id}}`)">
+                              <i class='bx bx-message-square-edit bx-tada' ></i>
+                           </button>
 
-                     <button class="btn__Delete" onclick="deleteEvent(`id`)">
-                        <i class='bx bx-message-square-minus bx-tada' ></i>
-                     </button>
+                           <button class="btn__Delete" onclick="deleteEvent(`{{id}}`, `{{#counter @index}} {{/counter}}`)">
+                              <i class='bx bx-message-square-minus bx-tada' ></i>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               {{/each}}
+            {{else}}
+               <div class="col-md-6 mx-auto">
+                  <div class="alert alert-info alert-dismissible fade show" role="alert">
+                     <div class="tittle__alert">
+                        <strong>Aviso</strong>
+                        <p class="subtittle__alert">{{nowFecha}}</p>
+                     </div>
+                     <p class="parrafo__alert">
+                        No se tiene eventos pendientes.
+                     </p>
+                     <div class="btn__alerts">
+                        <button class="btn__Edit" onclick="editEvent(`id`)">
+                           <i class='bx bx-message-square-edit bx-tada' ></i>
+                        </button>
+
+                        <button class="btn__Delete" onclick="deleteEvent(`id`)">
+                           <i class='bx bx-message-square-minus bx-tada' ></i>
+                        </button>
+                     </div>
                   </div>
                </div>
-            </div>
+            {{/if}}
          </div>
       </div>
-
-      {{!-- <br><br> --}}
 
       <script src="/js/jquery-3.5.1.min.js"></script>
       <script src="/js/popper.min.js"></script>
@@ -63,90 +82,61 @@
       <script src="/fontawesome/js/all.min.js"></script>
       <script src="/js/navSecretaria.min.js"></script>
 
-      {{!-- <script src="/dataTables/jquery.dataTables.min.js"></script>
-      <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
-      <script src="/dataTables/dataTables.responsive.min.js"></script>
-      <script src="/dataTables/theme/responsive.bulma.min.js"></script> --}}
-
-      {{!-- <script>
-         $(document).ready(function() {
-            listDocentes = $('#listOfrendas').DataTable({
-               destroy: true,
-               "ajax": {
-                  "url": '/s/getOfrendas',
-                  "dataSrc":""
-               },
-               "columns": [
-                  //{"data": "idOfrenda"},
-                  {"data": "tipItencion"},
-                  {"data": "fechaOf"},
-                  {"data": "cedula"},
-                  {"data": null,
-                        render: function ( data, type, row ) {
-                           return row.apellidos + ' ' + row.nombres;
-                        }
-                  },
-                  {"data": "telefono"},
-                  {"data": null,
-                        render: function ( data, type, row ) {
-                           const result = (row.estado === 'Aceptado') ? '<span class="mode badge badge-pill badge-success">Aceptado</span>' : '<span class="mode badge badge-pill badge-warning">Pendiente</span>' ;
-                           return result;
-                        }
-                  },
-                  /*{"data": "email"},
-                  {"data": "telefono"},
-                  {"data": null,
-                        render: function ( data, type, row ) {
-                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> <div class="dropdown-menu 1 menuD"> <a class="dropdown-item" onclick="newCode('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fab fa-buromobelexperte" style="margin-right: 7px;"></i> Código de Verificación </a> <a class="dropdown-item" onclick="changeEstado('${row._id}', '${row.apellidos}', '${row.nombres}', '${row.estado}')"> <i class="fas fa-audio-description" style="margin-right: 7px;"></i> Cambiar Estado </a> <a class="dropdown-item" onclick="newPass('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-key" style="margin-right: 7px;"></i> Nueva Contraseña </a> <a class="dropdown-item" onclick="changeDatePerson('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-user-edit" style="margin-right: 7px;"></i> Actualizar Datos </a> </div>`;
-                        }
-                  },*/
-               ],
-               responsive: true,
-               language: idioma,
-            });
-         });
-
-         var idioma = {
-            "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ registros",
-            "sZeroRecords":    "No se encontraron resultados",
-            "sEmptyTable":     "Ningún dato disponible en esta tabla =(",
-            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix":    "",
-            "sSearch":         "Buscar:",
-            "sUrl":            "",
-            "sInfoThousands":  ",",
-            "sLoadingRecords": "Cargando...",
-            "oPaginate": {
-               "sFirst":    "Primero",
-               "sLast":     "Último",
-               "sNext":     "Siguiente",
-               "sPrevious": "Anterior"
-            },
-            "oAria": {
-               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            },
-            "buttons": {
-               "copy": "Copiar",
-               "colvis": "Visibilidad"
-
-            }
-         }
-      </script> --}}
-
+      {{!-- Modal Save Evento --}}
       <div class="modal fade" id="modalAddEvents" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                <div class="modal-header header__modal">
                   <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Añadir evento</h5>
-                  {{!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                  </button> --}}
-                  </div>
+               </div>
                <div class="modal-body body__modal">
+                  <div class="row mb-1">
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-primary radio radio-primary col-md-2">
+                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio1" value="primary" >
+                           <label class="form-check-label" for="inlineRadio1">
+                              <span class="badge badge-pill badge-primary">Primary</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-success radio radio-success col-md-2">
+                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio2" value="success" >
+                           <label class="form-check-label" for="inlineRadio2">
+                              <span class="badge badge-pill badge-success">Success</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-danger radio radio-danger col-md-2">
+                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio3" value="danger" >
+                           <label class="form-check-label" for="inlineRadio3">
+                              <span class="badge badge-pill badge-danger">Danger</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-info radio radio-info col-md-2">
+                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio4" value="info" >
+                           <label class="form-check-label" for="inlineRadio4">
+                              <span class="badge badge-pill badge-info">Info</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-warning radio radio-warning col-md-2">
+                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio5" value="warning" >
+                           <label class="form-check-label" for="inlineRadio5">
+                              <span class="badge badge-pill badge-warning">Warning</span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form__div form__div-one">
@@ -187,13 +177,114 @@
          </div>
       </div>
 
+      {{!-- Modal Edit Evento --}}
+      <div class="modal fade" id="modalEditEvents" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Añadir evento</h5>
+               </div>
+               <div class="modal-body body__modal">
+                  <div class="row mb-1">
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-primary radio radio-primary col-md-2">
+                           <input class="form-check-input" type="radio" name="color_eventsEd" id="inlineRadio1" value="primary" >
+                           <label class="form-check-label" for="inlineRadio1">
+                              <span class="badge badge-pill badge-primary">Primary</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-success radio radio-success col-md-2">
+                           <input class="form-check-input" type="radio" name="color_eventsEd" id="inlineRadio2" value="success" >
+                           <label class="form-check-label" for="inlineRadio2">
+                              <span class="badge badge-pill badge-success">Success</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-danger radio radio-danger col-md-2">
+                           <input class="form-check-input" type="radio" name="color_eventsEd" id="inlineRadio3" value="danger" >
+                           <label class="form-check-label" for="inlineRadio3">
+                              <span class="badge badge-pill badge-danger">Danger</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-info radio radio-info col-md-2">
+                           <input class="form-check-input" type="radio" name="color_eventsEd" id="inlineRadio4" value="info" >
+                           <label class="form-check-label" for="inlineRadio4">
+                              <span class="badge badge-pill badge-info">Info</span>
+                           </label>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 mb-3">
+                        <div class="form-check form-check-warning radio radio-warning col-md-2">
+                           <input class="form-check-input" type="radio" name="color_eventsEd" id="inlineRadio5" value="warning" >
+                           <label class="form-check-label" for="inlineRadio5">
+                              <span class="badge badge-pill badge-warning">Warning</span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <input type="hidden" name="id_eventsEd" id="id_eventsEd">
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-calendar-check bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Fecha</label>
+                              <input type="date" class="form__input" id="fech_eventsEd" name="fech_eventsEd" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one content__TAEd" style="margin-bottom: 1rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-notepad bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Descripción</label>
+                              <textarea class="form__input" name="description_eventsEd" id="description_eventsEd" oninput="autoSizeEd(this)"></textarea>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal-footer footer__modal">
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                  <button type="button" class="btn__Update">Actualizar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
       <script src="/js/login.min.js"></script>
 
       <script>
          const openModalAdd = document.querySelector('.btn__Add');
 
          openModalAdd.onclick = () => {
-            $('#codigoClass').val('');
+            $('input[name="color_events"]').prop('checked', false);
+            $('#fech_events').val('');
+            $('#description_events').val('');
             $('#modalAddEvents').modal('show');
          }
 
@@ -205,4 +296,274 @@
             textarea.style.height = (textarea.scrollHeight)+"px";
             content__TA.style.height = (textarea.scrollHeight)+"px";
          }
+
+         const content__TAEd = document.querySelector('.content__TAEd');
+
+         function autoSizeEd(textarea) {
+            textarea.style.height = "44px";
+            content__TAEd.style.height = "42px";
+            textarea.style.height = (textarea.scrollHeight)+"px";
+            content__TAEd.style.height = (textarea.scrollHeight)+"px";
+         }
+
+         const btn__Send = document.querySelector('.btn__Send');
+
+         btn__Send.onclick = (e) => {
+            fechaEv = $.trim($('#fech_events').val());
+            descriptionEv = $.trim($('#description_events').val());
+            colorEv = $.trim($('input[name="color_events"]:checked').val());
+
+            if (fechaEv === '' || descriptionEv === '' || colorEv === '') {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `NUEVO EVENTO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar este evento?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/s/saveEvento`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           fechaEv,
+                           colorEv,
+                           descriptionEv
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        $("#modalAddEvents").modal('hide');
+
+                        Swal.fire({
+                           title: res.tittle,
+                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                           imageUrl: res.icon,
+                           imageWidth: 100,
+                           imageHeight: 100,
+                           imageAlt: 'SMM Iglesia',
+                           allowOutsideClick: false
+                        }).then((result) => {
+                           if (result.value == true) {
+                              location.reload();
+                           }
+                        })
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const deleteEvent = (idEvent, numEv) => {
+            Swal.fire({
+               title: `ELIMINAR EVENTO`,
+               html: `<p style="font-size: 1rem;">¿Deseas eliminar el evento #${numEv}?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, eliminar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/s/deleteEvento`,
+                     type: 'POST',
+                     dataType: 'json',
+                     data: {
+                        idEvent
+                     }
+                  })
+                  .done(function(res) {
+                     desbloqueointerface();
+                     Swal.fire({
+                        title: res.tittle,
+                        html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                        imageUrl: res.icon,
+                        imageWidth: 100,
+                        imageHeight: 100,
+                        imageAlt: 'SMM Iglesia',
+                        allowOutsideClick: false
+                     }).then((result) => {
+                        if (result.value == true) {
+                           location.reload();
+                        }
+                     })
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }
+
+         const editEvent = (idEvent) => {
+            bloqueointerface();
+
+            $.ajax({
+               url: `/s/searchEvento`,
+               type: 'GET',
+               dataType: 'json',
+               data: {
+                  idEvent
+               }
+            })
+            .done(function(res) {
+               desbloqueointerface();
+               
+               $('#id_eventsEd').val('');
+               $('input[name="color_eventsEd"]').prop('checked', false);
+               $('#fech_eventsEd').val('');
+               $('#description_eventsEd').val('');
+
+               if (res.res == 'data') {
+                  desbloqueointerface();
+
+                  $('#id_eventsEd').val(`${res.data.id}`);
+                  $(`input[name=color_eventsEd][value='${res.data.color}']`).prop("checked", true);
+                  $('#fech_eventsEd').val(`${res.data.fecha}`);
+                  $('#description_eventsEd').val(`${res.data.descripcion}`);
+                  $('#modalEditEvents').modal('show');
+               }
+
+               if (res.res == 'not data') {
+                  desbloqueointerface();
+
+                  Swal.fire({
+                     position: 'top-end',
+                     title: res.tittle,
+                     html: res.description,
+                     icon: res.icon,
+                     allowOutsideClick: false,
+                     showConfirmButton: false,   
+                     timer: 1500
+                  })
+               }
+            })
+            .fail(function() {
+               desbloqueointerface();
+               console.log("Error");
+            });
+         }
+
+         const btn__Update = document.querySelector('.btn__Update');
+
+         btn__Update.onclick = (e) => {
+            idEv = $.trim($('#id_eventsEd').val());
+            fechaEv = $.trim($('#fech_eventsEd').val());
+            descriptionEv = $.trim($('#description_eventsEd').val());
+            colorEv = $.trim($('input[name="color_eventsEd"]:checked').val());
+
+            if (idEv === '' || fechaEv === '' || descriptionEv === '' || colorEv === '') {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `ACTUALIZAR EVENTO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas actualizar el evento #${idEv}?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, actualizar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/s/updateEvento`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           idEv,
+                           fechaEv,
+                           colorEv,
+                           descriptionEv
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        $("#modalEditEvents").modal('hide');
+
+                        Swal.fire({
+                           title: res.tittle,
+                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                           imageUrl: res.icon,
+                           imageWidth: 100,
+                           imageHeight: 100,
+                           imageAlt: 'SMM Iglesia',
+                           allowOutsideClick: false
+                        }).then((result) => {
+                           if (result.value == true) {
+                              location.reload();
+                           }
+                        })
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
       </script>
