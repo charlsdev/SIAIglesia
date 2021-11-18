@@ -73,8 +73,7 @@ a.dropdown-item:hover{
    /* width: 100%; */
 }
 .table thead {
-   /* background-color: var(--verdeBajo); */
-   background-color: #ffcad5;
+   background-color: var(--verdeHojaBajo);
    text-transform: uppercase;
    text-align: center;
 }

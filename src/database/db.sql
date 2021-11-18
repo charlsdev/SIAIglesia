@@ -149,7 +149,7 @@ CREATE TABLE `ofrendas` (
    `dirección` varchar(75) NOT NULL,
    `email` varchar(75) NOT NULL,
    `comprobanteOf` varchar(150) NOT NULL,
-   `estado` varchar(10) NOT NULL,
+   `estado` varchar(11) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`idOfrenda`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

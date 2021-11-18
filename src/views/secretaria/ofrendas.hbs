@@ -1,6 +1,5 @@
       <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
-      {{!-- <link rel="stylesheet" href="/dataTables/jquery.dataTables.min.css" type="text/css"> --}}
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
       <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
@@ -9,6 +8,16 @@
       <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+
+      <style>
+         .swal2-radio {
+            font-size: .9rem;
+         }
+
+         .swal2-actions {
+            margin-top: .25rem;
+         }
+      </style>
       
    </head>
 
@@ -42,7 +51,7 @@
                         <th scope="col">Teléfono</th>
                         <th scope="col">Estado</th>
                         {{!-- <th scope="col">Teléfono</th> --}}
-                        {{!-- <th scope="col"></th> --}}
+                        <th scope="col">Acciones</th>
                      </tr>
                   </thead>
                </table>
@@ -66,7 +75,7 @@
 
       <script>
          $(document).ready(function() {
-            listDocentes = $('#listOfrendas').DataTable({
+            listOfrendas = $('#listOfrendas').DataTable({
                destroy: true,
                "ajax": {
                   "url": '/s/getOfrendas',
@@ -85,7 +94,22 @@
                   {"data": "telefono"},
                   {"data": null,
                         render: function ( data, type, row ) {
-                           const result = (row.estado === 'Aceptado') ? '<span class="mode badge badge-pill badge-success">Aceptado</span>' : '<span class="mode badge badge-pill badge-warning">Pendiente</span>' ;
+                           const result = (row.estado === 'Aceptado') 
+                                             ?  '<span class="mode badge badge-pill badge-success">Aceptado</span>' 
+                                             :  (row.estado === 'No aceptado') 
+                                                   ? '<span class="mode badge badge-pill badge-danger">No aceptado</span>' 
+                                                   :  (row.estado === 'Pendiente') 
+                                                         ? '<span class="mode badge badge-pill badge-warning">Pendiente</span>' 
+                                                         : '';
+                           return result;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           const result = (row.tipItencion != 'Ofrenda') 
+                                             ?  `<button class="btn__Acc" onclick="changeEstOf('${row.idOfrenda}', 
+                                                '${row.estado}')"><i class='bx bx-badge-check bx-tada' ></i></button>`
+                                             : '';
                            return result;
                         }
                   },
@@ -131,4 +155,158 @@
 
             }
          }
+
+         const changeEstOf = async (idOf, estOf) => {
+            const inputOptions = new Promise((resolve) => {
+               setTimeout(() => {
+                  resolve({
+                     'Aceptado': 'Aceptar',
+                     'No aceptado': 'No aceptar',
+                     'Pendiente': 'Pendiente',
+                     'Eliminar': 'Eliminar'
+                  })
+               }, 1000)
+            })
+            
+            Swal.fire({
+               title: `CAMBIAR ESTADO`,
+               html: `<p style="font-size: 1rem;">Para actualizar el estado de la ofrenda debe elegir las siguientes opciones:</p>`,
+               width: 600,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, actualizar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false,
+               input: 'radio',
+               inputOptions: inputOptions,
+               inputValidator: (value) => {
+                  if (!value) {
+                     return Swal.fire({
+                        position: 'top-end',
+                        imageUrl: '/img/SMMIglesia.png',
+                        imageWidth: 80,
+                        imageHeight: 100,
+                        imageAlt: 'SMM Iglesia',
+                        title: 'CAMPOS VACÍOS',
+                        html: `<p style="font-size: 1rem;">Debe de seleccionar una opción.</p>`,
+                        showConfirmButton: false,
+                        timer: 1500,
+                        allowOutsideClick: false
+                     })
+                  } else {
+                     if (idOf.trim() === '') {
+                        return Swal.fire({
+                           position: 'top-end',
+                           imageUrl: '/img/SMMIglesia.png',
+                           imageWidth: 80,
+                           imageHeight: 100,
+                           imageAlt: 'SMM Iglesia',
+                           title: 'CAMPOS VACÍOS',
+                           html: `<p style="font-size: 1rem;">Loa campos no pueden ir vacíos o con espacios</p>`,
+                           showConfirmButton: false,
+                           timer: 1500,
+                           allowOutsideClick: false
+                        })
+                     } else {
+                        bloqueointerface();
+
+                        $.ajax({
+                           url: `/s/changeEstOf`,
+                           type: 'POST',
+                           dataType: 'json',
+                           data: {
+                              idOf,
+                              value
+                           }
+                        })
+                        .done(function(res) {
+                           desbloqueointerface();
+                           
+                           return Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 listOfrendas.ajax.reload(null, false);
+                              }
+                           })
+
+                        })
+                        .fail(function() {
+                           desbloqueointerface();
+                           console.log("Error");
+                        });
+                     }
+                  }
+               }
+            })
+         }
+
+         /*const changeEstOf = (idOf, estOf) => {
+            let est = (estOf === 'Aceptado') 
+                           ? 'Pendiente'
+                           : 'Aceptado';
+            Swal.fire({
+               title: `CAMBIAR ESTADO`,
+               html: `<p style="font-size: 1rem;">¿Deseas actualizar el estado de la ofrenda a <b style="text-transform: uppercase;">${est}</b>?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, actualizar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/s/changeEstOf`,
+                     type: 'POST',
+                     dataType: 'json',
+                     data: {
+                        idOf
+                     }
+                  })
+                  .done(function(res) {
+                     desbloqueointerface();
+                     
+                     Swal.fire({
+                        title: res.tittle,
+                        html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                        imageUrl: res.icon,
+                        imageWidth: 100,
+                        imageHeight: 100,
+                        imageAlt: 'SMM Iglesia',
+                        allowOutsideClick: false
+                     })
+
+                     listOfrendas.ajax.reload(null, false);
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }*/
       </script>

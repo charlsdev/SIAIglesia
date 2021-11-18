@@ -63,11 +63,13 @@ secretariaControllers.renderOfrendas = async (req, res) => {
       photoProfile,
    } = req.user;
 
-   let est = (estado == 'Enabled') ? true : false;
+   let nowFecha = moment()
+         .format('YYYY-MM-DD'),
+      est = (estado == 'Enabled') ? true : false;
 
    res.render('secretaria/ofrendas', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
-      est
+      est, nowFecha
    });
 };
 
@@ -76,14 +78,79 @@ secretariaControllers.getOfrendas = async (req, res) => {
 
    try {
       searchOfrendas = await connectionDB
-         .query(` SELECT *
+         .query(` SELECT 
+                        idOfrenda, tipItencion, fechaOf, cedula, apellidos, nombres, telefono, estado
                   FROM ofrendas 
-                  WHERE tipItencion = "Ofrenda"
-                  ORDER BY fechaOf DESC`);
+                  #WHERE tipItencion = "Ofrenda"
+                  #ORDER BY fechaOf DESC
+                  ORDER BY fechaOf ASC`);
 
       res.send(searchOfrendas);
    } catch (e) {
       console.log(e);
+   }
+};
+
+secretariaControllers.changeEstOf = async (req, res) => {
+   const {
+      idOf,
+      value
+   } = req.body;
+
+   let ID = idOf.trim(),
+      estadoCh = value.trim(),
+      estadoOf, changeEST;
+
+   const estado = {
+      'Aceptado': 'Aceptado',
+      'No aceptado': 'No aceptado',
+      'Pendiente': 'Pendiente',
+      'Eliminar': 'Eliminar',
+   };
+
+   estadoCh = estado[estadoCh] || '';
+
+   if (ID === '' || estadoCh === '') {
+      res.json({
+         tittle: 'CAMPOS VACÍOS',
+         icon: 'info',
+         description: 'Los campos no pueden ir vacíos o con espacios'
+      });
+   } else {
+      try {
+         (estadoCh === 'Eliminar')
+            ? estadoOf = await connectionDB.query(`DELETE
+                                                FROM ofrendas
+                                                WHERE idOfrenda = ?`, ID)
+            : changeEST = await connectionDB.query(`UPDATE ofrendas
+                                                SET estado = ?
+                                                WHERE idOfrenda = ?`, [estadoCh, ID]);
+
+         (estadoOf)
+            ? res.json({
+               tittle: 'INTENCIÓN ELIMINADA',
+               icon: '/img/SMMIglesia.png',
+               description: 'La ofrenda o intención ha sido eliminada con éxito.'
+            })
+            : (changeEST)
+               ? res.json({
+                  tittle: 'INTENCIÓN ACTUALIZADA',
+                  icon: '/img/SMMIglesia.png',
+                  description: `El estado de la intencion ha cambiado a <b>${estadoCh}</b>.`
+               })
+               : res.json({
+                  tittle: 'SERVER ERROR',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido cambiar el estado de la ofrenda.'
+               });
+      } catch (e) {
+         console.log(e);
+         res.json({
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
    }
 };
 
@@ -301,6 +368,42 @@ secretariaControllers.updateEvento = async (req, res) => {
             description: 'Upss! Error interno x_x. Intentelo más luego.'
          });
       }
+   }
+};
+
+secretariaControllers.renderBautizo = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let /*nowFecha = moment()
+         .format('YYYY-MM-DD'),*/
+      est = (estado == 'Enabled') ? true : false;
+   
+   res.render('secretaria/bautizo', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est,
+   });
+};
+
+secretariaControllers.getBautizos = async (req, res) => {
+   let listBautizos;
+
+   try {
+      listBautizos = await connectionDB.query(` SELECT 
+                                                      _id, apellidos, nombres, fechaNacimiento,nameSacerdote, anioRParroquial, tomoRParroquial, paginaRParroquial, numeroRParroquial
+                                                FROM bautizo`);
+
+      res.json(
+         listBautizos
+      );
+   } catch (e) {
+      console.log(e);
    }
 };
 
