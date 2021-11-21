@@ -359,21 +359,32 @@
                      })
                      .done(function(res) {
                         desbloqueointerface();
-                        $("#modalAddEvents").modal('hide');
 
-                        Swal.fire({
-                           title: res.tittle,
-                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
-                           imageUrl: res.icon,
-                           imageWidth: 100,
-                           imageHeight: 100,
-                           imageAlt: 'SMM Iglesia',
-                           allowOutsideClick: false
-                        }).then((result) => {
-                           if (result.value == true) {
-                              location.reload();
-                           }
-                        })
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalAddEvents").modal('hide');
+                                 location.reload();
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
                      })
                      .fail(function() {
                         desbloqueointerface();
@@ -415,19 +426,30 @@
                   })
                   .done(function(res) {
                      desbloqueointerface();
-                     Swal.fire({
-                        title: res.tittle,
-                        html: `<p style="font-size: 1rem;">${res.description}</p>`,
-                        imageUrl: res.icon,
-                        imageWidth: 100,
-                        imageHeight: 100,
-                        imageAlt: 'SMM Iglesia',
-                        allowOutsideClick: false
-                     }).then((result) => {
-                        if (result.value == true) {
-                           location.reload();
+                     if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 location.reload();
+                              }
+                           })
                         }
-                     })
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
                   })
                   .fail(function() {
                      desbloqueointerface();
@@ -541,21 +563,32 @@
                      })
                      .done(function(res) {
                         desbloqueointerface();
-                        $("#modalEditEvents").modal('hide');
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalEditEvents").modal('hide');
+                                 location.reload();
+                              }
+                           })
+                        }
 
-                        Swal.fire({
-                           title: res.tittle,
-                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
-                           imageUrl: res.icon,
-                           imageWidth: 100,
-                           imageHeight: 100,
-                           imageAlt: 'SMM Iglesia',
-                           allowOutsideClick: false
-                        }).then((result) => {
-                           if (result.value == true) {
-                              location.reload();
-                           }
-                        })
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
                      })
                      .fail(function() {
                         desbloqueointerface();

@@ -9,6 +9,9 @@
       <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
 
+      <link rel="stylesheet" href="/css/ofrendasSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+
       <style>
          .swal2-radio {
             font-size: .9rem;
@@ -16,6 +19,10 @@
 
          .swal2-actions {
             margin-top: .25rem;
+         }
+
+         .modal {
+            z-index: 1041;
          }
       </style>
       
@@ -67,11 +74,35 @@
       <script src="/sweetalert2/sweetalert2.min.js"></script>
       <script src="/fontawesome/js/all.min.js"></script>
       <script src="/js/navSecretaria.min.js"></script>
-
+      
       <script src="/dataTables/jquery.dataTables.min.js"></script>
       <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
       <script src="/dataTables/dataTables.responsive.min.js"></script>
       <script src="/dataTables/theme/responsive.bulma.min.js"></script>
+
+
+      {{!-- Modal Search Ofrenda e Intenciones --}}
+      <div class="modal fade" id="modalSearchOf" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
+                     Datos de la Intención
+                  </h5>
+               </div>
+
+               <div class="modal-body body__modal"> </div>
+
+               <div class="modal-footer footer__modal justify-content-end">
+                  {{!-- <button type="button" class="btn__Send">Enviar</button> --}}
+
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
 
       <script>
          $(document).ready(function() {
@@ -107,19 +138,13 @@
                   {"data": null,
                         render: function ( data, type, row ) {
                            const result = (row.tipItencion != 'Ofrenda') 
-                                             ?  `<button class="btn__Acc" onclick="changeEstOf('${row.idOfrenda}', 
+                                             ?  `<button class="btn__Search" onclick="searchOf('${row.idOfrenda}')"><i class='bx bx-file-find bx-tada' ></i></button>
+                                                <button class="btn__Acc" onclick="changeEstOf('${row.idOfrenda}', 
                                                 '${row.estado}')"><i class='bx bx-badge-check bx-tada' ></i></button>`
-                                             : '';
+                                             : `<button class="btn__Search" onclick="searchOf('${row.idOfrenda}')"><i class='bx bx-file-find bx-tada' ></i></button>`;
                            return result;
                         }
                   },
-                  /*{"data": "email"},
-                  {"data": "telefono"},
-                  {"data": null,
-                        render: function ( data, type, row ) {
-                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> <div class="dropdown-menu 1 menuD"> <a class="dropdown-item" onclick="newCode('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fab fa-buromobelexperte" style="margin-right: 7px;"></i> Código de Verificación </a> <a class="dropdown-item" onclick="changeEstado('${row._id}', '${row.apellidos}', '${row.nombres}', '${row.estado}')"> <i class="fas fa-audio-description" style="margin-right: 7px;"></i> Cambiar Estado </a> <a class="dropdown-item" onclick="newPass('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-key" style="margin-right: 7px;"></i> Nueva Contraseña </a> <a class="dropdown-item" onclick="changeDatePerson('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-user-edit" style="margin-right: 7px;"></i> Actualizar Datos </a> </div>`;
-                        }
-                  },*/
                ],
                responsive: true,
                language: idioma,
@@ -156,14 +181,14 @@
             }
          }
 
-         const changeEstOf = async (idOf, estOf) => {
+         const changeEstOf = (idOf, estOf) => {
             const inputOptions = new Promise((resolve) => {
                setTimeout(() => {
                   resolve({
                      'Aceptado': 'Aceptar',
                      'No aceptado': 'No aceptar',
-                     'Pendiente': 'Pendiente',
-                     'Eliminar': 'Eliminar'
+                     //'Pendiente': 'Pendiente',
+                     //'Eliminar': 'Eliminar'
                   })
                }, 1000)
             })
@@ -255,6 +280,380 @@
             })
          }
 
+         const searchOf = (idOf) => {
+            const content = document.querySelector('.body__modal');
+            bloqueointerface();
+            $("div").remove('.bodyModal');
+
+            $.ajax({
+               url: `/s/searchDatesOf`,
+               type: 'GET',
+               dataType: 'json',
+               data: {
+                  idOf
+               }
+            })
+            .done(function(res) {               
+               if (res.res === 'empty') {
+                  desbloqueointerface();
+
+                  Swal.fire({
+                     title: res.tittle,
+                     html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                     imageUrl: res.icon,
+                     imageWidth: 100,
+                     imageHeight: 100,
+                     imageAlt: 'SMM Iglesia',
+                     allowOutsideClick: false
+                  }).then((result) => {
+                     if (result.value == true) {
+                        listOfrendas.ajax.reload(null, false);
+                     }
+                  })
+               }
+
+               if (res.data) {
+                  desbloqueointerface();
+                  if (res.data.tipItencion === 'Ofrenda') {
+                     content.insertAdjacentHTML('beforeend', `
+                        <div class="bodyModal">
+                           <div class="row">
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-trending-up bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">ID</label>
+                                       <input type="text" class="form__input" name="idOF" id="idOF" value='${res.data.idOfrenda}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-credit-card-front bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Tipo</label>
+                                       <input type="text" class="form__input" name="tipoOF" id="tipoOF" value='${res.data.tipItencion}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-calendar bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Fecha</label>
+                                       <input type="text" class="form__input" name="fechaOF" id="fechaOF" value='${res.data.fechaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-money bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Monto</label>
+                                       <input type="text" class="form__input" name="montoOF" id="montoOF" value='   ${res.data.montoOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-id-card bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Cédula</label>
+                                       <input type="text" class="form__input" name="cedulaOF" id="cedulaOF" value='${res.data.cedula}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Nombres Completos</label>
+                                       <input type="text" class="form__input" name="nameComOF" id="nameComOF" value='${res.data.nombres} ${res.data.apellidos}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-phone-call bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Teléfono</label>
+                                       <input type="text" class="form__input" name="telefonoOF" id="telefonoOF" value='${res.data.telefono}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-street-view bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Dirección</label>
+                                       <input type="text" class="form__input" name="direccionOF" id="direccionOF" value='${res.data.dirección}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-at bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Correo</label>
+                                       <input type="text" class="form__input" name="emailOF" id="emailOF" value='${res.data.email}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-help-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Estado</label>
+                                       <input type="text" class="form__input" name="estadoOF" id="estadoOF" value='${res.data.estado}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-12 d-flex justify-content-center">
+                                 <img src="/comprobantes/${res.data.comprobanteOf}" alt="${res.data.comprobanteOf}" >
+                              </div>
+                           </div>
+                        </div>
+                     `);
+                  } else {
+                     content.insertAdjacentHTML('beforeend', `
+                        <div class="bodyModal">
+                           <div class="row">
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-trending-up bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">ID</label>
+                                       <input type="text" class="form__input" name="idOF" id="idOF" value='${res.data.idOfrenda}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-credit-card-front bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Tipo</label>
+                                       <input type="text" class="form__input" name="tipoOF" id="tipoOF" value='${res.data.tipItencion}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-calendar bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Fecha</label>
+                                       <input type="text" class="form__input" name="fechaOF" id="fechaOF" value='${res.data.fechaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-alarm bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Hora</label>
+                                       <input type="text" class="form__input" name="horaOF" id="horaOF" value='${res.data.horaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-money bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Monto</label>
+                                       <input type="text" class="form__input" name="montoOF" id="montoOF" value='   ${res.data.montoOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">A nombre de</label>
+                                       <input type="text" class="form__input" name="nameTheOF" id="nameTheOF" value='${res.data.nameOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-id-card bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Cédula</label>
+                                       <input type="text" class="form__input" name="cedulaOF" id="cedulaOF" value='${res.data.cedula}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Nombres Completos</label>
+                                       <input type="text" class="form__input" name="nameComOF" id="nameComOF" value='${res.data.nombres} ${res.data.apellidos}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-phone-call bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Teléfono</label>
+                                       <input type="text" class="form__input" name="telefonoOF" id="telefonoOF" value='${res.data.telefono}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-street-view bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Dirección</label>
+                                       <input type="text" class="form__input" name="direccionOF" id="direccionOF" value='${res.data.dirección}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-at bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Correo</label>
+                                       <input type="text" class="form__input" name="emailOF" id="emailOF" value='${res.data.email}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-help-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Estado</label>
+                                       <input type="text" class="form__input" name="estadoOF" id="estadoOF" value='${res.data.estado}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-12 d-flex justify-content-center">
+                                 <img src="/comprobantes/${res.data.comprobanteOf}" alt="${res.data.comprobanteOf}" >
+                              </div>
+                           </div>
+                        </div>
+                     `);
+                  }
+
+                  $('#modalSearchOf').modal('show');
+               }
+            })
+            .fail(function() {
+               desbloqueointerface();
+               console.log("Error");
+            });
+            
+         }
+         
          /*const changeEstOf = (idOf, estOf) => {
             let est = (estOf === 'Aceptado') 
                            ? 'Pendiente'

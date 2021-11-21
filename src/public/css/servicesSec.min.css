@@ -36,28 +36,31 @@
    transition: .3s;
 }
 
-.btn__Acc/*.Aceptado*/ {
+.btn__Acc {
    width: 50px !important;
    border-radius: 15px !important;
    border: 1px solid var(--rojoEscarlata) !important;
    font-size: 1.2rem !important;
+   background: transparent;
    transition: .3s;
 }
 
-.btn__Acc/*.Aceptado*/:hover {
+.btn__Acc:hover {
    color: var(--blanco);
    background: var(--rojoCereza);
    transition: .3s;
 }
 
-.btn__Acc.Pendiente {
+.btn__Search {
    width: 50px !important;
    border-radius: 15px !important;
    border: 1px solid var(--verdeBajo) !important;
    font-size: 1.2rem !important;
+   background: transparent;
+   transition: .3s;
 }
 
-.btn__Acc.Pendiente:hover {
+.btn__Search:hover {
    color: var(--blanco);
    background: var(--verdeHojaBajo);
    transition: .3s;

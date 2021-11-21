@@ -37,7 +37,7 @@ ALTER TABLE
 -- Creamos la tabla `Bautizo`
 -- 
 CREATE TABLE `bautizo` (
-   `_id` varchar(6) NOT NULL,
+   `_id` int(11) NOT NULL AUTO_INCREMENT,
    `apellidos` varchar(50) NOT NULL,
    `nombres` varchar(50) NOT NULL,
    `lugarNacimiento` varchar(50) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE `bautizo` (
 -- Creamos la tabla `Matrimonio`
 -- 
 CREATE TABLE `matrimonio` (
-   `_id` varchar(6) NOT NULL,
+   `_id` int(11) NOT NULL AUTO_INCREMENT,
    `fechaMatrimonio` varchar(10) NOT NULL,
    `nameSacerdote` varchar(100) NOT NULL,
    `nameEsposo` varchar(100) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE `matrimonio` (
 -- Creamos la tabla `Comunion`
 --
 CREATE TABLE `comunion` (
-   `_id` varchar(6) NOT NULL,
+   `_id` int(11) NOT NULL AUTO_INCREMENT,
    `anioSacramento` varchar(4) NOT NULL,
    `cedula` varchar(10) NOT NULL,
    `apellidos` varchar(50) NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE `comunion` (
 -- Creamos la tabla `Confirmación`
 --
 CREATE TABLE `confirmacion` (
-   `_id` varchar(6) NOT NULL,
+   `_id` int(11) NOT NULL AUTO_INCREMENT,
    `anioSacramento` varchar(4) NOT NULL,
    `cedula` varchar(10) NOT NULL,
    `apellidos` varchar(50) NOT NULL,

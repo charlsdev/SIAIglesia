@@ -41,7 +41,28 @@ const emailVer = (correo) => {
    return true;
 };
 
+const spaceLetersVer = (letras) => {
+   var letrasRegex =
+      /^[A-Zá-ü ]+$/i;
+   if (letrasRegex.test(letras)) {
+      return true;
+   }
+   return false;
+};
+
+	
+const numbersVer = (number) => {
+   var numberRegex =
+      /^[0-9]+$/;
+   if (numberRegex.test(number)) {
+      return true;
+   }
+   return false;
+};
+
 module.exports = ({
    cedulaVal,
-   emailVer
+   emailVer,
+   spaceLetersVer,
+   numbersVer
 });

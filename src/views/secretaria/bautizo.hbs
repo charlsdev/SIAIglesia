@@ -1,6 +1,5 @@
       <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
-      {{!-- <link rel="stylesheet" href="/dataTables/jquery.dataTables.min.css" type="text/css"> --}}
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
       <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
@@ -9,6 +8,23 @@
       <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
       <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+
+      <link rel="stylesheet" href="/css/ofrendasSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+
+      <style>
+         .swal2-radio {
+            font-size: .9rem;
+         }
+
+         .swal2-actions {
+            margin-top: .25rem;
+         }
+
+         .modal {
+            z-index: 1041;
+         }
+      </style>
       
    </head>
 
@@ -25,7 +41,7 @@
 
          <div class="row">
             <div class="col-md-3">
-               <button class="btn__Add"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
+               <button class="btn__Add" onclick="modalNewBautizo()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
          </div>
 
@@ -58,15 +74,350 @@
       <script src="/sweetalert2/sweetalert2.min.js"></script>
       <script src="/fontawesome/js/all.min.js"></script>
       <script src="/js/navSecretaria.min.js"></script>
+      <script src="/js/validation.min.js"></script>
 
       <script src="/dataTables/jquery.dataTables.min.js"></script>
       <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
       <script src="/dataTables/dataTables.responsive.min.js"></script>
       <script src="/dataTables/theme/responsive.bulma.min.js"></script>
 
+      {{!-- Modal Register New Bautizo --}}
+      <div class="modal fade" id="modalNewBautizo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
+                     Registrar Bautizo
+                  </h5>
+               </div>
+
+               <div class="modal-body body__modal">
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos Básicos
+                        </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Apellidos</label>
+                              <input type="text" class="form__input" name="apellidos" id="apellidos" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres</label>
+                              <input type="text" class="form__input" name="nombres" id="nombres" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-been-here bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Lugar de nacimiento</label>
+                              <input type="text" class="form__input" name="homeNacimiento" id="homeNacimiento" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-been-here bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Fecha de nacimiento</label>
+                              <input type="date" class="form__input" name="dateNacimiento" id="dateNacimiento" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del padre</label>
+                              <input type="text" class="form__input" name="nameFather" id="nameFather" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos de la madre</label>
+                              <input type="text" class="form__input" name="nameMother" id="nameMother" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del padrino</label>
+                              <input type="text" class="form__input" name="namePadrino" id="namePadrino" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos de la madrina</label>
+                              <input type="text" class="form__input" name="nameMadrina" id="nameMadrina" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres del sacerdote</label>
+                              <input type="text" class="form__input" name="nameSacerdote" id="nameSacerdote" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description" id="staticBackdropLabel">
+                           Datos Parroquiales
+                        </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-calendar bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Año</label>
+                              <input type="text" class="form__input" name="anioParroquia" id="anioParroquia" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-notepad bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Tomo</label>
+                              <input type="text" class="form__input" name="tomoParroquia" id="tomoParroquia" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-book-open bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Página</label>
+                              <input type="text" class="form__input" name="pageParroquia" id="pageParroquia" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-hash bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Número</label>
+                              <input type="text" class="form__input" name="numeroParroquia" id="numeroParroquia" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description" id="staticBackdropLabel">
+                           Datos Registro Civil
+                        </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-building-house bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Ciudad</label>
+                              <input type="text" class="form__input" name="ciudadRCivil" id="ciudadRCivil" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-hash bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Número</label>
+                              <input type="text" class="form__input" name="numeroRCivil" id="numeroRCivil" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-notepad bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Tomo</label>
+                              <input type="text" class="form__input" name="tomoRCivil" id="tomoRCivil" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-4">
+                        <div class="form__div form__div-one" style="margin-bottom: .5rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-book-open bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Página</label>
+                              <input type="text" class="form__input" name="pageRCivil" id="pageRCivil" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-5">
+                        <div class="form__div form__div-one" style="margin-bottom: .5rem;">
+                           <div class="form__icon">
+                              <i class='bx bx-hash bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Número de acta</label>
+                              <input type="text" class="form__input" name="numActaRCivil" id="numActaRCivil" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal-footer footer__modal">
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                  {{!-- <button type="button" class="btn__Send">Enviar</button> --}}
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
+
       <script>
+         //$(".form__div-one").addClass("focus");
+         //bloqueointerface();
+         //desbloqueointerface();
+
+         const modalNewBautizo = () => {
+            bloqueointerface();
+            $(".form__div-one").removeClass("focus");
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Registrar Bautizo';
+            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveBautizo()">Enviar</button>';
+            
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#homeNacimiento').val('');
+            $('#dateNacimiento').val('');
+            $('#nameFather').val('');
+            $('#nameMother').val('');
+            $('#namePadrino').val('');
+            $('#nameMadrina').val('');
+            $('#nameSacerdote').val('');
+            $('#anioParroquia').val('');
+            $('#tomoParroquia').val('');
+            $('#pageParroquia').val('');
+            $('#numeroParroquia').val('');
+            $('#ciudadRCivil').val('');
+            $('#numeroRCivil').val('');
+            $('#tomoRCivil').val('');
+            $('#pageRCivil').val('');
+            $('#numActaRCivil').val('');
+            
+            $('#modalNewBautizo').modal('show');
+            desbloqueointerface();
+         }
+
          $(document).ready(function() {
-            listDocentes = $('#listBautizos').DataTable({
+            listBautizo = $('#listBautizos').DataTable({
                destroy: true,
                "ajax": {
                   "url": '/s/getBautizos',
@@ -123,6 +474,143 @@
                "copy": "Copiar",
                "colvis": "Visibilidad"
 
+            }
+         }
+
+         const saveBautizo = () => {
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            homeNacimiento = $.trim($('#homeNacimiento').val());
+            dateNacimiento = $.trim($('#dateNacimiento').val());
+            nameFather = $.trim($('#nameFather').val());
+            nameMother = $.trim($('#nameMother').val());
+            namePadrino = $.trim($('#namePadrino').val());
+            nameMadrina = $.trim($('#nameMadrina').val());
+            nameSacerdote = $.trim($('#nameSacerdote').val());
+            anioParroquia = $.trim($('#anioParroquia').val());
+            tomoParroquia = $.trim($('#tomoParroquia').val());
+            pageParroquia = $.trim($('#pageParroquia').val());
+            numeroParroquia = $.trim($('#numeroParroquia').val());
+            ciudadRCivil = $.trim($('#ciudadRCivil').val());
+            numeroRCivil = $.trim($('#numeroRCivil').val());
+            tomoRCivil = $.trim($('#tomoRCivil').val());
+            pageRCivil = $.trim($('#pageRCivil').val());
+            numActaRCivil = $.trim($('#numActaRCivil').val());
+
+            if (
+               apellidos === '' || 
+               nombres === '' || 
+               homeNacimiento === '' || 
+               dateNacimiento === '' || 
+               nameFather === '' || 
+               nameMother === '' || 
+               namePadrino === '' || 
+               nameMadrina === '' || 
+               nameSacerdote === '' || 
+               anioParroquia === '' || 
+               tomoParroquia === '' || 
+               pageParroquia === '' || 
+               numeroParroquia === '' || 
+               ciudadRCivil === '' || 
+               numeroRCivil === '' || 
+               tomoRCivil === '' || 
+               pageRCivil === '' || 
+               numActaRCivil === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR REGISTRO DE BAUTIZO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/s/saveBautizo`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           apellidos,
+                           nombres,
+                           homeNacimiento,
+                           dateNacimiento,
+                           nameFather,
+                           nameMother,
+                           namePadrino,
+                           nameMadrina,
+                           nameSacerdote,
+                           anioParroquia,
+                           tomoParroquia,
+                           pageParroquia,
+                           numeroParroquia,
+                           ciudadRCivil,
+                           numeroRCivil,
+                           tomoRCivil,
+                           pageRCivil,
+                           numActaRCivil
+                        }
+                     })
+                     .done(function(res) {
+                        console.log(res)
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewBautizo").modal('hide');
+                                 listBautizo.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
             }
          }
       </script>

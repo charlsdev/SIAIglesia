@@ -137,7 +137,7 @@ a.dropdown-item:hover{
    width: 95px;
 }
 /* Design input */
-.form__div,
+/* .form__div,
 .datepicker {
    position: relative;
    height: 48px;
@@ -188,7 +188,6 @@ a.dropdown-item:hover{
    font-size: 0.95rem;
    transition: 0.3s;
 }
-/*Input focus move up label*/
 .datepicker > .form__input:focus + .form__label,
 .form__input:focus + .form__label,
 .form__select:focus + .form__label,
@@ -200,7 +199,6 @@ a.dropdown-item:hover{
    font-weight: 500;
    z-index: 10;
 }
-/*Input focus sticky top label*/
 .datepicker > .form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label,
 .form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label,
 .form__textarea:not(:placeholder-shown).form__textarea:not(:focus) + .form__label {
@@ -222,7 +220,6 @@ a.dropdown-item:hover{
    z-index: 12;
    color: var(--azulCielo);
 }
-/*Input focus*/
 :is(.form__input, .form__textarea, .nice-select):focus {
    border: 2px solid var(--verdeBajo) !important;
 }
@@ -232,7 +229,8 @@ a.dropdown-item:hover{
    border: 1.5px solid var(--plomoPerla) !important;
    z-index: 11;
    background-color: rgba(255, 255, 255, 0.5) !important;
-}
+} */
+
 #dd-w-0 .dd-n {
    text-decoration: none;
 }
