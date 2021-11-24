@@ -15,7 +15,10 @@ const {
    updateEvento,
    renderBautizo,
    getBautizos,
-   saveBautizo
+   saveBautizo,
+   searchBautizo,
+   updateBautizo,
+   deleteBautizo
 } = require('../controllers/secretaria.controllers');
 
 const {
@@ -40,5 +43,8 @@ router.post('/updateEvento', isAuthenticated, authSecretaria, updateEvento);
 router.get('/bautizos', isAuthenticated, authSecretaria, renderBautizo);
 router.get('/getBautizos', isAuthenticated, authSecretaria, getBautizos);
 router.post('/saveBautizo', isAuthenticated, authSecretaria, saveBautizo);
+router.get('/searchBautizo', isAuthenticated, authSecretaria, searchBautizo);
+router.post('/updateBautizo', isAuthenticated, authSecretaria, updateBautizo);
+router.post('/deleteBautizo', isAuthenticated, authSecretaria, deleteBautizo);
 
 module.exports = router;

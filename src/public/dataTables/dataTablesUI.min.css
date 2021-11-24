@@ -113,6 +113,14 @@ a.dropdown-item:hover{
    outline: none;
    box-shadow: none;
 }
+a.dropdown-item{
+   display: flex;
+   align-items: center;
+}
+a.dropdown-item i{
+   font-size: 1.5rem;
+   margin-right: 7px;
+}
 .dropdown-item:hover {
    color: #009786 !important;
    font-weight: 600;

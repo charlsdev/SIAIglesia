@@ -438,7 +438,20 @@
                   /*{"data": "telefono"},*/
                   {"data": null,
                         render: function ( data, type, row ) {
-                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> <div class="dropdown-menu 1 menuD"> <a class="dropdown-item" onclick="newCode('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fab fa-buromobelexperte" style="margin-right: 7px;"></i> Código de Verificación </a> <a class="dropdown-item" onclick="changeEstado('${row._id}', '${row.apellidos}', '${row.nombres}', '${row.estado}')"> <i class="fas fa-audio-description" style="margin-right: 7px;"></i> Cambiar Estado </a> <a class="dropdown-item" onclick="newPass('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-key" style="margin-right: 7px;"></i> Nueva Contraseña </a> <a class="dropdown-item" onclick="changeDatePerson('${row._id}', '${row.apellidos}', '${row.nombres}')"> <i class="fas fa-user-edit" style="margin-right: 7px;"></i> Actualizar Datos </a> </div>`;
+                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
+                           <div class="dropdown-menu 1 menuD"> 
+                              <a class="dropdown-item" onclick="editBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-edit-alt' ></i>
+                                 Editar 
+                              </a> 
+                              <a class="dropdown-item" onclick="deleteBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-trash' ></i> 
+                                 Eliminar 
+                              </a> 
+                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bxs-file-pdf' ></i>
+                                 Generar Acta 
+                              </a>`;
                         }
                   },
                ],
@@ -576,7 +589,6 @@
                         }
                      })
                      .done(function(res) {
-                        console.log(res)
                         desbloqueointerface();
                         
                         if (res.res === 'img') {
@@ -613,4 +625,327 @@
                })
             }
          }
+
+         const editBautizo = (id, name, apell) => {
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Bautizo';
+            
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#homeNacimiento').val('');
+            $('#dateNacimiento').val('');
+            $('#nameFather').val('');
+            $('#nameMother').val('');
+            $('#namePadrino').val('');
+            $('#nameMadrina').val('');
+            $('#nameSacerdote').val('');
+            $('#anioParroquia').val('');
+            $('#tomoParroquia').val('');
+            $('#pageParroquia').val('');
+            $('#numeroParroquia').val('');
+            $('#ciudadRCivil').val('');
+            $('#numeroRCivil').val('');
+            $('#tomoRCivil').val('');
+            $('#pageRCivil').val('');
+            $('#numActaRCivil').val('');
+
+            Swal.fire({
+               title: `EDITAR ACTA DE BAUTIZO`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de bautizo de <b>${apell} ${name}</b>?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, editar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/s/searchBautizo`,
+                     type: 'GET',
+                     dataType: 'json',
+                     data: {
+                        id
+                     }
+                  })
+                  .done(function(res) {
+                     if (res.res === 'data') {
+                        $('#apellidos').val(`${res.searchData.apellidos}`);
+                        $('#nombres').val(`${res.searchData.nombres}`);
+                        $('#homeNacimiento').val(`${res.searchData.lugarNacimiento}`);
+                        $('#dateNacimiento').val(`${res.searchData.fechaNacimiento}`);
+                        $('#nameFather').val(`${res.searchData.namePadre}`);
+                        $('#nameMother').val(`${res.searchData.nameMadre}`);
+                        $('#namePadrino').val(`${res.searchData.namePadrino}`);
+                        $('#nameMadrina').val(`${res.searchData.nameMadrina}`);
+                        $('#nameSacerdote').val(`${res.searchData.nameSacerdote}`);
+                        $('#anioParroquia').val(`${res.searchData.anioRParroquial}`);
+                        $('#tomoParroquia').val(`${res.searchData.tomoRParroquial}`);
+                        $('#pageParroquia').val(`${res.searchData.paginaRParroquial}`);
+                        $('#numeroParroquia').val(`${res.searchData.numeroRParroquial}`);
+                        $('#ciudadRCivil').val(`${res.searchData.ciudadRCivil}`);
+                        $('#numeroRCivil').val(`${res.searchData.numeroRCivil}`);
+                        $('#tomoRCivil').val(`${res.searchData.tomoRCivil}`);
+                        $('#pageRCivil').val(`${res.searchData.paginaRCivil}`);
+                        $('#numActaRCivil').val(`${res.searchData.numeroActaRCivil}`);
+
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateBautizo('${res.searchData._id}')">Actualizar</button>`;
+
+                        $(".form__div-one").addClass("focus");
+                        $('#modalNewBautizo').modal('show');
+                        desbloqueointerface();
+                     }
+
+                     if (res.res === 'notData') {
+                        desbloqueointerface();
+
+                        Swal.fire({
+                           title: res.tittle,
+                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                           icon: res.icon,
+                           allowOutsideClick: false
+                        })
+                     }
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }
+
+         const updateBautizo = (id) => {
+            id = $.trim(id);
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            homeNacimiento = $.trim($('#homeNacimiento').val());
+            dateNacimiento = $.trim($('#dateNacimiento').val());
+            nameFather = $.trim($('#nameFather').val());
+            nameMother = $.trim($('#nameMother').val());
+            namePadrino = $.trim($('#namePadrino').val());
+            nameMadrina = $.trim($('#nameMadrina').val());
+            nameSacerdote = $.trim($('#nameSacerdote').val());
+            anioParroquia = $.trim($('#anioParroquia').val());
+            tomoParroquia = $.trim($('#tomoParroquia').val());
+            pageParroquia = $.trim($('#pageParroquia').val());
+            numeroParroquia = $.trim($('#numeroParroquia').val());
+            ciudadRCivil = $.trim($('#ciudadRCivil').val());
+            numeroRCivil = $.trim($('#numeroRCivil').val());
+            tomoRCivil = $.trim($('#tomoRCivil').val());
+            pageRCivil = $.trim($('#pageRCivil').val());
+            numActaRCivil = $.trim($('#numActaRCivil').val());
+
+            if (
+               id === '' || 
+               apellidos === '' || 
+               nombres === '' || 
+               homeNacimiento === '' || 
+               dateNacimiento === '' || 
+               nameFather === '' || 
+               nameMother === '' || 
+               namePadrino === '' || 
+               nameMadrina === '' || 
+               nameSacerdote === '' || 
+               anioParroquia === '' || 
+               tomoParroquia === '' || 
+               pageParroquia === '' || 
+               numeroParroquia === '' || 
+               ciudadRCivil === '' || 
+               numeroRCivil === '' || 
+               tomoRCivil === '' || 
+               pageRCivil === '' || 
+               numActaRCivil === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR REGISTRO DE BAUTIZO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/s/updateBautizo`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           id,
+                           apellidos,
+                           nombres,
+                           homeNacimiento,
+                           dateNacimiento,
+                           nameFather,
+                           nameMother,
+                           namePadrino,
+                           nameMadrina,
+                           nameSacerdote,
+                           anioParroquia,
+                           tomoParroquia,
+                           pageParroquia,
+                           numeroParroquia,
+                           ciudadRCivil,
+                           numeroRCivil,
+                           tomoRCivil,
+                           pageRCivil,
+                           numActaRCivil
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewBautizo").modal('hide');
+                                 listBautizo.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const deleteBautizo = (id, name, apell) => {
+            id = $.trim(id);
+
+            if (
+               id === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `ELIMINAR ACTA DE BAUTIZO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de bautizo de ${apell} ${name}?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, eliminar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     $.ajax({
+                        url: `/s/deleteBautizo`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           id
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewBautizo").modal('hide');
+                                 listBautizo.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         
       </script>

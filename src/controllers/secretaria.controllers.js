@@ -7,8 +7,8 @@ const secretariaControllers = {};
 const connectionDB = require('../database');
 
 const {
-   cedulaVal,
-   emailVer,
+   // cedulaVal,
+   // emailVer,
    numbersVer,
    spaceLetersVer
 } = require('../helpers/validations');
@@ -400,7 +400,9 @@ secretariaControllers.deleteEvento = async (req, res) => {
       });
    } else {
       try {
-         const deleteEven = await connectionDB.query('DELETE FROM eventos WHERE ID = ?', idEv);
+         const deleteEven = await connectionDB.query(`DELETE 
+                                                      FROM eventos 
+                                                      WHERE ID = ?`, idEv);
          // console.log(deleteEven);
 
          if (deleteEven.affectedRows === 1) {
@@ -696,6 +698,282 @@ secretariaControllers.saveBautizo = async (req, res) => {
                   tittle: 'DATOS NO GUARDADOS',
                   icon: 'error',
                   description: 'Upss! No se ha guardado los datos en la DB.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.searchBautizo = async (req, res) => {
+   const {
+      id
+   } = req.query;
+
+   let ID = id.trim();
+
+   if (ID === '') {
+      res.json({
+         res: 'notData',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      try {
+         const searchData = await connectionDB.query(`SELECT *
+                                                      FROM bautizo
+                                                      WHERE _id = ?`, ID);
+
+         if (searchData.length > 0) {
+            res.json({
+               res: 'data',
+               searchData: searchData[0]
+            });
+         } else {
+            res.json({
+               res: 'notData',
+               tittle: 'ACTA NO ENCONTRADA',
+               icon: 'error',
+               description: 'Upss! No existe ningún registro con ese ID.'
+            });                                      
+         }
+      } catch (e) {
+         console.log(e);
+         res.json({
+            res: 'notData',
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.updateBautizo = async (req, res) => {
+   const {
+      id,
+      apellidos,
+      nombres,
+      homeNacimiento,
+      dateNacimiento,
+      nameFather,
+      nameMother,
+      namePadrino,
+      nameMadrina,
+      nameSacerdote,
+      anioParroquia,
+      tomoParroquia,
+      pageParroquia,
+      numeroParroquia,
+      ciudadRCivil,
+      numeroRCivil,
+      tomoRCivil,
+      pageRCivil,
+      numActaRCivil
+   } = req.body;
+
+   let errors = 0,
+      idN = id.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      homeNacimientoN = homeNacimiento.trim(),
+      dateNacimientoN = dateNacimiento.trim(),
+      nameFatherN = nameFather.trim(),
+      nameMotherN = nameMother.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      nameSacerdoteN = nameSacerdote.trim(),
+      anioParroquiaN = anioParroquia.trim(),
+      tomoParroquiaN = tomoParroquia.trim(),
+      pageParroquiaN = pageParroquia.trim(),
+      numeroParroquiaN = numeroParroquia.trim(),
+      ciudadRCivilN = ciudadRCivil.trim(),
+      numeroRCivilN = numeroRCivil.trim(),
+      tomoRCivilN = tomoRCivil.trim(),
+      pageRCivilN = pageRCivil.trim(),
+      numActaRCivilN = numActaRCivil.trim();
+
+   if (
+      idN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      homeNacimientoN === '' || 
+      dateNacimientoN === '' || 
+      nameFatherN === '' || 
+      nameMotherN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      nameSacerdoteN === '' || 
+      anioParroquiaN === '' || 
+      tomoParroquiaN === '' || 
+      pageParroquiaN === '' || 
+      numeroParroquiaN === '' || 
+      ciudadRCivilN === '' || 
+      numeroRCivilN === '' || 
+      tomoRCivilN === '' || 
+      pageRCivilN === '' || 
+      numActaRCivilN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!numbersVer(idN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!spaceLetersVer(homeNacimientoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameSacerdoteN)) ? 1 : 0;
+      errors += (!numbersVer(anioParroquiaN)) ? 1 : 0;
+      errors += (!numbersVer(tomoParroquiaN)) ? 1 : 0;
+      errors += (!numbersVer(pageParroquiaN)) ? 1 : 0;
+      errors += (!numbersVer(numeroParroquiaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(ciudadRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(numeroRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(tomoRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(pageRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(numActaRCivilN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const searchData = await connectionDB.query(`SELECT *
+                                                         FROM bautizo
+                                                         WHERE _id = ?`, idN);
+
+            if (searchData.length > 0) {
+               const updateBautizo = {
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  lugarNacimiento: homeNacimientoN,
+                  fechaNacimiento: dateNacimientoN,
+                  namePadre: nameFatherN,
+                  nameMadre: nameMotherN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameSacerdote: nameSacerdoteN,
+                  anioRParroquial: anioParroquiaN,
+                  tomoRParroquial: tomoParroquiaN,
+                  paginaRParroquial: pageParroquiaN,
+                  numeroRParroquial: numeroParroquiaN,
+                  ciudadRCivil: ciudadRCivilN,
+                  numeroRCivil: numeroRCivilN,
+                  tomoRCivil: tomoRCivilN,
+                  paginaRCivil: pageRCivilN,
+                  numeroActaRCivil: numActaRCivilN,
+                  idCedula: req.user.cedula
+               };
+   
+               const updateSaveBau = await connectionDB.query(`UPDATE bautizo 
+                                                               SET ?
+                                                               WHERE _id = ?`, [updateBautizo, idN]);
+               // console.log(updateSaveBau);
+   
+               if (updateSaveBau.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS ACTUALIZADOS',
+                     description: 'Los datos de la cata han sido actualizados con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO ACTUALIZADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido actualizar los datos de la acta.'
+                  });
+               }
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ENCONTRADA',
+                  icon: 'error',
+                  description: 'Upss! No existe ningún registro con ese ID.'
+               }); 
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.deleteBautizo = async (req, res) => {
+   const {
+      id
+   } = req.body;
+
+   let errors = 0,
+      idN = id.trim();
+
+   if (
+      idN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!numbersVer(idN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+   
+            const deleteBautizo = await connectionDB.query(`DELETE 
+                                                            FROM bautizo 
+                                                            WHERE _id = ?`, idN);
+            // console.log(deleteBautizo);
+   
+            if (deleteBautizo.affectedRows === 1) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'ACTA ELIMINADA',
+                  description: 'Se ha eliminado el acta con éxito.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ELIMINADA',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido eliminar la acta seleccionada.'
                });
             }
          } catch (e) {
