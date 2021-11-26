@@ -60,9 +60,19 @@ const numbersVer = (number) => {
    return false;
 };
 
+const verNumberAndLetters = (letras) => {
+   var letrasRegex =
+      /^[0-9A-Zá-ü ]+$/i;
+   if (letrasRegex.test(letras)) {
+      return true;
+   }
+   return false;
+};
+
 module.exports = ({
    cedulaVal,
    emailVer,
    spaceLetersVer,
-   numbersVer
+   numbersVer,
+   verNumberAndLetters
 });

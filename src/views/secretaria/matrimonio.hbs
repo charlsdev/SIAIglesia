@@ -35,29 +35,26 @@
       <div class="container p-30">
          <div class="row">
             <div class="col-md-12 tittleSEC">
-               <div class="service__title">Bautizos</div>
+               <div class="service__title">Matrimonios</div>
             </div>
          </div>
 
          <div class="row">
             <div class="col-md-3">
-               <button class="btn__Add" onclick="modalNewBautizo()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
+               <button class="btn__Add" onclick="modalMatrimonio()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
          </div>
 
          <div class="row tableUI">
             <div class="col-md-12">
-               <table id="listBautizos" class="table is-striped table-striped table-bordered tableList">
+               <table id="listMatrimonios" class="table is-striped table-striped table-bordered tableList">
                   <thead>
                      <tr>
                         <th scope="col">ID</th>
-                        <th nowrap scope="col">Nombres Completos</th>
-                        <th scope="col">Sacerdote</th>
-                        <th scope="col">Año</th>
-                        <th scope="col">N° Tomo</th>
-                        <th scope="col">N° Página</th>
-                        <th scope="col">N° Registro</th>
-                        {{!-- <th scope="col">Teléfono</th> --}}
+                        <th scope="col">Fecha</th>
+                        <th nowrap scope="col">Nombre del Esposo</th>
+                        <th nowrap scope="col">Nombre de la Esposa</th>
+                        <th nowrap scope="col">Nombre del Sacerdote</th>
                         <th scope="col"></th>
                      </tr>
                   </thead>
@@ -81,13 +78,13 @@
       <script src="/dataTables/dataTables.responsive.min.js"></script>
       <script src="/dataTables/theme/responsive.bulma.min.js"></script>
 
-      {{!-- Modal Register New Bautizo --}}
-      <div class="modal fade" id="modalNewBautizo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      {{!-- Modal Register New Matrimonio --}}
+      <div class="modal fade" id="modalMatrimonio" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                <div class="modal-header header__modal">
                   <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
-                     Registrar Bautizo
+                     Registrar Matrimonio
                   </h5>
                </div>
 
@@ -104,59 +101,52 @@
                      <div class="col-md-6">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
-                              <i class='bx bx-user-circle bx-tada' ></i>
+                              <i class='bx bx-been-here bx-tada' ></i>
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Apellidos</label>
-                              <input type="text" class="form__input" name="apellidos" id="apellidos" onkeypress="return letra(event)" required>
+                              <label for="" class="form__label">Fecha de matrimonio</label>
+                              <input type="date" class="form__input" name="fechaMatrimonio" id="fechaMatrimonio" onkeypress="return letra(event)" required>
                            </div>
                         </div>
                      </div>
 
-                     <div class="col-md-6">
+                     <div class="col-md-12">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
-                              <i class='bx bx-user-circle bx-tada' ></i>
+                              <i class='bx bxs-group bx-tada' ></i>
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Nombres</label>
-                              <input type="text" class="form__input" name="nombres" id="nombres" onkeypress="return letra(event)" required>
+                              <label for="" class="form__label">Nombres completos del sacerdote</label>
+                              <input type="text" class="form__input" name="nameSacerdote" id="nameSacerdote" onkeypress="return letra(event)" required>
                            </div>
                         </div>
                      </div>
                   </div>
 
                   <div class="row">
-                     <div class="col-md-6">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-been-here bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Lugar de nacimiento</label>
-                              <input type="text" class="form__input" name="homeNacimiento" id="homeNacimiento" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-6">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-been-here bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Fecha de nacimiento</label>
-                              <input type="date" class="form__input" name="dateNacimiento" id="dateNacimiento" onkeypress="return letra(event)" required>
-                           </div>
-                        </div>
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos del Esposo
+                        </h5>
                      </div>
                   </div>
 
                   <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del esposo</label>
+                              <input type="text" class="form__input" name="nameEsposo" id="nameEsposo" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
                      <div class="col-md-12">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
@@ -165,9 +155,30 @@
       
                            <div class="form__div-input">
                               <label for="" class="form__label">Nombres completos del padre</label>
-                              <input type="text" class="form__input" name="nameFather" id="nameFather" onkeypress="return letra(event)" required>
+                              <input type="text" class="form__input" name="namePadreEsposo" id="namePadreEsposo" onkeypress="return letra(event)" required>
                            </div>
                         </div>
+                     </div>
+
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos de la madre</label>
+                              <input type="text" class="form__input" name="nameMadreEsposo" id="nameMadreEsposo" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos de la Esposa
+                        </h5>
                      </div>
                   </div>
 
@@ -179,10 +190,44 @@
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Nombres completos de la madre</label>
-                              <input type="text" class="form__input" name="nameMother" id="nameMother" onkeypress="return letra(event)" required>
+                              <label for="" class="form__label">Nombres completos de la esposa</label>
+                              <input type="text" class="form__input" name="nameEsposa" id="nameEsposa" onkeypress="return letra(event)" required>
                            </div>
                         </div>
+                     </div>
+
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del padre</label>
+                              <input type="text" class="form__input" name="namePadreEsposa" id="namePadreEsposa" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos de la madre</label>
+                              <input type="text" class="form__input" name="nameMadreEsposa" id="nameMadreEsposa" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos de los padrinos
+                        </h5>
                      </div>
                   </div>
 
@@ -199,9 +244,7 @@
                            </div>
                         </div>
                      </div>
-                  </div>
 
-                  <div class="row">
                      <div class="col-md-12">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
@@ -215,84 +258,7 @@
                         </div>
                      </div>
                   </div>
-
-                  <div class="row">
-                     <div class="col-md-12">
-                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
-                           <div class="form__icon">
-                              <i class='bx bxs-group bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Nombres del sacerdote</label>
-                              <input type="text" class="form__input" name="nameSacerdote" id="nameSacerdote" onkeypress="return letra(event)" required>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12 justify-content-center">
-                        <h5 class="tittle__description" id="staticBackdropLabel">
-                           Datos Parroquiales
-                        </h5>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-calendar bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Año</label>
-                              <input type="text" class="form__input" name="anioParroquia" id="anioParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-notepad bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Tomo</label>
-                              <input type="text" class="form__input" name="tomoParroquia" id="tomoParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-book-open bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Página</label>
-                              <input type="text" class="form__input" name="pageParroquia" id="pageParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-hash bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Número</label>
-                              <input type="text" class="form__input" name="numeroParroquia" id="numeroParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
+                  
                   <div class="row">
                      <div class="col-md-12 justify-content-center">
                         <h5 class="tittle__description" id="staticBackdropLabel">
@@ -322,8 +288,8 @@
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Número</label>
-                              <input type="text" class="form__input" name="numeroRCivil" id="numeroRCivil" onkeypress="return numeros(event)" required>
+                              <label for="" class="form__label">Año</label>
+                              <input type="text" class="form__input" name="anioRCivil" id="anioRCivil" maxlength="4" onkeypress="return numeros(event)" required>
                            </div>
                         </div>
                      </div>
@@ -381,69 +347,72 @@
       <script src="/js/login.min.js"></script>
 
       <script>
-         const modalNewBautizo = () => {
+         const modalMatrimonio = () => {
             bloqueointerface();
             $(".form__div-one").removeClass("focus");
             $("button").remove('.btn__Send');
 
-            document.querySelector('.tittle__modal').innerHTML = 'Registrar Bautizo';
-            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveBautizo()">Enviar</button>';
+            document.querySelector('.tittle__modal').innerHTML = 'Registrar Matrimonio';
+            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveMatrimonio()">Enviar</button>';
             
-            $('#apellidos').val('');
-            $('#nombres').val('');
-            $('#homeNacimiento').val('');
-            $('#dateNacimiento').val('');
-            $('#nameFather').val('');
-            $('#nameMother').val('');
+            $('#fechaMatrimonio').val('');
+            $('#nameSacerdote').val('');
+            $('#nameEsposo').val('');
+            $('#namePadreEsposo').val('');
+            $('#nameMadreEsposo').val('');
+            $('#nameEsposa').val('');
+            $('#namePadreEsposa').val('');
+            $('#nameMadreEsposa').val('');
             $('#namePadrino').val('');
             $('#nameMadrina').val('');
-            $('#nameSacerdote').val('');
-            $('#anioParroquia').val('');
-            $('#tomoParroquia').val('');
-            $('#pageParroquia').val('');
-            $('#numeroParroquia').val('');
             $('#ciudadRCivil').val('');
-            $('#numeroRCivil').val('');
+            $('#anioRCivil').val('');
             $('#tomoRCivil').val('');
             $('#pageRCivil').val('');
             $('#numActaRCivil').val('');
             
-            $('#modalNewBautizo').modal('show');
+            $('#modalMatrimonio').modal('show');
             desbloqueointerface();
          }
 
          $(document).ready(function() {
-            listBautizo = $('#listBautizos').DataTable({
+            listMatrimonio = $('#listMatrimonios').DataTable({
                destroy: true,
                "ajax": {
-                  "url": '/s/getBautizos',
+                  "url": '/s/getMatrimonios',
                   "dataSrc":""
                },
                "columns": [
                   {"data": "_id"},
+                  {"data": "fechaMatrimonio"},
                   {"data": null,
                         render: function ( data, type, row ) {
-                           return row.apellidos + ' ' + row.nombres;
+                           return row.nameEsposo;
                         }
                   },
-                  {"data": "nameSacerdote"},
-                  {"data": "anioRParroquial"},
-                  {"data": "tomoRParroquial"},
-                  {"data": "paginaRParroquial"},
-                  {"data": "numeroRParroquial"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.nameEsposa;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.nameSacerdote;
+                        }
+                  },
                   {"data": null,
                         render: function ( data, type, row ) {
                            return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
                            <div class="dropdown-menu 1 menuD"> 
-                              <a class="dropdown-item" onclick="editBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="editMatrimonio('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="deleteMatrimonio('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
                               </a> 
-                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
                                  <i class='bx bxs-file-pdf' ></i>
                                  Generar Acta 
                               </a>`;
@@ -485,42 +454,36 @@
             }
          }
 
-         const saveBautizo = () => {
-            apellidos = $.trim($('#apellidos').val());
-            nombres = $.trim($('#nombres').val());
-            homeNacimiento = $.trim($('#homeNacimiento').val());
-            dateNacimiento = $.trim($('#dateNacimiento').val());
-            nameFather = $.trim($('#nameFather').val());
-            nameMother = $.trim($('#nameMother').val());
+         const saveMatrimonio = () => {
+            fechaMatrimonio = $.trim($('#fechaMatrimonio').val());
+            nameSacerdote = $.trim($('#nameSacerdote').val());
+            nameEsposo = $.trim($('#nameEsposo').val());
+            namePadreEsposo = $.trim($('#namePadreEsposo').val());
+            nameMadreEsposo = $.trim($('#nameMadreEsposo').val());
+            nameEsposa = $.trim($('#nameEsposa').val());
+            namePadreEsposa = $.trim($('#namePadreEsposa').val());
+            nameMadreEsposa = $.trim($('#nameMadreEsposa').val());
             namePadrino = $.trim($('#namePadrino').val());
             nameMadrina = $.trim($('#nameMadrina').val());
-            nameSacerdote = $.trim($('#nameSacerdote').val());
-            anioParroquia = $.trim($('#anioParroquia').val());
-            tomoParroquia = $.trim($('#tomoParroquia').val());
-            pageParroquia = $.trim($('#pageParroquia').val());
-            numeroParroquia = $.trim($('#numeroParroquia').val());
             ciudadRCivil = $.trim($('#ciudadRCivil').val());
-            numeroRCivil = $.trim($('#numeroRCivil').val());
+            anioRCivil = $.trim($('#anioRCivil').val());
             tomoRCivil = $.trim($('#tomoRCivil').val());
             pageRCivil = $.trim($('#pageRCivil').val());
             numActaRCivil = $.trim($('#numActaRCivil').val());
 
             if (
-               apellidos === '' || 
-               nombres === '' || 
-               homeNacimiento === '' || 
-               dateNacimiento === '' || 
-               nameFather === '' || 
-               nameMother === '' || 
+               fechaMatrimonio === '' || 
+               nameSacerdote === '' || 
+               nameEsposo === '' || 
+               namePadreEsposo === '' || 
+               nameMadreEsposo === '' || 
+               nameEsposa === '' || 
+               namePadreEsposa === '' || 
+               nameMadreEsposa === '' || 
                namePadrino === '' || 
                nameMadrina === '' || 
-               nameSacerdote === '' || 
-               anioParroquia === '' || 
-               tomoParroquia === '' || 
-               pageParroquia === '' || 
-               numeroParroquia === '' || 
                ciudadRCivil === '' || 
-               numeroRCivil === '' || 
+               anioRCivil === '' || 
                tomoRCivil === '' || 
                pageRCivil === '' || 
                numActaRCivil === ''
@@ -539,8 +502,8 @@
                })
             } else {
                Swal.fire({
-                  title: `GUARDAR REGISTRO DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  title: `GUARDAR REGISTRO DE MATRIMONIO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de matrimonio?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -559,25 +522,22 @@
                      bloqueointerface();
 
                      $.ajax({
-                        url: `/s/saveBautizo`,
+                        url: `/s/saveMatrimonio`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                           apellidos,
-                           nombres,
-                           homeNacimiento,
-                           dateNacimiento,
-                           nameFather,
-                           nameMother,
+                           fechaMatrimonio,
+                           nameSacerdote,
+                           nameEsposo,
+                           namePadreEsposo,
+                           nameMadreEsposo,
+                           nameEsposa,
+                           namePadreEsposa,
+                           nameMadreEsposa,
                            namePadrino,
                            nameMadrina,
-                           nameSacerdote,
-                           anioParroquia,
-                           tomoParroquia,
-                           pageParroquia,
-                           numeroParroquia,
                            ciudadRCivil,
-                           numeroRCivil,
+                           anioRCivil,
                            tomoRCivil,
                            pageRCivil,
                            numActaRCivil
@@ -597,8 +557,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalMatrimonio").modal('hide');
+                                 listMatrimonio.ajax.reload(null, false);
                               }
                            })
                         }
@@ -621,33 +581,30 @@
             }
          }
 
-         const editBautizo = (id, name, apell) => {
+         const editMatrimonio = (id, nameEsposo, nameEsposa) => {
             $("button").remove('.btn__Send');
 
-            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Bautizo';
+            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Matrimonio';
             
-            $('#apellidos').val('');
-            $('#nombres').val('');
-            $('#homeNacimiento').val('');
-            $('#dateNacimiento').val('');
-            $('#nameFather').val('');
-            $('#nameMother').val('');
+            $('#fechaMatrimonio').val('');
+            $('#nameSacerdote').val('');
+            $('#nameEsposo').val('');
+            $('#namePadreEsposo').val('');
+            $('#nameMadreEsposo').val('');
+            $('#nameEsposa').val('');
+            $('#namePadreEsposa').val('');
+            $('#nameMadreEsposa').val('');
             $('#namePadrino').val('');
             $('#nameMadrina').val('');
-            $('#nameSacerdote').val('');
-            $('#anioParroquia').val('');
-            $('#tomoParroquia').val('');
-            $('#pageParroquia').val('');
-            $('#numeroParroquia').val('');
             $('#ciudadRCivil').val('');
-            $('#numeroRCivil').val('');
+            $('#anioRCivil').val('');
             $('#tomoRCivil').val('');
             $('#pageRCivil').val('');
             $('#numActaRCivil').val('');
 
             Swal.fire({
-               title: `EDITAR ACTA DE BAUTIZO`,
-               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de bautizo de <b>${apell} ${name}</b>?</p>`,
+               title: `EDITAR ACTA DE MATRIMONIO`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de matrimonio entre <b>${nameEsposo} y ${nameEsposa}</b>?</p>`,
                imageUrl: '/img/SMMIglesia.png',
                imageWidth: 80,
                imageHeight: 100,
@@ -666,7 +623,7 @@
                   bloqueointerface();
 
                   $.ajax({
-                     url: `/s/searchBautizo`,
+                     url: `/s/searchMatrimonio`,
                      type: 'GET',
                      dataType: 'json',
                      data: {
@@ -675,29 +632,26 @@
                   })
                   .done(function(res) {
                      if (res.res === 'data') {
-                        $('#apellidos').val(`${res.searchData.apellidos}`);
-                        $('#nombres').val(`${res.searchData.nombres}`);
-                        $('#homeNacimiento').val(`${res.searchData.lugarNacimiento}`);
-                        $('#dateNacimiento').val(`${res.searchData.fechaNacimiento}`);
-                        $('#nameFather').val(`${res.searchData.namePadre}`);
-                        $('#nameMother').val(`${res.searchData.nameMadre}`);
+                        $('#fechaMatrimonio').val(`${res.searchData.fechaMatrimonio}`);
+                        $('#nameSacerdote').val(`${res.searchData.nameSacerdote}`);
+                        $('#nameEsposo').val(`${res.searchData.nameEsposo}`);
+                        $('#namePadreEsposo').val(`${res.searchData.namePadreEsposo}`);
+                        $('#nameMadreEsposo').val(`${res.searchData.nameMadreEsposo}`);
+                        $('#nameEsposa').val(`${res.searchData.nameEsposa}`);
+                        $('#namePadreEsposa').val(`${res.searchData.namePadreEsposa}`);
+                        $('#nameMadreEsposa').val(`${res.searchData.nameMadreEsposa}`);
                         $('#namePadrino').val(`${res.searchData.namePadrino}`);
                         $('#nameMadrina').val(`${res.searchData.nameMadrina}`);
-                        $('#nameSacerdote').val(`${res.searchData.nameSacerdote}`);
-                        $('#anioParroquia').val(`${res.searchData.anioRParroquial}`);
-                        $('#tomoParroquia').val(`${res.searchData.tomoRParroquial}`);
-                        $('#pageParroquia').val(`${res.searchData.paginaRParroquial}`);
-                        $('#numeroParroquia').val(`${res.searchData.numeroRParroquial}`);
                         $('#ciudadRCivil').val(`${res.searchData.ciudadRCivil}`);
-                        $('#numeroRCivil').val(`${res.searchData.numeroRCivil}`);
+                        $('#anioRCivil').val(`${res.searchData.anioRCivil}`);
                         $('#tomoRCivil').val(`${res.searchData.tomoRCivil}`);
                         $('#pageRCivil').val(`${res.searchData.paginaRCivil}`);
                         $('#numActaRCivil').val(`${res.searchData.numeroActaRCivil}`);
 
-                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateBautizo('${res.searchData._id}')">Actualizar</button>`;
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateMatrimonio('${res.searchData._id}')">Actualizar</button>`;
 
                         $(".form__div-one").addClass("focus");
-                        $('#modalNewBautizo').modal('show');
+                        $('#modalMatrimonio').modal('show');
                         desbloqueointerface();
                      }
 
@@ -720,44 +674,38 @@
             })
          }
 
-         const updateBautizo = (id) => {
+         const updateMatrimonio = (id) => {
             id = $.trim(id);
-            apellidos = $.trim($('#apellidos').val());
-            nombres = $.trim($('#nombres').val());
-            homeNacimiento = $.trim($('#homeNacimiento').val());
-            dateNacimiento = $.trim($('#dateNacimiento').val());
-            nameFather = $.trim($('#nameFather').val());
-            nameMother = $.trim($('#nameMother').val());
+            fechaMatrimonio = $.trim($('#fechaMatrimonio').val());
+            nameSacerdote = $.trim($('#nameSacerdote').val());
+            nameEsposo = $.trim($('#nameEsposo').val());
+            namePadreEsposo = $.trim($('#namePadreEsposo').val());
+            nameMadreEsposo = $.trim($('#nameMadreEsposo').val());
+            nameEsposa = $.trim($('#nameEsposa').val());
+            namePadreEsposa = $.trim($('#namePadreEsposa').val());
+            nameMadreEsposa = $.trim($('#nameMadreEsposa').val());
             namePadrino = $.trim($('#namePadrino').val());
             nameMadrina = $.trim($('#nameMadrina').val());
-            nameSacerdote = $.trim($('#nameSacerdote').val());
-            anioParroquia = $.trim($('#anioParroquia').val());
-            tomoParroquia = $.trim($('#tomoParroquia').val());
-            pageParroquia = $.trim($('#pageParroquia').val());
-            numeroParroquia = $.trim($('#numeroParroquia').val());
             ciudadRCivil = $.trim($('#ciudadRCivil').val());
-            numeroRCivil = $.trim($('#numeroRCivil').val());
+            anioRCivil = $.trim($('#anioRCivil').val());
             tomoRCivil = $.trim($('#tomoRCivil').val());
             pageRCivil = $.trim($('#pageRCivil').val());
             numActaRCivil = $.trim($('#numActaRCivil').val());
 
             if (
                id === '' || 
-               apellidos === '' || 
-               nombres === '' || 
-               homeNacimiento === '' || 
-               dateNacimiento === '' || 
-               nameFather === '' || 
-               nameMother === '' || 
+               fechaMatrimonio === '' || 
+               nameSacerdote === '' || 
+               nameEsposo === '' || 
+               namePadreEsposo === '' || 
+               nameMadreEsposo === '' || 
+               nameEsposa === '' || 
+               namePadreEsposa === '' || 
+               nameMadreEsposa === '' || 
                namePadrino === '' || 
                nameMadrina === '' || 
-               nameSacerdote === '' || 
-               anioParroquia === '' || 
-               tomoParroquia === '' || 
-               pageParroquia === '' || 
-               numeroParroquia === '' || 
                ciudadRCivil === '' || 
-               numeroRCivil === '' || 
+               anioRCivil === '' || 
                tomoRCivil === '' || 
                pageRCivil === '' || 
                numActaRCivil === ''
@@ -776,8 +724,8 @@
                })
             } else {
                Swal.fire({
-                  title: `GUARDAR REGISTRO DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  title: `GUARDAR REGISTRO DE MATRIMONIO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas actualizar y guardar el registro de matrimonio?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -796,26 +744,23 @@
                      bloqueointerface();
 
                      $.ajax({
-                        url: `/s/updateBautizo`,
+                        url: `/s/updateMatrimonio`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
                            id,
-                           apellidos,
-                           nombres,
-                           homeNacimiento,
-                           dateNacimiento,
-                           nameFather,
-                           nameMother,
+                           fechaMatrimonio,
+                           nameSacerdote,
+                           nameEsposo,
+                           namePadreEsposo,
+                           nameMadreEsposo,
+                           nameEsposa,
+                           namePadreEsposa,
+                           nameMadreEsposa,
                            namePadrino,
                            nameMadrina,
-                           nameSacerdote,
-                           anioParroquia,
-                           tomoParroquia,
-                           pageParroquia,
-                           numeroParroquia,
                            ciudadRCivil,
-                           numeroRCivil,
+                           anioRCivil,
                            tomoRCivil,
                            pageRCivil,
                            numActaRCivil
@@ -835,8 +780,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalMatrimonio").modal('hide');
+                                 listMatrimonio.ajax.reload(null, false);
                               }
                            })
                         }
@@ -859,7 +804,7 @@
             }
          }
 
-         const deleteBautizo = (id, name, apell) => {
+         const deleteMatrimonio = (id, nameEsposo, nameEsposa) => {
             id = $.trim(id);
 
             if (
@@ -879,8 +824,8 @@
                })
             } else {
                Swal.fire({
-                  title: `ELIMINAR ACTA DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de bautizo de <b>${apell} ${name}</b>?</p>`,
+                  title: `ELIMINAR ACTA DE MATRIMONIO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de matrimonio de <b>${nameEsposo}</b> y <b>${nameEsposa}</b>?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -897,7 +842,7 @@
                }).then((result) => {
                   if (result.value == true) {
                      $.ajax({
-                        url: `/s/deleteBautizo`,
+                        url: `/s/deleteMatrimonio`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -918,8 +863,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalMatrimonio").modal('hide');
+                                 listMatrimonio.ajax.reload(null, false);
                               }
                            })
                         }

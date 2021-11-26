@@ -7,10 +7,10 @@ const secretariaControllers = {};
 const connectionDB = require('../database');
 
 const {
-   // cedulaVal,
-   // emailVer,
+   cedulaVal,
    numbersVer,
-   spaceLetersVer
+   spaceLetersVer,
+   verNumberAndLetters
 } = require('../helpers/validations');
 
 secretariaControllers.redirectWelcome = async (req, res) => {
@@ -634,7 +634,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
    } else {
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
-      errors += (!spaceLetersVer(homeNacimientoN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(homeNacimientoN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
       errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
@@ -895,7 +895,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
                      res: 'img',
                      icon: '/img/SMMIglesia.png',
                      tittle: 'DATOS ACTUALIZADOS',
-                     description: 'Los datos de la cata han sido actualizados con éxito.'
+                     description: 'Los datos de la acta han sido actualizados con éxito.'
                   });
                } else {
                   res.json({
@@ -974,6 +974,1197 @@ secretariaControllers.deleteBautizo = async (req, res) => {
                   tittle: 'ACTA NO ELIMINADA',
                   icon: 'error',
                   description: 'Upss! No se ha podido eliminar la acta seleccionada.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.renderComunion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let /*nowFecha = moment()
+         .format('YYYY-MM-DD'),*/
+      est = (estado == 'Enabled') ? true : false;
+   
+   res.render('secretaria/comunion', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est,
+   });
+};
+
+secretariaControllers.getComuniones = async (req, res) => {
+   let listComuniones;
+
+   try {
+      listComuniones = await connectionDB.query(` SELECT 
+                                                      _id, anioSacramento, cedula, apellidos, nombres, nameCatequista
+                                                FROM comunion`);
+
+      res.json(
+         listComuniones
+      );
+   } catch (e) {
+      console.log(e);
+   }
+};
+
+secretariaControllers.saveComunion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      anioSacramento,
+      nameFather,
+      nameMother,
+      namePadrino,
+      nameMadrina,
+      nameCatequista
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      anioSacramentoN = anioSacramento.trim(),
+      nameFatherN = nameFather.trim(),
+      nameMotherN = nameMother.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      nameCatequistaN = nameCatequista.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      anioSacramentoN === '' || 
+      nameFatherN === '' || 
+      nameMotherN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      nameCatequistaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!numbersVer(anioSacramentoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameCatequistaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const verActaCom = await connectionDB.query(`SELECT cedula
+                                                         FROM comunion
+                                                         WHERE cedula = ?`, [cedulaN]);
+            // console.log(verActaCom);
+
+            if (verActaCom.length > 0) {
+               res.json({
+                  res: 'icon',
+                  icon: 'error',
+                  tittle: 'ACTA YA REGISTRADA',
+                  description: 'El acta a ingresar ya ha sido ingresada.'
+               });
+            } else {
+               const newComunion = {
+                  cedula: cedulaN,
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  anioSacramento: anioSacramentoN,
+                  namePadre: nameFatherN,
+                  nameMadre: nameMotherN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameCatequista: nameCatequistaN,
+                  idCedula: req.user.cedula
+               };
+   
+               const saveComunion = await connectionDB.query(`INSERT 
+                                                               INTO comunion 
+                                                               SET ?`, [newComunion]);
+               // console.log(saveComunion);
+   
+               if (saveComunion.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS CORRECTOS',
+                     description: 'Se ha guardado con éxito los datos de comunión.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO GUARDADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha guardado los datos en la DB.'
+                  });
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.searchComunion = async (req, res) => {
+   const {
+      cedula
+   } = req.query;
+
+   let ID = cedula.trim();
+
+   if (ID === '') {
+      res.json({
+         res: 'notData',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      try {
+         const searchData = await connectionDB.query(`SELECT *
+                                                      FROM comunion
+                                                      WHERE cedula = ?`, ID);
+
+         if (searchData.length > 0) {
+            res.json({
+               res: 'data',
+               searchData: searchData[0]
+            });
+         } else {
+            res.json({
+               res: 'notData',
+               tittle: 'ACTA NO ENCONTRADA',
+               icon: 'error',
+               description: 'Upss! No existe ningún registro con esa cédula.'
+            });                                      
+         }
+      } catch (e) {
+         console.log(e);
+         res.json({
+            res: 'notData',
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.updateComunion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      anioSacramento,
+      nameFather,
+      nameMother,
+      namePadrino,
+      nameMadrina,
+      nameCatequista
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      anioSacramentoN = anioSacramento.trim(),
+      nameFatherN = nameFather.trim(),
+      nameMotherN = nameMother.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      nameCatequistaN = nameCatequista.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      anioSacramentoN === '' || 
+      nameFatherN === '' || 
+      nameMotherN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      nameCatequistaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!numbersVer(anioSacramentoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameCatequistaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const searchData = await connectionDB.query(`SELECT *
+                                                         FROM comunion
+                                                         WHERE cedula = ?`, cedulaN);
+
+            if (searchData.length > 0) {
+               const updateComunion = {
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  anioSacramento: anioSacramentoN,
+                  namePadre: nameFatherN,
+                  nameMadre: nameMotherN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameCatequista: nameCatequistaN,
+                  idCedula: req.user.cedula
+               };
+   
+               const updateSaveCom = await connectionDB.query(`UPDATE comunion 
+                                                               SET ?
+                                                               WHERE cedula = ?`, [updateComunion, cedulaN]);
+               // console.log(updateSaveCom);
+   
+               if (updateSaveCom.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS ACTUALIZADOS',
+                     description: 'Los datos de la acta han sido actualizados con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO ACTUALIZADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido actualizar los datos de la acta.'
+                  });
+               }
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ENCONTRADA',
+                  icon: 'error',
+                  description: 'Upss! No existe ningún registro con esa cédula.'
+               }); 
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.deleteComunion = async (req, res) => {
+   const {
+      cedula
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim();
+
+   if (
+      cedulaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+   
+            const deleteComunion = await connectionDB.query(`DELETE 
+                                                            FROM comunion 
+                                                            WHERE cedula = ?`, cedulaN);
+            // console.log(deleteComunion);
+   
+            if (deleteComunion.affectedRows === 1) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'ACTA ELIMINADA',
+                  description: 'Se ha eliminado el acta de comunión con éxito.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ELIMINADA',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido eliminar la acta seleccionada.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.renderConfirmacion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let /*nowFecha = moment()
+         .format('YYYY-MM-DD'),*/
+      est = (estado == 'Enabled') ? true : false;
+   
+   res.render('secretaria/confirmacion', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est,
+   });
+};
+
+secretariaControllers.getConfirmaciones = async (req, res) => {
+   let listConfirmacion;
+
+   try {
+      listConfirmacion = await connectionDB.query(` SELECT 
+                                                      _id, anioSacramento, cedula, apellidos, nombres, nameMonsenior
+                                                   FROM confirmacion`);
+
+      res.json(
+         listConfirmacion
+      );
+   } catch (e) {
+      console.log(e);
+   }
+};
+
+secretariaControllers.saveConfirmacion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      anioSacramento,
+      namePadrino,
+      nameMadrina,
+      nameMonsenior,
+      nameTemplo
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      anioSacramentoN = anioSacramento.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      nameMonseniorN = nameMonsenior.trim(),
+      nameTemploN = nameTemplo.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      anioSacramentoN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      nameMonseniorN === '' || 
+      nameTemploN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!numbersVer(anioSacramentoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMonseniorN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameTemploN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const verActaCon = await connectionDB.query(`SELECT cedula
+                                                         FROM confirmacion
+                                                         WHERE cedula = ?`, [cedulaN]);
+            // console.log(verActaCon);
+
+            if (verActaCon.length > 0) {
+               res.json({
+                  res: 'icon',
+                  icon: 'error',
+                  tittle: 'ACTA YA REGISTRADA',
+                  description: 'El acta a ingresar ya ha sido ingresada.'
+               });
+            } else {
+               const newConfirmacion = {
+                  cedula: cedulaN,
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  anioSacramento: anioSacramentoN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameMonsenior: nameMonseniorN,
+                  temploComunion: nameTemploN,
+                  idCedula: req.user.cedula
+               };
+   
+               const saveConfirmacion = await connectionDB.query(`INSERT 
+                                                                  INTO confirmacion 
+                                                                  SET ?`, [newConfirmacion]);
+               // console.log(saveConfirmacion);
+   
+               if (saveConfirmacion.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS CORRECTOS',
+                     description: 'Se ha guardado con éxito los datos de la confirmación.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO GUARDADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha guardado los datos en la DB.'
+                  });
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.searchConfirmacion = async (req, res) => {
+   const {
+      cedula
+   } = req.query;
+
+   let ID = cedula.trim();
+
+   if (ID === '') {
+      res.json({
+         res: 'notData',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      try {
+         const searchData = await connectionDB.query(`SELECT *
+                                                      FROM confirmacion
+                                                      WHERE cedula = ?`, ID);
+
+         if (searchData.length > 0) {
+            res.json({
+               res: 'data',
+               searchData: searchData[0]
+            });
+         } else {
+            res.json({
+               res: 'notData',
+               tittle: 'ACTA NO ENCONTRADA',
+               icon: 'error',
+               description: 'Upss! No existe ningún registro con esa cédula.'
+            });                                      
+         }
+      } catch (e) {
+         console.log(e);
+         res.json({
+            res: 'notData',
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.updateConfirmacion = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      anioSacramento,
+      namePadrino,
+      nameMadrina,
+      nameMonsenior,
+      nameTemplo
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      anioSacramentoN = anioSacramento.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      nameMonseniorN = nameMonsenior.trim(),
+      nameTemploN = nameTemplo.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      anioSacramentoN === '' ||  
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      nameMonseniorN === '' || 
+      nameTemploN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!numbersVer(anioSacramentoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMonseniorN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameTemploN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const searchData = await connectionDB.query(`SELECT *
+                                                         FROM confirmacion
+                                                         WHERE cedula = ?`, cedulaN);
+
+            if (searchData.length > 0) {
+               const updateConfirmacion = {
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  anioSacramento: anioSacramentoN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameMonsenior: nameMonseniorN,
+                  temploComunion: nameTemploN,
+                  idCedula: req.user.cedula
+               };
+   
+               const updateSaveCon = await connectionDB.query(`UPDATE confirmacion 
+                                                               SET ?
+                                                               WHERE cedula = ?`, [updateConfirmacion, cedulaN]);
+               // console.log(updateSaveCon);
+   
+               if (updateSaveCon.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS ACTUALIZADOS',
+                     description: 'Los datos de la acta han sido actualizados con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO ACTUALIZADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido actualizar los datos de la acta.'
+                  });
+               }
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ENCONTRADA',
+                  icon: 'error',
+                  description: 'Upss! No existe ningún registro con esa cédula.'
+               }); 
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.deleteConfirmacion = async (req, res) => {
+   const {
+      cedula
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim();
+
+   if (
+      cedulaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+   
+            const deleteConfirmacion = await connectionDB.query(`DELETE 
+                                                            FROM confirmacion 
+                                                            WHERE cedula = ?`, cedulaN);
+            // console.log(deleteConfirmacion);
+   
+            if (deleteConfirmacion.affectedRows === 1) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'ACTA ELIMINADA',
+                  description: 'Se ha eliminado el acta de confirmación con éxito.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ELIMINADA',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido eliminar la acta seleccionada.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.renderMatrimonio = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let /*nowFecha = moment()
+         .format('YYYY-MM-DD'),*/
+      est = (estado == 'Enabled') ? true : false;
+   
+   res.render('secretaria/matrimonio', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est,
+   });
+};
+
+secretariaControllers.getMatrimonios = async (req, res) => {
+   let listMatrimonios;
+
+   try {
+      listMatrimonios = await connectionDB.query(` SELECT 
+                                                      _id, nameEsposo, nameEsposa, fechaMatrimonio, nameSacerdote
+                                                   FROM matrimonio`);
+
+      res.json(
+         listMatrimonios
+      );
+   } catch (e) {
+      console.log(e);
+   }
+};
+
+secretariaControllers.saveMatrimonio = async (req, res) => {
+   const {
+      fechaMatrimonio,
+      nameSacerdote,
+      nameEsposo,
+      namePadreEsposo,
+      nameMadreEsposo,
+      nameEsposa,
+      namePadreEsposa,
+      nameMadreEsposa,
+      namePadrino,
+      nameMadrina,
+      ciudadRCivil,
+      anioRCivil,
+      tomoRCivil,
+      pageRCivil,
+      numActaRCivil
+   } = req.body;
+
+   let errors = 0,
+      fechaMatrimonioN = fechaMatrimonio.trim(),
+      nameSacerdoteN = nameSacerdote.trim(),
+      nameEsposoN = nameEsposo.trim(),
+      namePadreEsposoN = namePadreEsposo.trim(),
+      nameMadreEsposoN = nameMadreEsposo.trim(),
+      nameEsposaN = nameEsposa.trim(),
+      namePadreEsposaN = namePadreEsposa.trim(),
+      nameMadreEsposaN = nameMadreEsposa.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      ciudadRCivilN = ciudadRCivil.trim(),
+      anioRCivilN = anioRCivil.trim(),
+      tomoRCivilN = tomoRCivil.trim(),
+      pageRCivilN = pageRCivil.trim(),
+      numeroActaRCivilN = numActaRCivil.trim();
+
+   if (
+      fechaMatrimonioN === '' || 
+      nameSacerdoteN === '' || 
+      nameEsposoN === '' || 
+      namePadreEsposoN === '' || 
+      nameMadreEsposoN === '' || 
+      nameEsposaN === '' || 
+      namePadreEsposaN === '' || 
+      nameMadreEsposaN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      ciudadRCivilN === '' || 
+      anioRCivilN === '' || 
+      tomoRCivilN === '' || 
+      pageRCivilN === '' || 
+      numeroActaRCivilN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!moment(fechaMatrimonioN).isValid()) ? 1 : 0;
+      errors += (!spaceLetersVer(nameSacerdoteN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadreEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadreEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadreEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadreEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(ciudadRCivil)) ? 1 : 0;
+      errors += (!numbersVer(anioRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(tomoRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(pageRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(numeroActaRCivilN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const newMatrimonio = {
+               fechaMatrimonio: fechaMatrimonioN,
+               nameSacerdote: nameSacerdoteN,
+               nameEsposo: nameEsposoN,
+               namePadreEsposo: namePadreEsposoN,
+               nameMadreEsposo: nameMadreEsposoN,
+               nameEsposa: nameEsposaN,
+               namePadreEsposa: namePadreEsposaN,
+               nameMadreEsposa: nameMadreEsposaN,
+               namePadrino: namePadrinoN,
+               nameMadrina: nameMadrinaN,
+               ciudadRCivil: ciudadRCivil,
+               anioRCivil: anioRCivilN,
+               tomoRCivil: tomoRCivilN,
+               paginaRCivil: pageRCivilN,
+               numeroActaRCivil: numeroActaRCivilN,
+               idCedula: req.user.cedula
+            };
+
+            const saveMatrimonio = await connectionDB.query(`INSERT INTO matrimonio 
+                                                            SET ?`, [newMatrimonio]);
+            // console.log(saveMatrimonio);
+
+            if (saveMatrimonio.affectedRows === 1) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'DATOS CORRECTOS',
+                  description: 'Se ha guardado con éxito los datos del matrimonio.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'DATOS NO GUARDADOS',
+                  icon: 'error',
+                  description: 'Upss! No se ha guardado los datos en la DB.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.searchMatrimonio = async (req, res) => {
+   const {
+      id
+   } = req.query;
+
+   let ID = id.trim();
+
+   if (ID === '') {
+      res.json({
+         res: 'notData',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      try {
+         const searchData = await connectionDB.query(`SELECT *
+                                                      FROM matrimonio
+                                                      WHERE _id = ?`, ID);
+
+         if (searchData.length > 0) {
+            res.json({
+               res: 'data',
+               searchData: searchData[0]
+            });
+         } else {
+            res.json({
+               res: 'notData',
+               tittle: 'ACTA NO ENCONTRADA',
+               icon: 'error',
+               description: 'Upss! No existe ningún registro con ese ID.'
+            });                                      
+         }
+      } catch (e) {
+         console.log(e);
+         res.json({
+            res: 'notData',
+            tittle: 'SERVER ERROR',
+            icon: 'error',
+            description: 'Upss! Error interno x_x. Intentelo más luego.'
+         });
+      }
+   }
+};
+
+secretariaControllers.updateMatrimonio = async (req, res) => {
+   const {
+      id,
+      fechaMatrimonio,
+      nameSacerdote,
+      nameEsposo,
+      namePadreEsposo,
+      nameMadreEsposo,
+      nameEsposa,
+      namePadreEsposa,
+      nameMadreEsposa,
+      namePadrino,
+      nameMadrina,
+      ciudadRCivil,
+      anioRCivil,
+      tomoRCivil,
+      pageRCivil,
+      numActaRCivil
+   } = req.body;
+
+   let errors = 0,
+      idN = id.trim(),
+      fechaMatrimonioN = fechaMatrimonio.trim(),
+      nameSacerdoteN = nameSacerdote.trim(),
+      nameEsposoN = nameEsposo.trim(),
+      namePadreEsposoN = namePadreEsposo.trim(),
+      nameMadreEsposoN = nameMadreEsposo.trim(),
+      nameEsposaN = nameEsposa.trim(),
+      namePadreEsposaN = namePadreEsposa.trim(),
+      nameMadreEsposaN = nameMadreEsposa.trim(),
+      namePadrinoN = namePadrino.trim(),
+      nameMadrinaN = nameMadrina.trim(),
+      ciudadRCivilN = ciudadRCivil.trim(),
+      anioRCivilN = anioRCivil.trim(),
+      tomoRCivilN = tomoRCivil.trim(),
+      pageRCivilN = pageRCivil.trim(),
+      numeroActaRCivilN = numActaRCivil.trim();
+
+   if (
+      idN === '' || 
+      fechaMatrimonioN === '' || 
+      nameSacerdoteN === '' || 
+      nameEsposoN === '' || 
+      namePadreEsposoN === '' || 
+      nameMadreEsposoN === '' || 
+      nameEsposaN === '' || 
+      namePadreEsposaN === '' || 
+      nameMadreEsposaN === '' || 
+      namePadrinoN === '' || 
+      nameMadrinaN === '' || 
+      ciudadRCivilN === '' || 
+      anioRCivilN === '' || 
+      tomoRCivilN === '' || 
+      pageRCivilN === '' || 
+      numeroActaRCivilN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!moment(fechaMatrimonioN).isValid()) ? 1 : 0;
+      errors += (!spaceLetersVer(nameSacerdoteN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadreEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadreEsposoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadreEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadreEsposaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(ciudadRCivil)) ? 1 : 0;
+      errors += (!numbersVer(anioRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(tomoRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(pageRCivilN)) ? 1 : 0;
+      errors += (!numbersVer(numeroActaRCivilN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const searchData = await connectionDB.query(`SELECT *
+                                                         FROM matrimonio
+                                                         WHERE _id = ?`, idN);
+
+            if (searchData.length > 0) {
+               const updateMatrimonio = {
+                  fechaMatrimonio: fechaMatrimonioN,
+                  nameSacerdote: nameSacerdoteN,
+                  nameEsposo: nameEsposoN,
+                  namePadreEsposo: namePadreEsposoN,
+                  nameMadreEsposo: nameMadreEsposoN,
+                  nameEsposa: nameEsposaN,
+                  namePadreEsposa: namePadreEsposaN,
+                  nameMadreEsposa: nameMadreEsposaN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  ciudadRCivil: ciudadRCivil,
+                  anioRCivil: anioRCivilN,
+                  tomoRCivil: tomoRCivilN,
+                  paginaRCivil: pageRCivilN,
+                  numeroActaRCivil: numeroActaRCivilN,
+                  idCedula: req.user.cedula
+               };
+   
+               const updateSaveMat = await connectionDB.query(`UPDATE matrimonio 
+                                                               SET ?
+                                                               WHERE _id = ?`, [updateMatrimonio, idN]);
+               // console.log(updateSaveMat);
+   
+               if (updateSaveMat.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS ACTUALIZADOS',
+                     description: 'Los datos de la acta han sido actualizados con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO ACTUALIZADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido actualizar los datos de la acta.'
+                  });
+               }
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ENCONTRADA',
+                  icon: 'error',
+                  description: 'Upss! No existe ningún registro con ese ID.'
+               }); 
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+secretariaControllers.deleteMatrimonio = async (req, res) => {
+   const {
+      id
+   } = req.body;
+
+   let errors = 0,
+      idN = id.trim();
+
+   if (
+      idN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!numbersVer(idN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+   
+            const deleteMatrimono = await connectionDB.query(`DELETE 
+                                                            FROM matrimonio 
+                                                            WHERE _id = ?`, idN);
+            // console.log(deleteMatrimono);
+   
+            if (deleteMatrimono.affectedRows === 1) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'ACTA ELIMINADA',
+                  description: 'Se ha eliminado el acta de matrimonio con éxito.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'ACTA NO ELIMINADA',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido eliminar el acta seleccionada.'
                });
             }
          } catch (e) {

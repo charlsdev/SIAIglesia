@@ -35,29 +35,26 @@
       <div class="container p-30">
          <div class="row">
             <div class="col-md-12 tittleSEC">
-               <div class="service__title">Bautizos</div>
+               <div class="service__title">Comuniones</div>
             </div>
          </div>
 
          <div class="row">
             <div class="col-md-3">
-               <button class="btn__Add" onclick="modalNewBautizo()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
+               <button class="btn__Add" onclick="modalComunion()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
          </div>
 
          <div class="row tableUI">
             <div class="col-md-12">
-               <table id="listBautizos" class="table is-striped table-striped table-bordered tableList">
+               <table id="listComuniones" class="table is-striped table-striped table-bordered tableList">
                   <thead>
                      <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Cédula</th>
                         <th nowrap scope="col">Nombres Completos</th>
-                        <th scope="col">Sacerdote</th>
-                        <th scope="col">Año</th>
-                        <th scope="col">N° Tomo</th>
-                        <th scope="col">N° Página</th>
-                        <th scope="col">N° Registro</th>
-                        {{!-- <th scope="col">Teléfono</th> --}}
+                        <th scope="col">Año Sacramento</th>
+                        <th nowrap scope="col">Catequista</th>
                         <th scope="col"></th>
                      </tr>
                   </thead>
@@ -81,13 +78,13 @@
       <script src="/dataTables/dataTables.responsive.min.js"></script>
       <script src="/dataTables/theme/responsive.bulma.min.js"></script>
 
-      {{!-- Modal Register New Bautizo --}}
-      <div class="modal fade" id="modalNewBautizo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      {{!-- Modal Register New Comunion --}}
+      <div class="modal fade" id="modalComunion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
          <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                <div class="modal-header header__modal">
                   <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
-                     Registrar Bautizo
+                     Registrar Comunión
                   </h5>
                </div>
 
@@ -101,6 +98,19 @@
                   </div>
 
                   <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-credit-card-front bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Cédula</label>
+                              <input type="text" class="form__input" name="cedula" id="cedula" onkeypress="return numeros(event)" onkeyUp="return Cedula(this);" required>
+                           </div>
+                        </div>
+                     </div>
+
                      <div class="col-md-6">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
@@ -126,31 +136,16 @@
                            </div>
                         </div>
                      </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-6">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-been-here bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Lugar de nacimiento</label>
-                              <input type="text" class="form__input" name="homeNacimiento" id="homeNacimiento" required>
-                           </div>
-                        </div>
-                     </div>
 
                      <div class="col-md-6">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
-                              <i class='bx bx-been-here bx-tada' ></i>
+                              <i class='bx bx-calendar-star bx-tada' ></i>
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Fecha de nacimiento</label>
-                              <input type="date" class="form__input" name="dateNacimiento" id="dateNacimiento" onkeypress="return letra(event)" required>
+                              <label for="" class="form__label">Año Sacramento</label>
+                              <input type="text" class="form__input" name="anioSacramento" id="anioSacramento" maxlength="4" onkeypress="return numeros(event)" required>
                            </div>
                         </div>
                      </div>
@@ -218,151 +213,14 @@
 
                   <div class="row">
                      <div class="col-md-12">
-                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
+                        <div class="form__div form__div-one">
                            <div class="form__icon">
                               <i class='bx bxs-group bx-tada' ></i>
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Nombres del sacerdote</label>
-                              <input type="text" class="form__input" name="nameSacerdote" id="nameSacerdote" onkeypress="return letra(event)" required>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12 justify-content-center">
-                        <h5 class="tittle__description" id="staticBackdropLabel">
-                           Datos Parroquiales
-                        </h5>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-calendar bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Año</label>
-                              <input type="text" class="form__input" name="anioParroquia" id="anioParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-notepad bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Tomo</label>
-                              <input type="text" class="form__input" name="tomoParroquia" id="tomoParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-book-open bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Página</label>
-                              <input type="text" class="form__input" name="pageParroquia" id="pageParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-hash bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Número</label>
-                              <input type="text" class="form__input" name="numeroParroquia" id="numeroParroquia" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12 justify-content-center">
-                        <h5 class="tittle__description" id="staticBackdropLabel">
-                           Datos Registro Civil
-                        </h5>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-building-house bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Ciudad</label>
-                              <input type="text" class="form__input" name="ciudadRCivil" id="ciudadRCivil" onkeypress="return letra(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one" style="margin-bottom: 1rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-hash bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Número</label>
-                              <input type="text" class="form__input" name="numeroRCivil" id="numeroRCivil" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-notepad bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Tomo</label>
-                              <input type="text" class="form__input" name="tomoRCivil" id="tomoRCivil" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4">
-                        <div class="form__div form__div-one" style="margin-bottom: .5rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-book-open bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Página</label>
-                              <input type="text" class="form__input" name="pageRCivil" id="pageRCivil" onkeypress="return numeros(event)" required>
-                           </div>
-                        </div>
-                     </div>
-
-                     <div class="col-md-5">
-                        <div class="form__div form__div-one" style="margin-bottom: .5rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-hash bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Número de acta</label>
-                              <input type="text" class="form__input" name="numActaRCivil" id="numActaRCivil" onkeypress="return numeros(event)" required>
+                              <label for="" class="form__label">Nombres completos del o la catequista</label>
+                              <input type="text" class="form__input" name="nameCatequista" id="nameCatequista" onkeypress="return letra(event)" required>
                            </div>
                         </div>
                      </div>
@@ -381,69 +239,63 @@
       <script src="/js/login.min.js"></script>
 
       <script>
-         const modalNewBautizo = () => {
+         const modalComunion = () => {
             bloqueointerface();
+            $("#cedula").prop('disabled', false);
             $(".form__div-one").removeClass("focus");
             $("button").remove('.btn__Send');
 
-            document.querySelector('.tittle__modal').innerHTML = 'Registrar Bautizo';
-            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveBautizo()">Enviar</button>';
+            document.querySelector('.tittle__modal').innerHTML = 'Registrar Comunión';
+            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveComunion()">Enviar</button>';
             
+            $('#cedula').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
-            $('#homeNacimiento').val('');
-            $('#dateNacimiento').val('');
+            $('#anioSacramento').val('');
             $('#nameFather').val('');
             $('#nameMother').val('');
             $('#namePadrino').val('');
             $('#nameMadrina').val('');
-            $('#nameSacerdote').val('');
-            $('#anioParroquia').val('');
-            $('#tomoParroquia').val('');
-            $('#pageParroquia').val('');
-            $('#numeroParroquia').val('');
-            $('#ciudadRCivil').val('');
-            $('#numeroRCivil').val('');
-            $('#tomoRCivil').val('');
-            $('#pageRCivil').val('');
-            $('#numActaRCivil').val('');
+            $('#nameCatequista').val('');
             
-            $('#modalNewBautizo').modal('show');
+            $('#modalComunion').modal('show');
             desbloqueointerface();
          }
 
          $(document).ready(function() {
-            listBautizo = $('#listBautizos').DataTable({
+            listComunion = $('#listComuniones').DataTable({
                destroy: true,
                "ajax": {
-                  "url": '/s/getBautizos',
+                  "url": '/s/getComuniones',
                   "dataSrc":""
                },
                "columns": [
                   {"data": "_id"},
+                  {"data": "cedula"},
                   {"data": null,
                         render: function ( data, type, row ) {
                            return row.apellidos + ' ' + row.nombres;
                         }
                   },
-                  {"data": "nameSacerdote"},
-                  {"data": "anioRParroquial"},
-                  {"data": "tomoRParroquial"},
-                  {"data": "paginaRParroquial"},
-                  {"data": "numeroRParroquial"},
+                  {"data": "anioSacramento"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.nameCatequista ;
+                        }
+                  },
                   {"data": null,
                         render: function ( data, type, row ) {
                            return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
                            <div class="dropdown-menu 1 menuD"> 
-                              <a class="dropdown-item" onclick="editBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="editComunion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="deleteComunion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
                               </a> 
-                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="generatePDF('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bxs-file-pdf' ></i>
                                  Generar Acta 
                               </a>`;
@@ -485,45 +337,27 @@
             }
          }
 
-         const saveBautizo = () => {
+         const saveComunion = () => {
+            cedula = $.trim($('#cedula').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
-            homeNacimiento = $.trim($('#homeNacimiento').val());
-            dateNacimiento = $.trim($('#dateNacimiento').val());
+            anioSacramento = $.trim($('#anioSacramento').val());
             nameFather = $.trim($('#nameFather').val());
             nameMother = $.trim($('#nameMother').val());
             namePadrino = $.trim($('#namePadrino').val());
             nameMadrina = $.trim($('#nameMadrina').val());
-            nameSacerdote = $.trim($('#nameSacerdote').val());
-            anioParroquia = $.trim($('#anioParroquia').val());
-            tomoParroquia = $.trim($('#tomoParroquia').val());
-            pageParroquia = $.trim($('#pageParroquia').val());
-            numeroParroquia = $.trim($('#numeroParroquia').val());
-            ciudadRCivil = $.trim($('#ciudadRCivil').val());
-            numeroRCivil = $.trim($('#numeroRCivil').val());
-            tomoRCivil = $.trim($('#tomoRCivil').val());
-            pageRCivil = $.trim($('#pageRCivil').val());
-            numActaRCivil = $.trim($('#numActaRCivil').val());
+            nameCatequista = $.trim($('#nameCatequista').val());
 
             if (
+               cedula === '' || 
                apellidos === '' || 
                nombres === '' || 
-               homeNacimiento === '' || 
-               dateNacimiento === '' || 
+               anioSacramento === '' || 
                nameFather === '' || 
                nameMother === '' || 
                namePadrino === '' || 
                nameMadrina === '' || 
-               nameSacerdote === '' || 
-               anioParroquia === '' || 
-               tomoParroquia === '' || 
-               pageParroquia === '' || 
-               numeroParroquia === '' || 
-               ciudadRCivil === '' || 
-               numeroRCivil === '' || 
-               tomoRCivil === '' || 
-               pageRCivil === '' || 
-               numActaRCivil === ''
+               nameCatequista === ''
             ) {
                Swal.fire({
                   position: 'top-end',
@@ -539,8 +373,8 @@
                })
             } else {
                Swal.fire({
-                  title: `GUARDAR REGISTRO DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  title: `GUARDAR REGISTRO DE COMUNIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de comunión?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -559,28 +393,19 @@
                      bloqueointerface();
 
                      $.ajax({
-                        url: `/s/saveBautizo`,
+                        url: `/s/saveComunion`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
+                           cedula,
                            apellidos,
                            nombres,
-                           homeNacimiento,
-                           dateNacimiento,
+                           anioSacramento,
                            nameFather,
                            nameMother,
                            namePadrino,
                            nameMadrina,
-                           nameSacerdote,
-                           anioParroquia,
-                           tomoParroquia,
-                           pageParroquia,
-                           numeroParroquia,
-                           ciudadRCivil,
-                           numeroRCivil,
-                           tomoRCivil,
-                           pageRCivil,
-                           numActaRCivil
+                           nameCatequista
                         }
                      })
                      .done(function(res) {
@@ -597,8 +422,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalComunion").modal('hide');
+                                 listComunion.ajax.reload(null, false);
                               }
                            })
                         }
@@ -621,33 +446,24 @@
             }
          }
 
-         const editBautizo = (id, name, apell) => {
+         const editComunion = (cedula, name, apell) => {
             $("button").remove('.btn__Send');
 
-            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Bautizo';
+            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Comunion';
             
+            $('#cedula').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
-            $('#homeNacimiento').val('');
-            $('#dateNacimiento').val('');
+            $('#anioSacramento').val('');
             $('#nameFather').val('');
             $('#nameMother').val('');
             $('#namePadrino').val('');
             $('#nameMadrina').val('');
-            $('#nameSacerdote').val('');
-            $('#anioParroquia').val('');
-            $('#tomoParroquia').val('');
-            $('#pageParroquia').val('');
-            $('#numeroParroquia').val('');
-            $('#ciudadRCivil').val('');
-            $('#numeroRCivil').val('');
-            $('#tomoRCivil').val('');
-            $('#pageRCivil').val('');
-            $('#numActaRCivil').val('');
+            $('#nameCatequista').val('');
 
             Swal.fire({
-               title: `EDITAR ACTA DE BAUTIZO`,
-               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de bautizo de <b>${apell} ${name}</b>?</p>`,
+               title: `EDITAR ACTA DE COMUNIÓN`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de comunión de <b>${apell} ${name}</b>?</p>`,
                imageUrl: '/img/SMMIglesia.png',
                imageWidth: 80,
                imageHeight: 100,
@@ -666,38 +482,30 @@
                   bloqueointerface();
 
                   $.ajax({
-                     url: `/s/searchBautizo`,
+                     url: `/s/searchComunion`,
                      type: 'GET',
                      dataType: 'json',
                      data: {
-                        id
+                        cedula
                      }
                   })
                   .done(function(res) {
                      if (res.res === 'data') {
+                        $('#cedula').val(`${res.searchData.cedula}`);
                         $('#apellidos').val(`${res.searchData.apellidos}`);
                         $('#nombres').val(`${res.searchData.nombres}`);
-                        $('#homeNacimiento').val(`${res.searchData.lugarNacimiento}`);
-                        $('#dateNacimiento').val(`${res.searchData.fechaNacimiento}`);
+                        $('#anioSacramento').val(`${res.searchData.anioSacramento}`);
                         $('#nameFather').val(`${res.searchData.namePadre}`);
                         $('#nameMother').val(`${res.searchData.nameMadre}`);
                         $('#namePadrino').val(`${res.searchData.namePadrino}`);
                         $('#nameMadrina').val(`${res.searchData.nameMadrina}`);
-                        $('#nameSacerdote').val(`${res.searchData.nameSacerdote}`);
-                        $('#anioParroquia').val(`${res.searchData.anioRParroquial}`);
-                        $('#tomoParroquia').val(`${res.searchData.tomoRParroquial}`);
-                        $('#pageParroquia').val(`${res.searchData.paginaRParroquial}`);
-                        $('#numeroParroquia').val(`${res.searchData.numeroRParroquial}`);
-                        $('#ciudadRCivil').val(`${res.searchData.ciudadRCivil}`);
-                        $('#numeroRCivil').val(`${res.searchData.numeroRCivil}`);
-                        $('#tomoRCivil').val(`${res.searchData.tomoRCivil}`);
-                        $('#pageRCivil').val(`${res.searchData.paginaRCivil}`);
-                        $('#numActaRCivil').val(`${res.searchData.numeroActaRCivil}`);
+                        $('#nameCatequista').val(`${res.searchData.nameCatequista}`);
 
-                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateBautizo('${res.searchData._id}')">Actualizar</button>`;
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateComunion('${res.searchData.cedula}')">Actualizar</button>`;
 
                         $(".form__div-one").addClass("focus");
-                        $('#modalNewBautizo').modal('show');
+                        $("#cedula").prop('disabled', true);
+                        $('#modalComunion').modal('show');
                         desbloqueointerface();
                      }
 
@@ -720,47 +528,27 @@
             })
          }
 
-         const updateBautizo = (id) => {
-            id = $.trim(id);
+         const updateComunion = (cedula) => {
+            cedula = $.trim($('#cedula').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
-            homeNacimiento = $.trim($('#homeNacimiento').val());
-            dateNacimiento = $.trim($('#dateNacimiento').val());
+            anioSacramento = $.trim($('#anioSacramento').val());
             nameFather = $.trim($('#nameFather').val());
             nameMother = $.trim($('#nameMother').val());
             namePadrino = $.trim($('#namePadrino').val());
             nameMadrina = $.trim($('#nameMadrina').val());
-            nameSacerdote = $.trim($('#nameSacerdote').val());
-            anioParroquia = $.trim($('#anioParroquia').val());
-            tomoParroquia = $.trim($('#tomoParroquia').val());
-            pageParroquia = $.trim($('#pageParroquia').val());
-            numeroParroquia = $.trim($('#numeroParroquia').val());
-            ciudadRCivil = $.trim($('#ciudadRCivil').val());
-            numeroRCivil = $.trim($('#numeroRCivil').val());
-            tomoRCivil = $.trim($('#tomoRCivil').val());
-            pageRCivil = $.trim($('#pageRCivil').val());
-            numActaRCivil = $.trim($('#numActaRCivil').val());
+            nameCatequista = $.trim($('#nameCatequista').val());
 
             if (
-               id === '' || 
+               cedula === '' || 
                apellidos === '' || 
                nombres === '' || 
-               homeNacimiento === '' || 
-               dateNacimiento === '' || 
+               anioSacramento === '' || 
                nameFather === '' || 
                nameMother === '' || 
                namePadrino === '' || 
                nameMadrina === '' || 
-               nameSacerdote === '' || 
-               anioParroquia === '' || 
-               tomoParroquia === '' || 
-               pageParroquia === '' || 
-               numeroParroquia === '' || 
-               ciudadRCivil === '' || 
-               numeroRCivil === '' || 
-               tomoRCivil === '' || 
-               pageRCivil === '' || 
-               numActaRCivil === ''
+               nameCatequista === ''
             ) {
                Swal.fire({
                   position: 'top-end',
@@ -776,8 +564,8 @@
                })
             } else {
                Swal.fire({
-                  title: `GUARDAR REGISTRO DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de bautizo?</p>`,
+                  title: `GUARDAR REGISTRO DE COMUNIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas actualizar y guardar el registro de comunión?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -796,29 +584,19 @@
                      bloqueointerface();
 
                      $.ajax({
-                        url: `/s/updateBautizo`,
+                        url: `/s/updateComunion`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                           id,
+                           cedula,
                            apellidos,
                            nombres,
-                           homeNacimiento,
-                           dateNacimiento,
+                           anioSacramento,
                            nameFather,
                            nameMother,
                            namePadrino,
                            nameMadrina,
-                           nameSacerdote,
-                           anioParroquia,
-                           tomoParroquia,
-                           pageParroquia,
-                           numeroParroquia,
-                           ciudadRCivil,
-                           numeroRCivil,
-                           tomoRCivil,
-                           pageRCivil,
-                           numActaRCivil
+                           nameCatequista
                         }
                      })
                      .done(function(res) {
@@ -835,8 +613,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalComunion").modal('hide');
+                                 listComunion.ajax.reload(null, false);
                               }
                            })
                         }
@@ -859,11 +637,11 @@
             }
          }
 
-         const deleteBautizo = (id, name, apell) => {
-            id = $.trim(id);
+         const deleteComunion = (cedula, name, apell) => {
+            cedula = $.trim(cedula);
 
             if (
-               id === ''
+               cedula === ''
             ) {
                Swal.fire({
                   position: 'top-end',
@@ -879,8 +657,8 @@
                })
             } else {
                Swal.fire({
-                  title: `ELIMINAR ACTA DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de bautizo de <b>${apell} ${name}</b>?</p>`,
+                  title: `ELIMINAR ACTA DE COMUNIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de comunión de <b>${apell} ${name}</b>?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -897,11 +675,11 @@
                }).then((result) => {
                   if (result.value == true) {
                      $.ajax({
-                        url: `/s/deleteBautizo`,
+                        url: `/s/deleteComunion`,
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                           id
+                           cedula
                         }
                      })
                      .done(function(res) {
@@ -918,8 +696,8 @@
                               allowOutsideClick: false
                            }).then((result) => {
                               if (result.value == true) {
-                                 $("#modalNewBautizo").modal('hide');
-                                 listBautizo.ajax.reload(null, false);
+                                 $("#modalComunion").modal('hide');
+                                 listComunion.ajax.reload(null, false);
                               }
                            })
                         }
