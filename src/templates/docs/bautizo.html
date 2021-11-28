@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Certificado de Bautizo</title>
+
+      <style>
+         @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+         
+         body {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'PT Sans', sans-serif;
+         }
+         /* table, th, td {
+            border:1px solid black;
+         } */
+         table {
+            width: 100%;
+         }
+         .encabezado {
+            margin: 10px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+         }
+         .imgEnc {
+            width: 30%;
+         }
+         .encabezado img {
+            width: 85px;
+         }
+         .datosIglesia {
+            width: 100%;
+         }
+         .encabezado .datosIglesia {
+            text-align: center;
+         }
+         .encabezado .datosIglesia .title {
+            margin: 5px;
+            font-size: 22px;
+            font-weight: bold;
+         }
+         .encabezado div {
+            margin-top: 35px;
+         }
+         .encabezado .textInfo {
+            font-size: 1.025rem;
+            font-weight: 500;
+         }
+         .encabezado .textInfo .resalt{
+            font-weight: bold !important;
+            font-style: oblique;
+         }
+         .encabezado .nameUser {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            padding-right: 10px;
+            padding-left: 10px;
+         }
+         .encabezado .textBody,
+         .encabezado .textBodyDer {
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: justify;
+            padding: 0 2rem;
+         }
+         .encabezado .datesBau {
+            font-weight: bold;
+         }
+         .anexosNameCenter {
+            margin: 15px !important;
+            text-align: center;
+         }
+         .linear, .firma {
+            border: 1px dotted #000;
+         }
+         .copiaEx {
+            font-size: .923rem;
+         }
+         .encabezado .imgEnc .titleDer {
+            font-size: 1rem;
+            font-style: oblique;
+            font-weight: bold !important;
+         }
+         .encabezado .textBodyDer {
+            padding: 0 !important;
+         }
+         .encabezado .textInfoDer {
+            font-size: 1rem;
+            margin-top: 5px;
+            padding: 0 15px;
+            font-weight: bold;
+         }
+         .encabezado .imgEnc .textBodyDer .textInfoDer .bold {
+            font-style: oblique;
+            font-weight: bold !important;
+         }
+      </style>
+   </head>
+   <body>
+      <table>
+         <tbody>
+            <tr class="encabezado">
+               <th class="imgEnc">
+                  <img src="https://drive.google.com/uc?export=view&id=16yXk-jYPawir1QAyj0DOdqOyYBhjbOBd">
+
+                  <h3 class="titleDer">PARROQUIA</h3>
+                  
+                  <h3 class="titleDer">"SANTA MARÍA MADRE"</h3>
+
+                  <div class="textBodyDer">
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           JIPIJAPA
+                        </span> <br>
+                        <span class="copiaEx">
+                           Manabí - Ecuador
+                        </span> <br>
+                        <span class="copiaEx">
+                           Teléfono: 2601-031
+                        </span>
+                     </div>
+                  </div>
+
+                  <div class="textBodyDer">
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           REGISTRO PARROQUIAL
+                        </span>
+                     </div>
+
+                     <div class="textInfoDer">
+                        AÑO: 
+                        <span class="bold">{{data.anioRParroquial}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        TOMO: 
+                        <span class="bold">{{data.tomoRParroquial}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        PAGINA: 
+                        <span class="bold">{{data.paginaRParroquial}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        NUMERO: 
+                        <span class="bold">{{data.numeroRParroquial}}</span>
+                     </div>
+                  </div>
+
+                  <div class="textBodyDer">
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           REGISTRO CIVIL
+                        </span>
+                     </div>
+
+                     <div class="textInfoDer">
+                        DE: 
+                        <span class="bold">{{data.ciudadRCivil}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        N° TOMO: 
+                        <span class="bold">{{data.tomoRCivil}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        PAGINA: 
+                        <span class="bold">{{data.paginaRCivil}}</span>
+                     </div>
+                     <div class="textInfoDer">
+                        N° ACTA: 
+                        <span class="bold">{{data.numeroActaRCivil}}</span>
+                     </div>
+                  </div>
+
+                  <div class="textBodyDer">
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           OBSERVACIONES:
+                        </span>
+                     </div>
+                     <div class="anexosNameCenter">
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                     </div>
+                  </div>
+               </th>
+
+               <th class="datosIglesia">
+                  <h3 class="title">ARQUIDIOCESIS DE PORTOVIEJO</h3>
+                  
+                  <h3 class="title">PARROQUIA SANTA MARÍA MADRE</h3>
+
+                  <div class="textInfo">
+                     En la Parroquia 
+                        <span class="resalt">Santa María Madre</span> 
+                     de Jipijapa
+                  </div> 
+
+                  <div class="nameUser">
+                     {{data.nombres}} {{data.apellidos}}
+                  </div>
+
+                  <div class="textBody">
+                     Fue bautizada(o) solemnemente: El día 
+                     <span class="datesBau">{{data.fechaBautizo}}</span>
+                  </div>
+
+                  <div class="textBody">
+                     Nacida en 
+                     <span class="datesBau">{{data.lugarNacimiento}}</span>
+                     el día  
+                     <span class="datesBau">{{data.fechaNacimiento}}</span>
+                  </div>
+
+                  <div class="textBody">
+                     Hija(o) de:
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           {{data.namePadre}}
+                        </span>
+                        <br>
+                        <span class="datesBau">
+                           {{data.nameMadre}}
+                        </span>
+                     </div>
+                  </div>
+
+                  <div class="textBody">
+                     Fueron Padrinos:
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           {{data.namePadrino}}
+                        </span>
+                        <br>
+                        <span class="datesBau">
+                           {{data.nameMadrina}}
+                        </span>
+                     </div>
+                  </div>
+                  
+                  <div class="textBody">
+                     Nota marginal:
+                     <div class="anexosNameCenter">
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                        <p class="linear"></p>
+                     </div>
+                  </div>
+                  
+                  <div class="textBody">
+                     Sacerdote que bautizó:
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           {{data.nameSacerdote}}
+                        </span>
+                     </div>
+                  </div>
+                  
+                  <div class="textBody">
+                     <div class="anexosNameCenter">
+                        <span class="copiaEx">
+                           Es copia fiel y exacta de la partida original
+                        </span>
+                     </div>
+                     <div class="anexosNameCenter">
+                        <span class="datesBau">
+                           LO CERTIFICO:
+                        </span>
+                     </div>
+                  </div>
+                  
+                  <div class="textBody">
+                     <div class="anexosNameCenter">
+                        <span class="copiaEx">
+                           Jipijapa, {{data.dateNow}}
+                        </span>
+                     </div>
+                  </div>
+                  
+                  <div class="textBody">
+                     <div class="anexosNameCenter">
+                        <span class="copiaEx">
+                           ..................................................
+                        </span>
+                        <br>
+                        <span class="datesBau">
+                           {{data.nameSacerdoteNow}}
+                        </span>
+                        <br>
+                        <span class="datesBau" style="margin-top: 20px;">
+                           PÁRROCO
+                        </span>
+                     </div>
+                  </div>
+               </th>
+            </tr>
+         </tbody>            
+      </table>
+   </body>
+</html>

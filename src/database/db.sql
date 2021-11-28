@@ -47,6 +47,7 @@ CREATE TABLE `bautizo` (
    `namePadrino` varchar(100) NOT NULL,
    `nameMadrina` varchar(100) NOT NULL,
    `nameSacerdote` varchar(100) NOT NULL,
+   `fechaBautizo` varchar(10) NOT NULL,
    `anioRParroquial` int(4) NOT NULL,
    `tomoRParroquial` int(8) NOT NULL,
    `paginaRParroquial` int(8) NOT NULL,

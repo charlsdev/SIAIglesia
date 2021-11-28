@@ -1,4 +1,8 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
+const fse = require('fs-extra');
+const pdf = require('pdf-creator-node');
+const configPDF  = require('../helpers/optionsPDF');
 const moment = require('moment');
 moment.locale('es');
 
@@ -552,7 +556,7 @@ secretariaControllers.getBautizos = async (req, res) => {
 
    try {
       listBautizos = await connectionDB.query(` SELECT 
-                                                      _id, apellidos, nombres, fechaNacimiento,nameSacerdote, anioRParroquial, tomoRParroquial, paginaRParroquial, numeroRParroquial
+                                                      _id, apellidos, nombres, fechaBautizo,nameSacerdote, anioRParroquial, tomoRParroquial, paginaRParroquial, numeroRParroquial
                                                 FROM bautizo`);
 
       res.json(
@@ -565,6 +569,7 @@ secretariaControllers.getBautizos = async (req, res) => {
 
 secretariaControllers.saveBautizo = async (req, res) => {
    const {
+      dateBautizo,
       apellidos,
       nombres,
       homeNacimiento,
@@ -586,6 +591,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
    } = req.body;
 
    let errors = 0,
+      dateBautizoN = dateBautizo.trim(),
       apellidosN = apellidos.trim(),
       nombresN = nombres.trim(),
       homeNacimientoN = homeNacimiento.trim(),
@@ -606,6 +612,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
       numActaRCivilN = numActaRCivil.trim();
 
    if (
+      dateBautizoN === '' || 
       apellidosN === '' || 
       nombresN === '' || 
       homeNacimientoN === '' || 
@@ -632,9 +639,11 @@ secretariaControllers.saveBautizo = async (req, res) => {
          description: 'Los campos no pueden ir vacios o con espacios.'
       });
    } else {
+      errors += (!moment(dateBautizoN).isValid()) ? 1 : 0;
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
       errors += (!verNumberAndLetters(homeNacimientoN)) ? 1 : 0;
+      errors += (!moment(dateNacimientoN).isValid()) ? 1 : 0;
       errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
       errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
@@ -669,6 +678,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
                namePadrino: namePadrinoN,
                nameMadrina: nameMadrinaN,
                nameSacerdote: nameSacerdoteN,
+               fechaBautizo: dateBautizoN,
                anioRParroquial: anioParroquiaN,
                tomoRParroquial: tomoParroquiaN,
                paginaRParroquial: pageParroquiaN,
@@ -770,6 +780,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       namePadrino,
       nameMadrina,
       nameSacerdote,
+      dateBautizo,
       anioParroquia,
       tomoParroquia,
       pageParroquia,
@@ -792,6 +803,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       namePadrinoN = namePadrino.trim(),
       nameMadrinaN = nameMadrina.trim(),
       nameSacerdoteN = nameSacerdote.trim(),
+      dateBautizoN = dateBautizo.trim(),
       anioParroquiaN = anioParroquia.trim(),
       tomoParroquiaN = tomoParroquia.trim(),
       pageParroquiaN = pageParroquia.trim(),
@@ -813,6 +825,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       namePadrinoN === '' || 
       nameMadrinaN === '' || 
       nameSacerdoteN === '' || 
+      dateBautizoN === '' || 
       anioParroquiaN === '' || 
       tomoParroquiaN === '' || 
       pageParroquiaN === '' || 
@@ -834,11 +847,13 @@ secretariaControllers.updateBautizo = async (req, res) => {
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
       errors += (!spaceLetersVer(homeNacimientoN)) ? 1 : 0;
+      errors += (!moment(dateNacimientoN).isValid()) ? 1 : 0;
       errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
       errors += (!spaceLetersVer(namePadrinoN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameMadrinaN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameSacerdoteN)) ? 1 : 0;
+      errors += (!moment(dateBautizoN).isValid()) ? 1 : 0;
       errors += (!numbersVer(anioParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(tomoParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(pageParroquiaN)) ? 1 : 0;
@@ -873,6 +888,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
                   namePadrino: namePadrinoN,
                   nameMadrina: nameMadrinaN,
                   nameSacerdote: nameSacerdoteN,
+                  fechaBautizo: dateBautizoN,
                   anioRParroquial: anioParroquiaN,
                   tomoRParroquial: tomoParroquiaN,
                   paginaRParroquial: pageParroquiaN,
@@ -984,6 +1000,88 @@ secretariaControllers.deleteBautizo = async (req, res) => {
                icon: 'error',
                description: 'Upss! Error interno x_x. Intentelo más luego.'
             });
+         }
+      }
+   }
+};
+
+secretariaControllers.downloadPDFBautizo = async (req, res) => {
+   let errors = 0,
+      idBauN = req.params.idBau.trim();
+
+   if (
+      idBauN === ''
+   ) {
+      req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
+      res.redirect('/s/bautizos');
+   } else {
+      errors += (!numbersVer(idBauN)) ? 1 : 0;
+
+      if (errors > 0) {
+         req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
+         res.redirect('/s/bautizos');
+      } else {
+         try {
+   
+            const dataBautizo = await connectionDB.query(`SELECT *
+                                                         FROM bautizo
+                                                         WHERE _id = ?`, idBauN);
+            // console.log(dataBautizo);
+   
+            if (!dataBautizo) {
+               req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
+               res.redirect('/s/bautizos');
+            } else {
+               try {
+                  const html = fse.readFileSync(path.join(__dirname, '../templates/docs/bautizo.html'), 'utf-8');
+
+                  const paramsHTML = {
+                     apellidos: dataBautizo[0].apellidos.toUpperCase(),
+                     nombres: dataBautizo[0].nombres.toUpperCase(),
+                     lugarNacimiento: dataBautizo[0].lugarNacimiento.toUpperCase(),
+                     fechaNacimiento: moment(dataBautizo[0].fechaNacimiento).format('LL').toUpperCase(),
+                     namePadre: dataBautizo[0].namePadre.toUpperCase(),
+                     nameMadre: dataBautizo[0].nameMadre.toUpperCase(),
+                     namePadrino: dataBautizo[0].namePadrino.toUpperCase(),
+                     nameMadrina: dataBautizo[0].nameMadrina.toUpperCase(),
+                     nameSacerdote: dataBautizo[0].nameSacerdote.toUpperCase(),
+                     fechaBautizo: moment(dataBautizo[0].fechaBautizo).format('LL').toUpperCase(),
+                     anioRParroquial: dataBautizo[0].anioRParroquial,
+                     tomoRParroquial: dataBautizo[0].tomoRParroquial,
+                     paginaRParroquial: dataBautizo[0].paginaRParroquial,
+                     numeroRParroquial: dataBautizo[0].numeroRParroquial,
+                     ciudadRCivil: dataBautizo[0].ciudadRCivil.toUpperCase(),
+                     numeroRCivil: dataBautizo[0].numeroRCivil,
+                     tomoRCivil: dataBautizo[0].tomoRCivil,
+                     paginaRCivil: dataBautizo[0].paginaRCivil,
+                     numeroActaRCivil: dataBautizo[0].numeroActaRCivil,
+                     nameSacerdoteNow: process.env.nameSacerdoteNow,
+                     dateNow: moment().format('LL').toUpperCase()
+                  };
+
+                  const filename = `${dataBautizo[0].apellidos} ${dataBautizo[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
+
+                  const document = {
+                     html: html,
+                     data: {
+                        data: paramsHTML
+                     },
+                     path: path.join(__dirname, '../actas/') + filename
+                  };
+
+                  await pdf.create(document, configPDF);
+
+                  var data = path.join(__dirname, '../actas/' + filename);
+                  res.download(data, filename);
+
+               } catch (e) {
+                  console.log(e);
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
+            res.redirect('/s/bautizos');
          }
       }
    }

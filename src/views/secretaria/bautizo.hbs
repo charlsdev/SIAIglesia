@@ -40,6 +40,13 @@
          </div>
 
          <div class="row">
+               <div class="col-md-6 mx-auto">
+                  {{> alerts}}
+                  {{> errors}}
+               </div>
+            </div>
+
+         <div class="row">
             <div class="col-md-3">
                <button class="btn__Add" onclick="modalNewBautizo()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
@@ -53,6 +60,7 @@
                         <th scope="col">ID</th>
                         <th nowrap scope="col">Nombres Completos</th>
                         <th scope="col">Sacerdote</th>
+                        <th scope="col">Fecha Bautizo</th>
                         <th scope="col">Año</th>
                         <th scope="col">N° Tomo</th>
                         <th scope="col">N° Página</th>
@@ -97,6 +105,21 @@
                         <h5 class="tittle__description">
                            Datos Básicos
                         </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-been-here bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Fecha de nacimiento</label>
+                              <input type="date" class="form__input" name="dateBautizo" id="dateBautizo" required>
+                           </div>
+                        </div>
                      </div>
                   </div>
 
@@ -389,6 +412,7 @@
             document.querySelector('.tittle__modal').innerHTML = 'Registrar Bautizo';
             document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveBautizo()">Enviar</button>';
             
+            $('#dateBautizo').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
             $('#homeNacimiento').val('');
@@ -427,6 +451,7 @@
                         }
                   },
                   {"data": "nameSacerdote"},
+                  {"data": "fechaBautizo"},
                   {"data": "anioRParroquial"},
                   {"data": "tomoRParroquial"},
                   {"data": "paginaRParroquial"},
@@ -442,11 +467,13 @@
                               <a class="dropdown-item" onclick="deleteBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
-                              </a> 
-                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
-                                 <i class='bx bxs-file-pdf' ></i>
-                                 Generar Acta 
-                              </a>`;
+                              </a>
+                              <form id="urlReportPDF" method="GET" action="downloadPDFBautizo/${row._id}">
+                                 <a class="dropdown-item" onclick="reportPDF()"> 
+                                    <i class='bx bxs-file-pdf' ></i>
+                                    Generar Acta 
+                                 </a>
+                              </form>`;
                         }
                   },
                ],
@@ -486,6 +513,7 @@
          }
 
          const saveBautizo = () => {
+            dateBautizo = $.trim($('#dateBautizo').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
             homeNacimiento = $.trim($('#homeNacimiento').val());
@@ -506,6 +534,7 @@
             numActaRCivil = $.trim($('#numActaRCivil').val());
 
             if (
+               dateBautizo === '' || 
                apellidos === '' || 
                nombres === '' || 
                homeNacimiento === '' || 
@@ -563,6 +592,7 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
+                           dateBautizo,
                            apellidos,
                            nombres,
                            homeNacimiento,
@@ -626,6 +656,7 @@
 
             document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Bautizo';
             
+            $('#dateBautizo').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
             $('#homeNacimiento').val('');
@@ -675,6 +706,7 @@
                   })
                   .done(function(res) {
                      if (res.res === 'data') {
+                        $('#dateBautizo').val(`${res.searchData.fechaBautizo}`);
                         $('#apellidos').val(`${res.searchData.apellidos}`);
                         $('#nombres').val(`${res.searchData.nombres}`);
                         $('#homeNacimiento').val(`${res.searchData.lugarNacimiento}`);
@@ -722,6 +754,7 @@
 
          const updateBautizo = (id) => {
             id = $.trim(id);
+            dateBautizo = $.trim($('#dateBautizo').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
             homeNacimiento = $.trim($('#homeNacimiento').val());
@@ -743,6 +776,7 @@
 
             if (
                id === '' || 
+               dateBautizo === '' || 
                apellidos === '' || 
                nombres === '' || 
                homeNacimiento === '' || 
@@ -801,6 +835,7 @@
                         dataType: 'json',
                         data: {
                            id,
+                           dateBautizo,
                            apellidos,
                            nombres,
                            homeNacimiento,
@@ -942,5 +977,12 @@
             }
          }
 
-         
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
       </script>

@@ -22,6 +22,7 @@ const {
    searchBautizo,
    updateBautizo,
    deleteBautizo,
+   downloadPDFBautizo,
 
    renderComunion,
    getComuniones,
@@ -70,6 +71,7 @@ router.post('/saveBautizo', isAuthenticated, authSecretaria, saveBautizo);
 router.get('/searchBautizo', isAuthenticated, authSecretaria, searchBautizo);
 router.post('/updateBautizo', isAuthenticated, authSecretaria, updateBautizo);
 router.post('/deleteBautizo', isAuthenticated, authSecretaria, deleteBautizo);
+router.get('/downloadPDFBautizo/:idBau', isAuthenticated, authSecretaria, downloadPDFBautizo);
 
 router.get('/comuniones', isAuthenticated, authSecretaria, renderComunion);
 router.get('/getComuniones', isAuthenticated, authSecretaria, getComuniones);
