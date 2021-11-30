@@ -57,14 +57,14 @@
                <table id="listBautizos" class="table is-striped table-striped table-bordered tableList">
                   <thead>
                      <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">Cédula</th>
                         <th nowrap scope="col">Nombres Completos</th>
-                        <th scope="col">Sacerdote</th>
+                        <th nowrap scope="col">Sacerdote</th>
                         <th scope="col">Fecha Bautizo</th>
                         <th scope="col">Año</th>
                         <th scope="col">N° Tomo</th>
-                        <th scope="col">N° Página</th>
-                        <th scope="col">N° Registro</th>
+                        {{!-- <th scope="col">N° Página</th>
+                        <th scope="col">N° Registro</th> --}}
                         {{!-- <th scope="col">Teléfono</th> --}}
                         <th scope="col"></th>
                      </tr>
@@ -112,11 +112,24 @@
                      <div class="col-md-6">
                         <div class="form__div form__div-one">
                            <div class="form__icon">
+                              <i class='bx bx-credit-card-front bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Cédula</label>
+                              <input type="text" class="form__input" name="cedula" id="cedula" onkeypress="return numeros(event)" maxlength="10" onkeyUp="return Cedula(this);" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
                               <i class='bx bx-been-here bx-tada' ></i>
                            </div>
       
                            <div class="form__div-input">
-                              <label for="" class="form__label">Fecha de nacimiento</label>
+                              <label for="" class="form__label">Fecha de Bautizo</label>
                               <input type="date" class="form__input" name="dateBautizo" id="dateBautizo" required>
                            </div>
                         </div>
@@ -271,7 +284,7 @@
       
                            <div class="form__div-input">
                               <label for="" class="form__label">Año</label>
-                              <input type="text" class="form__input" name="anioParroquia" id="anioParroquia" onkeypress="return numeros(event)" required>
+                              <input type="text" class="form__input" name="anioParroquia" id="anioParroquia" maxlength="4" onkeypress="return numeros(event)" required>
                            </div>
                         </div>
                      </div>
@@ -406,12 +419,14 @@
       <script>
          const modalNewBautizo = () => {
             bloqueointerface();
+            $("#cedula").prop('disabled', false);
             $(".form__div-one").removeClass("focus");
             $("button").remove('.btn__Send');
 
             document.querySelector('.tittle__modal').innerHTML = 'Registrar Bautizo';
             document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveBautizo()">Enviar</button>';
             
+            $('#cedula').val('');
             $('#dateBautizo').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
@@ -444,31 +459,35 @@
                   "dataSrc":""
                },
                "columns": [
-                  {"data": "_id"},
+                  {"data": "cedula"},
                   {"data": null,
                         render: function ( data, type, row ) {
                            return row.apellidos + ' ' + row.nombres;
                         }
                   },
-                  {"data": "nameSacerdote"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.nameSacerdote;
+                        }
+                  },
                   {"data": "fechaBautizo"},
                   {"data": "anioRParroquial"},
                   {"data": "tomoRParroquial"},
-                  {"data": "paginaRParroquial"},
-                  {"data": "numeroRParroquial"},
+                  /*{"data": "paginaRParroquial"},
+                  {"data": "numeroRParroquial"},*/
                   {"data": null,
                         render: function ( data, type, row ) {
                            return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
                            <div class="dropdown-menu 1 menuD"> 
-                              <a class="dropdown-item" onclick="editBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="editBautizo('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteBautizo('${row._id}', '${row.apellidos}', '${row.nombres}')"> 
+                              <a class="dropdown-item" onclick="deleteBautizo('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
                               </a>
-                              <form id="urlReportPDF" method="GET" action="downloadPDFBautizo/${row._id}">
+                              <form id="urlReportPDF" method="GET" action="downloadPDFBautizo/${row.cedula}">
                                  <a class="dropdown-item" onclick="reportPDF()"> 
                                     <i class='bx bxs-file-pdf' ></i>
                                     Generar Acta 
@@ -513,6 +532,7 @@
          }
 
          const saveBautizo = () => {
+            cedula = $.trim($('#cedula').val());
             dateBautizo = $.trim($('#dateBautizo').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
@@ -534,6 +554,7 @@
             numActaRCivil = $.trim($('#numActaRCivil').val());
 
             if (
+               cedula === '' || 
                dateBautizo === '' || 
                apellidos === '' || 
                nombres === '' || 
@@ -592,6 +613,7 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
+                           cedula,
                            dateBautizo,
                            apellidos,
                            nombres,
@@ -651,11 +673,12 @@
             }
          }
 
-         const editBautizo = (id, name, apell) => {
+         const editBautizo = (cedula, name, apell) => {
             $("button").remove('.btn__Send');
 
             document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Bautizo';
             
+            $('#cedula').val('');
             $('#dateBautizo').val('');
             $('#apellidos').val('');
             $('#nombres').val('');
@@ -678,7 +701,7 @@
 
             Swal.fire({
                title: `EDITAR ACTA DE BAUTIZO`,
-               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de bautizo de <b>${apell} ${name}</b>?</p>`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de bautizo de <b>${apell} ${name}</b> con cédula <b>${cedula}</b>?</p>`,
                imageUrl: '/img/SMMIglesia.png',
                imageWidth: 80,
                imageHeight: 100,
@@ -701,11 +724,12 @@
                      type: 'GET',
                      dataType: 'json',
                      data: {
-                        id
+                        cedula
                      }
                   })
                   .done(function(res) {
                      if (res.res === 'data') {
+                        $('#cedula').val(`${res.searchData.cedula}`);
                         $('#dateBautizo').val(`${res.searchData.fechaBautizo}`);
                         $('#apellidos').val(`${res.searchData.apellidos}`);
                         $('#nombres').val(`${res.searchData.nombres}`);
@@ -726,9 +750,10 @@
                         $('#pageRCivil').val(`${res.searchData.paginaRCivil}`);
                         $('#numActaRCivil').val(`${res.searchData.numeroActaRCivil}`);
 
-                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateBautizo('${res.searchData._id}')">Actualizar</button>`;
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateBautizo('${res.searchData.cedula}')">Actualizar</button>`;
 
                         $(".form__div-one").addClass("focus");
+                        $("#cedula").prop('disabled', true);
                         $('#modalNewBautizo').modal('show');
                         desbloqueointerface();
                      }
@@ -752,8 +777,8 @@
             })
          }
 
-         const updateBautizo = (id) => {
-            id = $.trim(id);
+         const updateBautizo = (cedula) => {
+            cedula = $.trim(cedula);
             dateBautizo = $.trim($('#dateBautizo').val());
             apellidos = $.trim($('#apellidos').val());
             nombres = $.trim($('#nombres').val());
@@ -775,7 +800,7 @@
             numActaRCivil = $.trim($('#numActaRCivil').val());
 
             if (
-               id === '' || 
+               cedula === '' || 
                dateBautizo === '' || 
                apellidos === '' || 
                nombres === '' || 
@@ -834,7 +859,7 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                           id,
+                           cedula,
                            dateBautizo,
                            apellidos,
                            nombres,
@@ -894,11 +919,11 @@
             }
          }
 
-         const deleteBautizo = (id, name, apell) => {
-            id = $.trim(id);
+         const deleteBautizo = (cedula, name, apell) => {
+            cedula = $.trim(cedula);
 
             if (
-               id === ''
+               cedula === ''
             ) {
                Swal.fire({
                   position: 'top-end',
@@ -915,7 +940,7 @@
             } else {
                Swal.fire({
                   title: `ELIMINAR ACTA DE BAUTIZO`,
-                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de bautizo de <b>${apell} ${name}</b>?</p>`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de bautizo de <b>${apell} ${name}</b> con cédula <b>${cedula}</b>?</p>`,
                   imageUrl: '/img/SMMIglesia.png',
                   imageWidth: 80,
                   imageHeight: 100,
@@ -936,7 +961,7 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                           id
+                           cedula
                         }
                      })
                      .done(function(res) {
@@ -985,4 +1010,5 @@
                desbloqueointerface();
             }, 3000);
          }
+         
       </script>

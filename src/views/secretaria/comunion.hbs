@@ -50,7 +50,6 @@
                <table id="listComuniones" class="table is-striped table-striped table-bordered tableList">
                   <thead>
                      <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Cédula</th>
                         <th nowrap scope="col">Nombres Completos</th>
                         <th scope="col">Año Sacramento</th>
@@ -270,7 +269,6 @@
                   "dataSrc":""
                },
                "columns": [
-                  {"data": "_id"},
                   {"data": "cedula"},
                   {"data": null,
                         render: function ( data, type, row ) {
@@ -295,10 +293,12 @@
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
                               </a> 
-                              <a class="dropdown-item" onclick="generatePDF('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
-                                 <i class='bx bxs-file-pdf' ></i>
-                                 Generar Acta 
-                              </a>`;
+                              <form id="urlReportPDF" method="GET" action="downloadPDFComunion/${row.cedula}">
+                                 <a class="dropdown-item" onclick="reportPDF()"> 
+                                    <i class='bx bxs-file-pdf' ></i>
+                                    Generar Acta 
+                                 </a>
+                              </form>`;
                         }
                   },
                ],
@@ -720,5 +720,12 @@
             }
          }
 
-         
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
       </script>

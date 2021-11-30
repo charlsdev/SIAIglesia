@@ -30,6 +30,7 @@ const {
    searchComunion,
    updateComunion,
    deleteComunion,
+   downloadPDFComunion,
 
    renderConfirmacion,
    getConfirmaciones,
@@ -79,6 +80,7 @@ router.post('/saveComunion', isAuthenticated, authSecretaria, saveComunion);
 router.get('/searchComunion', isAuthenticated, authSecretaria, searchComunion);
 router.post('/updateComunion', isAuthenticated, authSecretaria, updateComunion);
 router.post('/deleteComunion', isAuthenticated, authSecretaria, deleteComunion);
+router.get('/downloadPDFComunion/:idBau', isAuthenticated, authSecretaria, downloadPDFComunion);
 
 router.get('/confirmaciones', isAuthenticated, authSecretaria, renderConfirmacion);
 router.get('/getConfirmaciones', isAuthenticated, authSecretaria, getConfirmaciones);

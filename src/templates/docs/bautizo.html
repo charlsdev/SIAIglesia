@@ -62,6 +62,9 @@
             padding-right: 10px;
             padding-left: 10px;
          }
+         .encabezado .textBody {
+            font-size: 1.05rem !important;
+         }
          .encabezado .textBody,
          .encabezado .textBodyDer {
             font-size: 1.1rem;
@@ -160,6 +163,10 @@
                      </div>
 
                      <div class="textInfoDer">
+                        C.I.: 
+                        <span class="bold">{{data.cedula}}</span>
+                     </div>
+                     <div class="textInfoDer">
                         DE: 
                         <span class="bold">{{data.ciudadRCivil}}</span>
                      </div>
@@ -184,7 +191,6 @@
                         </span>
                      </div>
                      <div class="anexosNameCenter">
-                        <p class="linear"></p>
                         <p class="linear"></p>
                         <p class="linear"></p>
                         <p class="linear"></p>
@@ -305,7 +311,7 @@
                            {{data.nameSacerdoteNow}}
                         </span>
                         <br>
-                        <span class="datesBau" style="margin-top: 20px;">
+                        <span class="datesBau">
                            PÁRROCO
                         </span>
                      </div>

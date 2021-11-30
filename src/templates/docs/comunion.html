@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Certificado de Bautizo</title>
+
+      <style>
+         @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+         
+         body {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: 'PT Sans', sans-serif;
+         }
+         /* table, th, td {
+            border:1px solid black;
+         } */
+         table {
+            width: 100%;
+         }
+         .encabezado {
+            margin: 10px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+         }
+         .encabezado img {
+            width: 85px;
+            margin: auto 50px;
+         }
+         .datosIglesia {
+            width: 100%;
+         }
+         .encabezado .datosIglesia {
+            text-align: center;
+         }
+         .datosIglesia .tittle {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 2px 10px 0 10px;
+         }
+         .datosIglesia .creada {
+            font-size: .9rem;
+            font-style: oblique;
+            font-weight: bold;
+            margin: 2px 10px 0 10px;
+         }
+         .datosIglesia .direccion {
+            font-size: .9rem;
+            font-weight: 500;
+            margin: 2px 10px 0 10px;
+         }
+         .datosIglesia .telefono {
+            font-size: .8rem;
+            font-weight: 600;
+            margin: 2px 10px 0 10px;
+         }
+
+         .tituloCenter .tittleBau {
+            font-size: 1.65rem;
+            padding: 50px 5px;
+         }
+         .negrita {
+            font-weight: bold;
+         }
+         .content .description {
+            padding: 5px 75px !important;
+            text-align: justify;
+            font-weight: 500 !important;
+            line-height: 1.8rem;
+         }
+         .marginTB {
+            text-align: justify;
+            font-weight: 500;
+            padding: 45px 75px !important;
+         }
+         .content .descriptionFrase {
+            padding: 5px 75px !important;
+            text-align: center;
+            font-weight: 600 !important;
+            font-style: oblique;
+            line-height: 1.65rem;
+         }
+         .content .descriptionIZ {
+            padding: 5px 95px !important;
+            text-align: right;
+         }
+         .margin .textR {
+            padding: 45px 95px 30px 95px !important;
+            text-align: right;
+            font-weight: 500 !important;
+            font-style: oblique;
+            line-height: 1.65rem;
+         }
+         .firma {
+            text-transform: uppercase;
+         }
+         .firma .dotenv {
+            padding-top: 50px;
+         }
+      </style>
+   </head>
+   <body>
+      <table>
+         <tbody>
+            <tr class="encabezado">
+               <th class="imgEnc">
+                  <img src="https://drive.google.com/uc?export=view&id=16yXk-jYPawir1QAyj0DOdqOyYBhjbOBd">
+               </th>
+               <th class="datosIglesia">
+                  <div class="tittle">ARQUIDIOCESIS DE PORTOVIEJO</div>
+                  <div class="tittle">PARROQUIA SANTA MARÍA MADRE</div>
+                  <div class="creada">Av. Alejo Lascano, barrio la Dolorosa, frente a la Cdla. La Fae</div>
+                  <div class="direccion">(05) 601 031, +593 997955011, +593 981444594</div>
+                  <div class="telefono">JIPIJAPA - MANABÍ - ECUADOR</div>
+               </th>
+               <th class="imgEnc">
+                  <img src="https://drive.google.com/uc?export=view&id=16yXk-jYPawir1QAyj0DOdqOyYBhjbOBd">
+               </th>
+            </tr>
+         </tbody>
+
+         <table>
+            <tbody>
+               <tr class="tituloCenter">
+                  <th class="tittleBau">
+                     CERTIFICADO DE COMUNIÓN
+                  </th>
+               </tr>
+            </tbody>
+         </table>
+
+         <table>
+            <tbody>
+               <tr class="content">
+                  <th class="description">
+                     En la <span class="negrita">Parroquia Santa María Madre</span> de Jipijapa en el año <span class="negrita">{{data.anioSacramento}}</span> la/el señorita(o) <span class="negrita">{{data.nombres}} {{data.apellidos}}</span> con número de cédula <span class="negrita">{{data.cedula}}</span>, hijo de <span class="negrita">{{data.namePadre}}</span>  y <span class="negrita">{{data.nameMadre}}</span>, recibió el sacramento de la <span class="negrita">COMUNIÓN</span> a cargo del Padre y siendo catequista la/el Sr(a). <span class="negrita">{{data.nameCatequista}}</span> en nuestra parroquia.
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="description">
+                     <span class="negrita">Sus padrinos:</span> {{data.nameMadrina}} y {{data.namePadrino}}.
+                  </th>
+               </tr>
+
+               <tr>
+                  <th class="marginTB">
+                     Se expide la presente certificación a solicitud del interesado.
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionFrase">
+                     “Lo importante no es mirar desde lejos o ayudarlo desde lejos, sino ir al encuentro. Eso es lo cristiano, lo que nos enseña Jesús. Ir al encuentro de los más necesitados. Como Jesús que iba siempre al encuentro de la gente”.
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     - Papa Francisco.
+                  </th>
+               </tr>
+
+               <tr class="margin">
+                  <th class="textR">
+                     Jipijapa, {{data.dateNow}}
+                  </th>
+               </tr>
+
+               <tr class="firma">
+                  <th class="dotenv">
+                     ................................................................
+                  </th>
+               </tr>
+
+               <tr class="firma">
+                  <th class="textR">
+                     {{data.namePadre}}
+                  </th>
+               </tr>
+
+               <tr class="firma">
+                  <th class="textR" style="padding-bottom: 25px !important;">
+                     PÁRROCO
+                  </th>
+               </tr>
+            </tbody>
+         </table>           
+      </table>
+   </body>
+</html>

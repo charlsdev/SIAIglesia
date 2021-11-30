@@ -10,10 +10,10 @@ module.exports = {
       contents: ''
    },
    footer: {
-      height: '10mm',
+      height: '5mm',
       contents: {
          default: 
-            `<table style="margin-bottom: 10px; padding-top: 15px !important; width: 100%;">
+            `<table style="margin-bottom: 10px; padding-top: 5px !important; width: 100%;">
                <tbody>
                   <tr class="descriptions" style="font-size: 12px; margin: 0 5px;">
                      <th style="width: 33.3%">

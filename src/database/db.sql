@@ -37,7 +37,7 @@ ALTER TABLE
 -- Creamos la tabla `Bautizo`
 -- 
 CREATE TABLE `bautizo` (
-   `_id` int(11) NOT NULL AUTO_INCREMENT,
+   `cedula` varchar(10) NOT NULL,
    `apellidos` varchar(50) NOT NULL,
    `nombres` varchar(50) NOT NULL,
    `lugarNacimiento` varchar(50) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `bautizo` (
    `numeroActaRCivil` int(8) NOT NULL,
    `idCedula` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`_id`),
+   PRIMARY KEY (`cedula`),
    KEY `fk_cedula` (`idCedula`),
    CONSTRAINT `fk_cedula` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -95,8 +95,6 @@ CREATE TABLE `matrimonio` (
 -- Creamos la tabla `Comunion`
 --
 CREATE TABLE `comunion` (
-   `_id` int(11) NOT NULL AUTO_INCREMENT,
-   `anioSacramento` varchar(4) NOT NULL,
    `cedula` varchar(10) NOT NULL,
    `apellidos` varchar(50) NOT NULL,
    `nombres` varchar(50) NOT NULL,
@@ -105,9 +103,10 @@ CREATE TABLE `comunion` (
    `namePadrino` varchar(100) NOT NULL,
    `nameMadrina` varchar(100) NOT NULL,
    `nameCatequista` varchar(100) NOT NULL,
+   `anioSacramento` varchar(4) NOT NULL,
    `idCedula` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`_id`),
+   PRIMARY KEY (`cedula`),
    KEY `fk_cedulaU` (`idCedula`),
    CONSTRAINT `fk_cedulaU` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -116,18 +115,17 @@ CREATE TABLE `comunion` (
 -- Creamos la tabla `Confirmación`
 --
 CREATE TABLE `confirmacion` (
-   `_id` int(11) NOT NULL AUTO_INCREMENT,
-   `anioSacramento` varchar(4) NOT NULL,
    `cedula` varchar(10) NOT NULL,
    `apellidos` varchar(50) NOT NULL,
    `nombres` varchar(50) NOT NULL,
    `namePadrino` varchar(100) NOT NULL,
    `nameMadrina` varchar(100) NOT NULL,
    `nameMonsenior` varchar(100) NOT NULL,
+   `anioSacramento` varchar(4) NOT NULL,
    `temploComunion` varchar(50) NOT NULL,
    `idCedula` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`_id`),
+   PRIMARY KEY (`cedula`),
    KEY `fk_cedulaUser` (`idCedula`),
    CONSTRAINT `fk_cedulaUser` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -43,13 +43,13 @@ secretariaControllers.renderWelcome = async (req, res) => {
       ofr = await connectionDB.query('SELECT COUNT(idOfrenda) AS numOF FROM ofrendas');
       ofr = ofr[0].numOF;
 
-      bau = await connectionDB.query('SELECT COUNT(_id) AS numOF FROM bautizo');
+      bau = await connectionDB.query('SELECT COUNT(cedula) AS numOF FROM bautizo');
       bau = bau[0].numOF;
 
-      comu = await connectionDB.query('SELECT COUNT(_id) AS numOF FROM comunion');
+      comu = await connectionDB.query('SELECT COUNT(cedula) AS numOF FROM comunion');
       comu = comu[0].numOF;
 
-      conf = await connectionDB.query('SELECT COUNT(_id) AS numOF FROM confirmacion');
+      conf = await connectionDB.query('SELECT COUNT(cedula) AS numOF FROM confirmacion');
       conf = conf[0].numOF;
 
       mat = await connectionDB.query('SELECT COUNT(_id) AS numOF FROM matrimonio');
@@ -556,7 +556,7 @@ secretariaControllers.getBautizos = async (req, res) => {
 
    try {
       listBautizos = await connectionDB.query(` SELECT 
-                                                      _id, apellidos, nombres, fechaBautizo,nameSacerdote, anioRParroquial, tomoRParroquial, paginaRParroquial, numeroRParroquial
+                                                      cedula, apellidos, nombres, fechaBautizo,nameSacerdote, anioRParroquial, tomoRParroquial, paginaRParroquial, numeroRParroquial
                                                 FROM bautizo`);
 
       res.json(
@@ -569,6 +569,7 @@ secretariaControllers.getBautizos = async (req, res) => {
 
 secretariaControllers.saveBautizo = async (req, res) => {
    const {
+      cedula,
       dateBautizo,
       apellidos,
       nombres,
@@ -591,6 +592,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
    } = req.body;
 
    let errors = 0,
+      cedulaN = cedula.trim(),
       dateBautizoN = dateBautizo.trim(),
       apellidosN = apellidos.trim(),
       nombresN = nombres.trim(),
@@ -612,6 +614,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
       numActaRCivilN = numActaRCivil.trim();
 
    if (
+      cedulaN === '' || 
       dateBautizoN === '' || 
       apellidosN === '' || 
       nombresN === '' || 
@@ -639,6 +642,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
          description: 'Los campos no pueden ir vacios o con espacios.'
       });
    } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
       errors += (!moment(dateBautizoN).isValid()) ? 1 : 0;
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
@@ -668,47 +672,61 @@ secretariaControllers.saveBautizo = async (req, res) => {
          });
       } else {
          try {
-            const newBautizo = {
-               apellidos: apellidosN,
-               nombres: nombresN,
-               lugarNacimiento: homeNacimientoN,
-               fechaNacimiento: dateNacimientoN,
-               namePadre: nameFatherN,
-               nameMadre: nameMotherN,
-               namePadrino: namePadrinoN,
-               nameMadrina: nameMadrinaN,
-               nameSacerdote: nameSacerdoteN,
-               fechaBautizo: dateBautizoN,
-               anioRParroquial: anioParroquiaN,
-               tomoRParroquial: tomoParroquiaN,
-               paginaRParroquial: pageParroquiaN,
-               numeroRParroquial: numeroParroquiaN,
-               ciudadRCivil: ciudadRCivilN,
-               numeroRCivil: numeroRCivilN,
-               tomoRCivil: tomoRCivilN,
-               paginaRCivil: pageRCivilN,
-               numeroActaRCivil: numActaRCivilN,
-               idCedula: req.user.cedula
-            };
+            const searchData = await connectionDB.query(`SELECT *
+                                                         FROM bautizo
+                                                         WHERE cedula = ?`, cedulaN);
 
-            const saveBautizo = await connectionDB.query(`INSERT INTO bautizo 
-                                                            SET ?`, [newBautizo]);
-            // console.log(saveBautizo);
-
-            if (saveBautizo.affectedRows === 1) {
-               res.json({
-                  res: 'img',
-                  icon: '/img/SMMIglesia.png',
-                  tittle: 'DATOS CORRECTOS',
-                  description: 'Se ha guardado con éxito los datos del bautizo.'
-               });
-            } else {
+            if (searchData.length > 0) {
                res.json({
                   res: 'icon',
-                  tittle: 'DATOS NO GUARDADOS',
-                  icon: 'error',
-                  description: 'Upss! No se ha guardado los datos en la DB.'
+                  tittle: 'ACTA YA REGISTRADA',
+                  icon: 'info',
+                  description: 'Upss! Ya existe una acta con esa cédula, no podrá registrarla nuevamente.'
                });
+            } else {
+               const newBautizo = {
+                  cedula: cedulaN,
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  lugarNacimiento: homeNacimientoN,
+                  fechaNacimiento: dateNacimientoN,
+                  namePadre: nameFatherN,
+                  nameMadre: nameMotherN,
+                  namePadrino: namePadrinoN,
+                  nameMadrina: nameMadrinaN,
+                  nameSacerdote: nameSacerdoteN,
+                  fechaBautizo: dateBautizoN,
+                  anioRParroquial: anioParroquiaN,
+                  tomoRParroquial: tomoParroquiaN,
+                  paginaRParroquial: pageParroquiaN,
+                  numeroRParroquial: numeroParroquiaN,
+                  ciudadRCivil: ciudadRCivilN,
+                  numeroRCivil: numeroRCivilN,
+                  tomoRCivil: tomoRCivilN,
+                  paginaRCivil: pageRCivilN,
+                  numeroActaRCivil: numActaRCivilN,
+                  idCedula: req.user.cedula
+               };
+   
+               const saveBautizo = await connectionDB.query(`INSERT INTO bautizo 
+                                                               SET ?`, [newBautizo]);
+               // console.log(saveBautizo);
+   
+               if (saveBautizo.affectedRows === 1) {
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'DATOS CORRECTOS',
+                     description: 'Se ha guardado con éxito los datos del bautizo.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'DATOS NO GUARDADOS',
+                     icon: 'error',
+                     description: 'Upss! No se ha guardado los datos en la DB.'
+                  });
+               }
             }
          } catch (e) {
             console.log(e);
@@ -725,12 +743,12 @@ secretariaControllers.saveBautizo = async (req, res) => {
 
 secretariaControllers.searchBautizo = async (req, res) => {
    const {
-      id
+      cedula
    } = req.query;
 
-   let ID = id.trim();
+   let DNI = cedula.trim();
 
-   if (ID === '') {
+   if (DNI === '') {
       res.json({
          res: 'notData',
          icon: 'info',
@@ -741,7 +759,7 @@ secretariaControllers.searchBautizo = async (req, res) => {
       try {
          const searchData = await connectionDB.query(`SELECT *
                                                       FROM bautizo
-                                                      WHERE _id = ?`, ID);
+                                                      WHERE cedula = ?`, DNI);
 
          if (searchData.length > 0) {
             res.json({
@@ -770,7 +788,7 @@ secretariaControllers.searchBautizo = async (req, res) => {
 
 secretariaControllers.updateBautizo = async (req, res) => {
    const {
-      id,
+      cedula,
       apellidos,
       nombres,
       homeNacimiento,
@@ -793,7 +811,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
    } = req.body;
 
    let errors = 0,
-      idN = id.trim(),
+      cedulaN = cedula.trim(),
       apellidosN = apellidos.trim(),
       nombresN = nombres.trim(),
       homeNacimientoN = homeNacimiento.trim(),
@@ -815,7 +833,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       numActaRCivilN = numActaRCivil.trim();
 
    if (
-      idN === '' || 
+      cedulaN === '' || 
       apellidosN === '' || 
       nombresN === '' || 
       homeNacimientoN === '' || 
@@ -843,7 +861,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
          description: 'Los campos no pueden ir vacios o con espacios.'
       });
    } else {
-      errors += (!numbersVer(idN)) ? 1 : 0;
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
       errors += (!spaceLetersVer(homeNacimientoN)) ? 1 : 0;
@@ -875,7 +893,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
          try {
             const searchData = await connectionDB.query(`SELECT *
                                                          FROM bautizo
-                                                         WHERE _id = ?`, idN);
+                                                         WHERE cedula = ?`, cedulaN);
 
             if (searchData.length > 0) {
                const updateBautizo = {
@@ -903,7 +921,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
    
                const updateSaveBau = await connectionDB.query(`UPDATE bautizo 
                                                                SET ?
-                                                               WHERE _id = ?`, [updateBautizo, idN]);
+                                                               WHERE cedula = ?`, [updateBautizo, cedulaN]);
                // console.log(updateSaveBau);
    
                if (updateSaveBau.affectedRows === 1) {
@@ -926,7 +944,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
                   res: 'icon',
                   tittle: 'ACTA NO ENCONTRADA',
                   icon: 'error',
-                  description: 'Upss! No existe ningún registro con ese ID.'
+                  description: 'Upss! No existe ningún registro con esa cédula.'
                }); 
             }
          } catch (e) {
@@ -944,14 +962,14 @@ secretariaControllers.updateBautizo = async (req, res) => {
 
 secretariaControllers.deleteBautizo = async (req, res) => {
    const {
-      id
+      cedula
    } = req.body;
 
    let errors = 0,
-      idN = id.trim();
+      DNI = cedula.trim();
 
    if (
-      idN === ''
+      DNI === ''
    ) {
       res.json({
          res: 'icon',
@@ -960,7 +978,7 @@ secretariaControllers.deleteBautizo = async (req, res) => {
          description: 'Los campos no pueden ir vacios o con espacios.'
       });
    } else {
-      errors += (!numbersVer(idN)) ? 1 : 0;
+      errors += (!cedulaVal(DNI)) ? 1 : 0;
 
       if (errors > 0) {
          res.json({
@@ -974,7 +992,7 @@ secretariaControllers.deleteBautizo = async (req, res) => {
    
             const deleteBautizo = await connectionDB.query(`DELETE 
                                                             FROM bautizo 
-                                                            WHERE _id = ?`, idN);
+                                                            WHERE cedula = ?`, DNI);
             // console.log(deleteBautizo);
    
             if (deleteBautizo.affectedRows === 1) {
@@ -1015,7 +1033,7 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
       req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
       res.redirect('/s/bautizos');
    } else {
-      errors += (!numbersVer(idBauN)) ? 1 : 0;
+      errors += (!cedulaVal(idBauN)) ? 1 : 0;
 
       if (errors > 0) {
          req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
@@ -1025,7 +1043,7 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
    
             const dataBautizo = await connectionDB.query(`SELECT *
                                                          FROM bautizo
-                                                         WHERE _id = ?`, idBauN);
+                                                         WHERE cedula = ?`, idBauN);
             // console.log(dataBautizo);
    
             if (!dataBautizo) {
@@ -1036,6 +1054,7 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/bautizo.html'), 'utf-8');
 
                   const paramsHTML = {
+                     cedula: dataBautizo[0].cedula.toUpperCase(),
                      apellidos: dataBautizo[0].apellidos.toUpperCase(),
                      nombres: dataBautizo[0].nombres.toUpperCase(),
                      lugarNacimiento: dataBautizo[0].lugarNacimiento.toUpperCase(),
@@ -1112,7 +1131,7 @@ secretariaControllers.getComuniones = async (req, res) => {
 
    try {
       listComuniones = await connectionDB.query(` SELECT 
-                                                      _id, anioSacramento, cedula, apellidos, nombres, nameCatequista
+                                                      cedula, apellidos, nombres, anioSacramento, nameCatequista
                                                 FROM comunion`);
 
       res.json(
@@ -1471,6 +1490,78 @@ secretariaControllers.deleteComunion = async (req, res) => {
    }
 };
 
+secretariaControllers.downloadPDFComunion = async (req, res) => {
+   let errors = 0,
+      idBauN = req.params.idBau.trim();
+
+   if (
+      idBauN === ''
+   ) {
+      req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
+      res.redirect('/s/comuniones');
+   } else {
+      errors += (!cedulaVal(idBauN)) ? 1 : 0;
+
+      if (errors > 0) {
+         req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
+         res.redirect('/s/comuniones');
+      } else {
+         try {
+   
+            const dataBautizo = await connectionDB.query(`SELECT *
+                                                         FROM comunion
+                                                         WHERE cedula = ?`, idBauN);
+            // console.log(dataBautizo);
+   
+            if (!dataBautizo) {
+               req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
+               res.redirect('/s/bautizos');
+            } else {
+               try {
+                  const html = fse.readFileSync(path.join(__dirname, '../templates/docs/comunion.html'), 'utf-8');
+
+                  const paramsHTML = {
+                     cedula: dataBautizo[0].cedula.toUpperCase(),
+                     apellidos: dataBautizo[0].apellidos.toUpperCase(),
+                     nombres: dataBautizo[0].nombres.toUpperCase(),
+                     namePadre: dataBautizo[0].namePadre.toUpperCase(),
+                     nameMadre: dataBautizo[0].nameMadre.toUpperCase(),
+                     namePadrino: dataBautizo[0].namePadrino.toUpperCase(),
+                     nameMadrina: dataBautizo[0].nameMadrina.toUpperCase(),
+                     nameCatequista: dataBautizo[0].nameCatequista.toUpperCase(),
+                     anioSacramento: dataBautizo[0].anioSacramento,
+                     nameSacerdoteNow: process.env.nameSacerdoteNow,
+                     dateNow: moment().format('LL')
+                  };
+
+                  const filename = `${dataBautizo[0].apellidos} ${dataBautizo[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
+
+                  const document = {
+                     html: html,
+                     data: {
+                        data: paramsHTML
+                     },
+                     path: path.join(__dirname, '../actas/') + filename
+                  };
+
+                  await pdf.create(document, configPDF);
+
+                  var data = path.join(__dirname, '../actas/' + filename);
+                  res.download(data, filename);
+
+               } catch (e) {
+                  console.log(e);
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
+            res.redirect('/s/comuniones');
+         }
+      }
+   }
+};
+
 secretariaControllers.renderConfirmacion = async (req, res) => {
    const {
       cedula,
@@ -1496,7 +1587,7 @@ secretariaControllers.getConfirmaciones = async (req, res) => {
 
    try {
       listConfirmacion = await connectionDB.query(` SELECT 
-                                                      _id, anioSacramento, cedula, apellidos, nombres, nameMonsenior
+                                                      cedula, apellidos, nombres, anioSacramento, nameMonsenior
                                                    FROM confirmacion`);
 
       res.json(
@@ -1574,7 +1665,7 @@ secretariaControllers.saveConfirmacion = async (req, res) => {
                   res: 'icon',
                   icon: 'error',
                   tittle: 'ACTA YA REGISTRADA',
-                  description: 'El acta a ingresar ya ha sido ingresada.'
+                  description: 'El acta a ingresar ya ha sido registrada.'
                });
             } else {
                const newConfirmacion = {
