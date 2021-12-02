@@ -657,7 +657,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
       errors += (!numbersVer(tomoParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(pageParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(numeroParroquiaN)) ? 1 : 0;
-      errors += (!spaceLetersVer(ciudadRCivilN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(ciudadRCivilN)) ? 1 : 0;
       errors += (!numbersVer(numeroRCivilN)) ? 1 : 0;
       errors += (!numbersVer(tomoRCivilN)) ? 1 : 0;
       errors += (!numbersVer(pageRCivilN)) ? 1 : 0;
@@ -864,7 +864,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       errors += (!cedulaVal(cedulaN)) ? 1 : 0;
       errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
       errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
-      errors += (!spaceLetersVer(homeNacimientoN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(homeNacimientoN)) ? 1 : 0;
       errors += (!moment(dateNacimientoN).isValid()) ? 1 : 0;
       errors += (!spaceLetersVer(nameFatherN)) ? 1 : 0;
       errors += (!spaceLetersVer(nameMotherN)) ? 1 : 0;
@@ -876,7 +876,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
       errors += (!numbersVer(tomoParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(pageParroquiaN)) ? 1 : 0;
       errors += (!numbersVer(numeroParroquiaN)) ? 1 : 0;
-      errors += (!spaceLetersVer(ciudadRCivilN)) ? 1 : 0;
+      errors += (!verNumberAndLetters(ciudadRCivilN)) ? 1 : 0;
       errors += (!numbersVer(numeroRCivilN)) ? 1 : 0;
       errors += (!numbersVer(tomoRCivilN)) ? 1 : 0;
       errors += (!numbersVer(pageRCivilN)) ? 1 : 0;
@@ -1057,14 +1057,14 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
                      cedula: dataBautizo[0].cedula.toUpperCase(),
                      apellidos: dataBautizo[0].apellidos.toUpperCase(),
                      nombres: dataBautizo[0].nombres.toUpperCase(),
-                     lugarNacimiento: dataBautizo[0].lugarNacimiento.toUpperCase(),
-                     fechaNacimiento: moment(dataBautizo[0].fechaNacimiento).format('LL').toUpperCase(),
+                     lugarNacimiento: dataBautizo[0].lugarNacimiento.replace(/\b\w/g, l => l.toUpperCase()),
+                     fechaNacimiento: moment(dataBautizo[0].fechaNacimiento).format('LL'),
                      namePadre: dataBautizo[0].namePadre.toUpperCase(),
                      nameMadre: dataBautizo[0].nameMadre.toUpperCase(),
                      namePadrino: dataBautizo[0].namePadrino.toUpperCase(),
                      nameMadrina: dataBautizo[0].nameMadrina.toUpperCase(),
                      nameSacerdote: dataBautizo[0].nameSacerdote.toUpperCase(),
-                     fechaBautizo: moment(dataBautizo[0].fechaBautizo).format('LL').toUpperCase(),
+                     fechaBautizo: moment(dataBautizo[0].fechaBautizo).format('LL'),
                      anioRParroquial: dataBautizo[0].anioRParroquial,
                      tomoRParroquial: dataBautizo[0].tomoRParroquial,
                      paginaRParroquial: dataBautizo[0].paginaRParroquial,
@@ -1075,7 +1075,7 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
                      paginaRCivil: dataBautizo[0].paginaRCivil,
                      numeroActaRCivil: dataBautizo[0].numeroActaRCivil,
                      nameSacerdoteNow: process.env.nameSacerdoteNow,
-                     dateNow: moment().format('LL').toUpperCase()
+                     dateNow: moment().format('LL')
                   };
 
                   const filename = `${dataBautizo[0].apellidos} ${dataBautizo[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
@@ -1508,12 +1508,12 @@ secretariaControllers.downloadPDFComunion = async (req, res) => {
       } else {
          try {
    
-            const dataBautizo = await connectionDB.query(`SELECT *
+            const dataComunion = await connectionDB.query(`SELECT *
                                                          FROM comunion
                                                          WHERE cedula = ?`, idBauN);
-            // console.log(dataBautizo);
+            // console.log(dataComunion);
    
-            if (!dataBautizo) {
+            if (!dataComunion) {
                req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
                res.redirect('/s/bautizos');
             } else {
@@ -1521,20 +1521,20 @@ secretariaControllers.downloadPDFComunion = async (req, res) => {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/comunion.html'), 'utf-8');
 
                   const paramsHTML = {
-                     cedula: dataBautizo[0].cedula.toUpperCase(),
-                     apellidos: dataBautizo[0].apellidos.toUpperCase(),
-                     nombres: dataBautizo[0].nombres.toUpperCase(),
-                     namePadre: dataBautizo[0].namePadre.toUpperCase(),
-                     nameMadre: dataBautizo[0].nameMadre.toUpperCase(),
-                     namePadrino: dataBautizo[0].namePadrino.toUpperCase(),
-                     nameMadrina: dataBautizo[0].nameMadrina.toUpperCase(),
-                     nameCatequista: dataBautizo[0].nameCatequista.toUpperCase(),
-                     anioSacramento: dataBautizo[0].anioSacramento,
+                     cedula: dataComunion[0].cedula.toUpperCase(),
+                     apellidos: dataComunion[0].apellidos.toUpperCase(),
+                     nombres: dataComunion[0].nombres.toUpperCase(),
+                     namePadre: dataComunion[0].namePadre.toUpperCase(),
+                     nameMadre: dataComunion[0].nameMadre.toUpperCase(),
+                     namePadrino: dataComunion[0].namePadrino.toUpperCase(),
+                     nameMadrina: dataComunion[0].nameMadrina.toUpperCase(),
+                     nameCatequista: dataComunion[0].nameCatequista.toUpperCase(),
+                     anioSacramento: dataComunion[0].anioSacramento,
                      nameSacerdoteNow: process.env.nameSacerdoteNow,
                      dateNow: moment().format('LL')
                   };
 
-                  const filename = `${dataBautizo[0].apellidos} ${dataBautizo[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
+                  const filename = `${dataComunion[0].apellidos} ${dataComunion[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
 
                   const document = {
                      html: html,
@@ -1931,6 +1931,77 @@ secretariaControllers.deleteConfirmacion = async (req, res) => {
                icon: 'error',
                description: 'Upss! Error interno x_x. Intentelo más luego.'
             });
+         }
+      }
+   }
+};
+
+secretariaControllers.downloadPDFConfirmacion = async (req, res) => {
+   let errors = 0,
+      idBauN = req.params.idBau.trim();
+
+   if (
+      idBauN === ''
+   ) {
+      req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
+      res.redirect('/s/comuniones');
+   } else {
+      errors += (!cedulaVal(idBauN)) ? 1 : 0;
+
+      if (errors > 0) {
+         req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
+         res.redirect('/s/confirmaciones');
+      } else {
+         try {
+   
+            const dataConfirmacion = await connectionDB.query(`SELECT *
+                                                         FROM confirmacion
+                                                         WHERE cedula = ?`, idBauN);
+            // console.log(dataConfirmacion);
+   
+            if (!dataConfirmacion) {
+               req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
+               res.redirect('/s/confirmaciones');
+            } else {
+               try {
+                  const html = fse.readFileSync(path.join(__dirname, '../templates/docs/confirmacion.html'), 'utf-8');
+
+                  const paramsHTML = {
+                     cedula: dataConfirmacion[0].cedula.toUpperCase(),
+                     apellidos: dataConfirmacion[0].apellidos.toUpperCase(),
+                     nombres: dataConfirmacion[0].nombres.toUpperCase(),
+                     namePadrino: dataConfirmacion[0].namePadrino.toUpperCase(),
+                     nameMadrina: dataConfirmacion[0].nameMadrina.toUpperCase(),
+                     nameMonsenior: dataConfirmacion[0].nameMonsenior.toUpperCase(),
+                     anioSacramento: dataConfirmacion[0].anioSacramento.toUpperCase(),
+                     temploComunion: dataConfirmacion[0].temploComunion.toUpperCase(),
+                     nameSacerdoteNow: process.env.nameSacerdoteNow,
+                     dateNow: moment().format('LL')
+                  };
+
+                  const filename = `${dataConfirmacion[0].apellidos} ${dataConfirmacion[0].nombres} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
+
+                  const document = {
+                     html: html,
+                     data: {
+                        data: paramsHTML
+                     },
+                     path: path.join(__dirname, '../actas/') + filename
+                  };
+
+                  await pdf.create(document, configPDF);
+
+                  var data = path.join(__dirname, '../actas/' + filename);
+                  res.download(data, filename);
+
+               } catch (e) {
+                  console.log(e);
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
+            res.redirect('/s/confirmaciones');
          }
       }
    }
@@ -2364,6 +2435,84 @@ secretariaControllers.deleteMatrimonio = async (req, res) => {
                icon: 'error',
                description: 'Upss! Error interno x_x. Intentelo más luego.'
             });
+         }
+      }
+   }
+};
+
+secretariaControllers.downloadPDFMatrimonio = async (req, res) => {
+   let errors = 0,
+      idBauN = req.params.idBau.trim();
+
+   if (
+      idBauN === ''
+   ) {
+      req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
+      res.redirect('/s/comuniones');
+   } else {
+      errors += (!numbersVer(idBauN)) ? 1 : 0;
+
+      if (errors > 0) {
+         req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
+         res.redirect('/s/matrimonios');
+      } else {
+         try {
+   
+            const dataMatrimonio = await connectionDB.query(`SELECT *
+                                                         FROM matrimonio
+                                                         WHERE _id = ?`, idBauN);
+            // console.log(dataMatrimonio);
+   
+            if (!dataMatrimonio) {
+               req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
+               res.redirect('/s/matrimonios');
+            } else {
+               try {
+                  const html = fse.readFileSync(path.join(__dirname, '../templates/docs/matrimonio.html'), 'utf-8');
+
+                  const paramsHTML = {
+                     fechaMatrimonio: moment(dataMatrimonio[0].fechaMatrimonio).format('LL'),
+                     nameSacerdote: dataMatrimonio[0].nameSacerdote.toUpperCase(),
+                     nameEsposo: dataMatrimonio[0].nameEsposo.toUpperCase(),
+                     namePadreEsposo: dataMatrimonio[0].namePadreEsposo.toUpperCase(),
+                     nameMadreEsposo: dataMatrimonio[0].nameMadreEsposo.toUpperCase(),
+                     nameEsposa: dataMatrimonio[0].nameEsposa.toUpperCase(),
+                     namePadreEsposa: dataMatrimonio[0].namePadreEsposa.toUpperCase(),
+                     nameMadreEsposa: dataMatrimonio[0].nameMadreEsposa.toUpperCase(),
+                     namePadrino: dataMatrimonio[0].namePadrino.toUpperCase(),
+                     nameMadrina: dataMatrimonio[0].nameMadrina.toUpperCase(),
+                     ciudadRCivil: dataMatrimonio[0].ciudadRCivil.replace(/\b\w/g, l => l.toUpperCase()),
+                     anioRCivil: dataMatrimonio[0].anioRCivil,
+                     tomoRCivil: dataMatrimonio[0].tomoRCivil,
+                     paginaRCivil: dataMatrimonio[0].paginaRCivil,
+                     numeroActaRCivil: dataMatrimonio[0].numeroActaRCivil,
+                     nameSacerdoteNow: process.env.nameSacerdoteNow,
+                     dateNow: moment().format('LL')
+                  };
+
+                  const filename = `${dataMatrimonio[0].nameEsposo} y ${dataMatrimonio[0].nameEsposa} - ${moment().format('MMM D, YYYY').replace(/\b\w/g, l => l.toUpperCase())}.pdf`;
+
+                  const document = {
+                     html: html,
+                     data: {
+                        data: paramsHTML
+                     },
+                     path: path.join(__dirname, '../actas/') + filename
+                  };
+
+                  await pdf.create(document, configPDF);
+
+                  var data = path.join(__dirname, '../actas/' + filename);
+                  res.download(data, filename);
+
+               } catch (e) {
+                  console.log(e);
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
+            res.redirect('/s/matrimonios');
          }
       }
    }

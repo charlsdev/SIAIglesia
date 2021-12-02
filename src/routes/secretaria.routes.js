@@ -38,6 +38,7 @@ const {
    searchConfirmacion,
    updateConfirmacion,
    deleteConfirmacion,
+   downloadPDFConfirmacion,
 
    renderMatrimonio,
    getMatrimonios,
@@ -45,6 +46,7 @@ const {
    searchMatrimonio,
    updateMatrimonio,
    deleteMatrimonio,
+   downloadPDFMatrimonio
 } = require('../controllers/secretaria.controllers');
 
 const {
@@ -88,6 +90,7 @@ router.post('/saveConfirmacion', isAuthenticated, authSecretaria, saveConfirmaci
 router.get('/searchConfirmacion', isAuthenticated, authSecretaria, searchConfirmacion);
 router.post('/updateConfirmacion', isAuthenticated, authSecretaria, updateConfirmacion);
 router.post('/deleteConfirmacion', isAuthenticated, authSecretaria, deleteConfirmacion);
+router.get('/downloadPDFConfirmacion/:idBau', isAuthenticated, authSecretaria, downloadPDFConfirmacion);
 
 router.get('/matrimonios', isAuthenticated, authSecretaria, renderMatrimonio);
 router.get('/getMatrimonios', isAuthenticated, authSecretaria, getMatrimonios);
@@ -95,5 +98,6 @@ router.post('/saveMatrimonio', isAuthenticated, authSecretaria, saveMatrimonio);
 router.get('/searchMatrimonio', isAuthenticated, authSecretaria, searchMatrimonio);
 router.post('/updateMatrimonio', isAuthenticated, authSecretaria, updateMatrimonio);
 router.post('/deleteMatrimonio', isAuthenticated, authSecretaria, deleteMatrimonio);
+router.get('/downloadPDFMatrimonio/:idBau', isAuthenticated, authSecretaria, downloadPDFMatrimonio);
 
 module.exports = router;

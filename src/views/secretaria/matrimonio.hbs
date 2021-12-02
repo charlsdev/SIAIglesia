@@ -412,10 +412,12 @@
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
                               </a> 
-                              <a class="dropdown-item" onclick="generatePDF('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
-                                 <i class='bx bxs-file-pdf' ></i>
-                                 Generar Acta 
-                              </a>`;
+                              <form id="urlReportPDF" method="GET" action="downloadPDFMatrimonio/${row._id}">
+                                 <a class="dropdown-item" onclick="reportPDF()"> 
+                                    <i class='bx bxs-file-pdf' ></i>
+                                    Generar Acta 
+                                 </a>
+                              </form>`;
                         }
                   },
                ],
@@ -887,5 +889,13 @@
             }
          }
 
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
          
       </script>

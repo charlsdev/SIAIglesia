@@ -61,10 +61,14 @@
 
          .tituloCenter .tittleBau {
             font-size: 1.65rem;
-            padding: 50px 5px;
+            padding: 10px 5px 30px 5px;
          }
          .negrita {
             font-weight: bold;
+         }
+         .cursiva {
+            font-style: oblique;
+            font-weight: 500;
          }
          .content .description {
             padding: 5px 75px !important;
@@ -75,7 +79,7 @@
          .marginTB {
             text-align: justify;
             font-weight: 500;
-            padding: 45px 75px !important;
+            padding: 25px 75px 25px 75px !important;
          }
          .content .descriptionFrase {
             padding: 5px 75px !important;
@@ -85,8 +89,8 @@
             line-height: 1.65rem;
          }
          .content .descriptionIZ {
-            padding: 5px 95px !important;
-            text-align: right;
+            padding: 1px 120px 1px 95px !important;
+            text-align: left;
          }
          .margin .textR {
             padding: 45px 95px 30px 95px !important;
@@ -125,9 +129,19 @@
 
          <table>
             <tbody>
+               <tr class="margin">
+                  <th class="textR">
+                     Jipijapa, {{data.dateNow}}
+                  </th>
+               </tr>
+            </tbody>
+         </table>
+
+         <table>
+            <tbody>
                <tr class="tituloCenter">
                   <th class="tittleBau">
-                     CERTIFICADO DE COMUNIÓN
+                     CERTIFICADO MATRIMONIAL
                   </th>
                </tr>
             </tbody>
@@ -137,37 +151,73 @@
             <tbody>
                <tr class="content">
                   <th class="description">
-                     En la <span class="negrita">Parroquia Santa María Madre</span> de Jipijapa en el año <span class="negrita">{{data.anioSacramento}}</span> la/el señorita(o) <span class="negrita">{{data.nombres}} {{data.apellidos}}</span> con número de cédula <span class="negrita">{{data.cedula}}</span>, hijo de <span class="negrita">{{data.namePadre}}</span>  y <span class="negrita">{{data.nameMadre}}</span>, recibió el sacramento de la <span class="negrita">COMUNIÓN</span> a cargo del Padre y siendo catequista la/el Sr(a). <span class="negrita">{{data.nameCatequista}}</span> en nuestra parroquia.
+                     El <span class="negrita">{{data.fechaMatrimonio}}</span>, en la iglesia <span class="negrita">Santa María Madre</span>, obtenida la dispensa de proclamas y no habiendo impedimento ninguno el Padre <span class="negrita">{{data.nameSacerdote}}</span> presencio y bendijo el matrimonio de:
                   </th>
                </tr>
 
                <tr class="content">
                   <th class="description">
-                     <span class="negrita">Sus padrinos:</span> {{data.nameMadrina}} y {{data.namePadrino}}.
+                     Sr. <span class="negrita">{{data.nameEsposo}}</span>, hijo de <span class="cursiva">{{data.namePadreEsposo}}</span> y <span class="cursiva">{{data.nameMadreEsposo}}</span>.
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="description">
+                     Sra. <span class="negrita">{{data.nameEsposa}}</span>, hijo de <span class="cursiva">{{data.namePadreEsposa}}</span> y <span class="cursiva">{{data.nameMadreEsposa}}</span>.
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="description">
+                     Cumpliendo cuanto para la validez y licitud del acto exige la legislación canónica y en presencia de los testigos, los señores;
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="description">
+                     Sr. <span class="negrita">{{data.namePadrino}}</span> y Sra. <span class="negrita">{{data.nameMadrina}}</span>.
                   </th>
                </tr>
 
                <tr>
                   <th class="marginTB">
-                     Se expide la presente certificación a solicitud del interesado.
-                  </th>
-               </tr>
-
-               <tr class="content">
-                  <th class="descriptionFrase">
-                     “Lo importante no es mirar desde lejos o ayudarlo desde lejos, sino ir al encuentro. Eso es lo cristiano, lo que nos enseña Jesús. Ir al encuentro de los más necesitados. Como Jesús que iba siempre al encuentro de la gente”.
+                     Lo certifica,
                   </th>
                </tr>
 
                <tr class="content">
                   <th class="descriptionIZ">
-                     - Papa Francisco.
+                     REGISTRO CIVIL
                   </th>
                </tr>
 
-               <tr class="margin">
-                  <th class="textR">
-                     Jipijapa, {{data.dateNow}}
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     DE: <span class="cursiva">{{data.ciudadRCivil}}</span>
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     AÑO: <span class="cursiva">{{data.anioRCivil}}</span>
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     TOMO: <span class="cursiva">{{data.tomoRCivil}}</span>
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     PÁGINA: <span class="cursiva">{{data.paginaRCivil}}</span>
+                  </th>
+               </tr>
+
+               <tr class="content">
+                  <th class="descriptionIZ">
+                     N° ACTA: <span class="cursiva">{{data.numeroActaRCivil}}</span>
                   </th>
                </tr>
 
@@ -185,7 +235,7 @@
 
                <tr class="firma">
                   <th class="textR" style="padding-bottom: 25px !important;">
-                     PÁRROCO
+                     VICARIO PARROQUIAL
                   </th>
                </tr>
             </tbody>
