@@ -10,6 +10,7 @@ const uploadEvents = multer({
 const {
    redirectWelcome,
    renderWelcome,
+   renderProfile,
 
    renderOfrendas,
    getOfrendas,
@@ -63,6 +64,7 @@ const {
 
 router.get('/', isAuthenticated, authSecretaria, redirectWelcome);
 router.get('/welcome', isAuthenticated, authSecretaria, renderWelcome);
+router.get('/profile', isAuthenticated, authSecretaria, renderProfile);
 
 router.get('/ofrendas', isAuthenticated, authSecretaria, renderOfrendas);
 router.get('/getOfrendas', isAuthenticated, authSecretaria, getOfrendas);

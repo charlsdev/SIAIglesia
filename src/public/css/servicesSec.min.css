@@ -14,6 +14,9 @@
 }
 
 .btn__Add {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    width: 150px;
    font-size: .9rem;
    padding: 6px 1px;

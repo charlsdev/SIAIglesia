@@ -66,6 +66,28 @@ secretariaControllers.renderWelcome = async (req, res) => {
    });
 };
 
+secretariaControllers.renderProfile = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      fechNacimiento,
+      genero,
+      telefono,
+      email,
+      privilegio,
+      estado,
+      photoProfile
+   } = req.user;
+
+   let est = (estado == 'Enabled') ? true : false;
+
+   res.render('secretaria/profile', { 
+      cedula, apellidos, nombres, fechNacimiento, genero, telefono, email, privilegio, estado, photoProfile,
+      est
+   });
+};
+
 secretariaControllers.renderOfrendas = async (req, res) => {
    const {
       cedula,

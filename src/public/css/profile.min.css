@@ -1,0 +1,48 @@
+.borderPro {
+   background-color: var(--bodyColor);
+   border: 1.5px solid var(--azulBajoOp);
+   border-radius: 1rem;
+}
+
+.tittleSEC {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 12px 5px;
+}
+
+.tittleSEC .service__title {
+   font-size: 1.55rem;
+   text-transform: uppercase;
+   font-weight: 600;
+   color: var(--title-color);
+   letter-spacing: 0.5px;
+}
+
+.btn__Add {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 150px;
+   font-size: .8rem;
+   padding: 6px 1px;
+   margin: 0 15px 15px 15px;
+   border-radius: 1.5rem;
+   border: 1px solid var(--rojoEscarlata);
+   font-weight: 600;
+   background: transparent;
+   text-transform: uppercase;
+   transition: .3s;
+   color: var(--rojoEscarlata);
+}
+
+.btn__Add i {
+   margin-right: 5px;
+   font-size: 1.1rem;
+}
+
+.btn__Add:hover {
+   color: var(--blanco);
+   background: var(--rojoCereza);
+   transition: .3s;
+}
