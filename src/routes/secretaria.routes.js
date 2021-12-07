@@ -1,6 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 
+const path = require('path');
+const multer = require('multer');
+const uploadEvents = multer({
+   dest: path.join(__dirname, '../public/events/temp')
+});
+
 const {
    redirectWelcome,
    renderWelcome,
@@ -15,6 +21,7 @@ const {
    deleteEvento,
    searchEvento,
    updateEvento,
+   saveEventoFile,
 
    renderBautizo,
    getBautizos,
@@ -67,6 +74,7 @@ router.post('/saveEvento', isAuthenticated, authSecretaria, saveEvento);
 router.post('/deleteEvento', isAuthenticated, authSecretaria, deleteEvento);
 router.get('/searchEvento', isAuthenticated, authSecretaria, searchEvento);
 router.post('/updateEvento', isAuthenticated, authSecretaria, updateEvento);
+router.post('/saveEventoFile', isAuthenticated, authSecretaria, uploadEvents.single('file_events'), saveEventoFile);
 
 router.get('/bautizos', isAuthenticated, authSecretaria, renderBautizo);
 router.get('/getBautizos', isAuthenticated, authSecretaria, getBautizos);

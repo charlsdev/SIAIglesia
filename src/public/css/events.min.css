@@ -8,18 +8,21 @@
    align-items: center;
 }
 
-.tittle__alert .subtittle__alert {
+.tittle__alert .subtittle__alert,
+.subtittle__alert {
    font-size: 0.75em;
    font-weight: 600;
 }
 
-.alert-dismissible .parrafo__alert {
+.alert-dismissible .parrafo__alert,
+.parrafo__alert {
    text-align: justify;
    font-size: 0.8em;
    color: #333;
 }
 
-.alert-dismissible .btn__alerts {
+.alert-dismissible .btn__alerts,
+.btn__alerts {
    display: flex;
    align-items: center;
    justify-content: flex-end;
@@ -39,6 +42,12 @@
    padding-bottom: 5px;
 }
 
+.btn__alerts .btn__File {
+   margin-right: 10px;
+   color: var(--moradoBajo);
+   border: 1px solid var(--moradoBajo);
+}
+
 .btn__alerts .btn__Edit {
    margin-right: 10px;
    color: var(--verde);
@@ -48,6 +57,12 @@
 .btn__alerts .btn__Delete {
    color: var(--rojoEscarlata);
    border: 1px solid var(--rojoEscarlata);
+}
+
+.btn__alerts .btn__File:hover {
+   color: var(--blanco);
+   background: var(--moradoBajo);
+   transition: .3s;
 }
 
 .btn__alerts .btn__Edit:hover {
@@ -126,7 +141,12 @@
 textarea {
    resize: none;
    overflow: hidden;
-   min-height: 44px;
+   /* min-height: 44px; */
+   min-height: 35px;
    max-height: 100%;
    font-size: .78rem !important;
+}
+
+.card-body {
+   padding: .65rem 1.25rem .65rem 1rem;
 }

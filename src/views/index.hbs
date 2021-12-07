@@ -1,5 +1,6 @@
       <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="/swiper/swiper-bundle.min.css" type="text/css">
+      <link rel="stylesheet" href="/lightbox2/lightbox.min.css" type="text/css">
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       {{!-- <link rel="stylesheet" href="/css/chatsBox.min.css" type="text/css"> --}}
       <link rel="stylesheet" href="/css/socialsBar.min.css" type="text/css">
@@ -123,18 +124,30 @@
                <div class="row mt-3">
                   {{#each listEvents}}
                      <div class="col-md-6">
-                        <div class="alert alert-{{color}} alert-dismissible fade show" role="alert">
-                           <div class="tittle__alert">
-                              <strong>Evento #{{#counter @index}} {{/counter}}</strong>
-                              <p class="subtittle__alert">{{timeDate fecha}}</p>
+                        <div class="card alert-{{color}} mb-3">
+                           <div class="row no-gutters">
+                              <div class="col-md-4 p-2 d-flex justify-content-center align-items-center">
+                                 <a href="/events/{{images}}" data-lightbox="roadtrip" data-title="">
+                                    <img width="120px" src="/events/{{images}}">
+                                 </a>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="card-body">
+                                    <div class="tittle__alert">
+                                       <strong>{{tittle}}</strong>
+                                       <div class="subtittle__alert">{{timeDate fecha}}</div>
+                                    </div>
+
+                                    <div class="parrafo__alert">
+                                       {{descripcion}}
+                                    </div>
+                                 </div>
+                              </div>
                            </div>
-                           <p class="parrafo__alert">
-                              {{descripcion}}
-                           </p>
                         </div>
                      </div>
                   {{/each}}
-               
                </div>
             </div>
          </div>
@@ -147,8 +160,20 @@
 
       <script src="/js/jquery-3.5.1.min.js"></script>
       <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/lightbox2/lightbox.min.js"></script>
       <script src="/swiper/gsap.min.js"></script>
       <script src="/swiper/swiper-bundle.min.js"></script>
       <script src="/js/index.min.js"></script>
+
+      <script>
+         /*$(document).ready(function(){
+            lightbox.init();
+         });*/
+
+         lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true
+         })
+      </script>
 
       {{!-- {{> chatsBox}} --}}

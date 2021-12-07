@@ -1,11 +1,19 @@
       <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/lightbox2/lightbox.min.css" type="text/css">
       <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
       <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
       <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
       <link rel="stylesheet" href="/css/events.min.css" type="text/css">
       <link rel="stylesheet" href="/css/register.min.css" type="text/css">
       <link rel="stylesheet" href="/css/myCSS.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/drapArea.min.css" type="text/css">
+
+      <style>
+         .wrapperImg img {
+            object-fit: contain;;
+         }
+      </style>
       
    </head>
 
@@ -25,27 +33,52 @@
                <button class="btn__Add"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
             </div>
          </div>
+
+         <div class="row">
+            <div class="col-md-6 mx-auto">
+               {{> alerts}}
+               {{> errors}}
+            </div>
+         </div>
          
          <div class="row mt-3">
             {{#if listEvents}}
                {{#each listEvents}}
                   <div class="col-md-6">
-                     <div class="alert alert-{{color}} alert-dismissible fade show" role="alert">
-                        <div class="tittle__alert">
-                           <strong>Evento #{{#counter @index}} {{/counter}}</strong>
-                           <p class="subtittle__alert">{{timeDate fecha}}</p>
-                        </div>
-                        <p class="parrafo__alert">
-                           {{descripcion}}
-                        </p>
-                        <div class="btn__alerts">
-                           <button class="btn__Edit" onclick="editEvent(`{{id}}`)">
-                              <i class='bx bx-message-square-edit bx-tada' ></i>
-                           </button>
+                     <div class="card alert-{{color}} mb-3">
+                        <div class="row no-gutters">
+                           <div class="col-md-4 p-2 d-flex justify-content-center align-items-center">
+                              <a href="/events/{{images}}" data-lightbox="roadtrip" data-title="">
+                                 <img src="/events/{{images}}">
+                              </a>
+                           </div>
 
-                           <button class="btn__Delete" onclick="deleteEvent(`{{id}}`, `{{#counter @index}} {{/counter}}`)">
-                              <i class='bx bx-message-square-minus bx-tada' ></i>
-                           </button>
+                           <div class="col-md-8">
+                              <div class="card-body">
+                                 <div class="tittle__alert">
+                                    <strong>{{tittle}}</strong>
+                                    <div class="subtittle__alert">{{timeDate fecha}}</div>
+                                 </div>
+
+                                 <div class="parrafo__alert">
+                                    {{descripcion}}
+                                 </div>
+
+                                 <div class="btn__alerts">
+                                    <button class="btn__File" onclick="editImage(`{{id}}`, `{{images}}`)">
+                                       <i class='bx bxs-file-image bx-tada' ></i>
+                                    </button>
+
+                                    <button class="btn__Edit" onclick="editEvent(`{{id}}`)">
+                                       <i class='bx bx-message-square-edit bx-tada' ></i>
+                                    </button>
+
+                                    <button class="btn__Delete" onclick="deleteEvent(`{{id}}`, `{{#counter @index}} {{/counter}}`)">
+                                       <i class='bx bx-message-square-minus bx-tada' ></i>
+                                    </button>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -78,6 +111,7 @@
       <script src="/js/jquery-3.5.1.min.js"></script>
       <script src="/js/popper.min.js"></script>
       <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/lightbox2/lightbox.min.js"></script>
       <script src="/sweetalert2/sweetalert2.min.js"></script>
       <script src="/fontawesome/js/all.min.js"></script>
       <script src="/js/navSecretaria.min.js"></script>
@@ -89,83 +123,129 @@
                <div class="modal-header header__modal">
                   <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Añadir evento</h5>
                </div>
+
                <div class="modal-body body__modal">
-                  <div class="row mb-1">
-                     <div class="col-md-4 mb-3">
-                        <div class="form-check form-check-primary radio radio-primary col-md-2">
-                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio1" value="primary" >
-                           <label class="form-check-label" for="inlineRadio1">
-                              <span class="badge badge-pill badge-primary">Primary</span>
-                           </label>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4 mb-3">
-                        <div class="form-check form-check-success radio radio-success col-md-2">
-                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio2" value="success" >
-                           <label class="form-check-label" for="inlineRadio2">
-                              <span class="badge badge-pill badge-success">Success</span>
-                           </label>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4 mb-3">
-                        <div class="form-check form-check-danger radio radio-danger col-md-2">
-                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio3" value="danger" >
-                           <label class="form-check-label" for="inlineRadio3">
-                              <span class="badge badge-pill badge-danger">Danger</span>
-                           </label>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4 mb-3">
-                        <div class="form-check form-check-info radio radio-info col-md-2">
-                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio4" value="info" >
-                           <label class="form-check-label" for="inlineRadio4">
-                              <span class="badge badge-pill badge-info">Info</span>
-                           </label>
-                        </div>
-                     </div>
-
-                     <div class="col-md-4 mb-3">
-                        <div class="form-check form-check-warning radio radio-warning col-md-2">
-                           <input class="form-check-input" type="radio" name="color_events" id="inlineRadio5" value="warning" >
-                           <label class="form-check-label" for="inlineRadio5">
-                              <span class="badge badge-pill badge-warning">Warning</span>
-                           </label>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12">
-                        <div class="form__div form__div-one">
-                           <div class="form__icon">
-                              <i class='bx bx-calendar-check bx-tada' ></i>
+                  <form enctype="multipart/form-data" id="formEvents">
+                     <div class="row mb-1">
+                        <div class="col-md-4 mb-3">
+                           <div class="form-check form-check-primary radio radio-primary col-md-2">
+                              <input class="form-check-input" type="radio" name="color_events" id="inlineRadio1" value="primary" >
+                              <label class="form-check-label" for="inlineRadio1">
+                                 <span class="badge badge-pill badge-primary">Primary</span>
+                              </label>
                            </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Fecha</label>
-                              <input type="date" class="form__input" id="fech_events" name="fech_events" required>
+                        </div>
+   
+                        <div class="col-md-4 mb-3">
+                           <div class="form-check form-check-success radio radio-success col-md-2">
+                              <input class="form-check-input" type="radio" name="color_events" id="inlineRadio2" value="success" >
+                              <label class="form-check-label" for="inlineRadio2">
+                                 <span class="badge badge-pill badge-success">Success</span>
+                              </label>
+                           </div>
+                        </div>
+   
+                        <div class="col-md-4 mb-3">
+                           <div class="form-check form-check-danger radio radio-danger col-md-2">
+                              <input class="form-check-input" type="radio" name="color_events" id="inlineRadio3" value="danger" >
+                              <label class="form-check-label" for="inlineRadio3">
+                                 <span class="badge badge-pill badge-danger">Danger</span>
+                              </label>
+                           </div>
+                        </div>
+   
+                        <div class="col-md-4 mb-3">
+                           <div class="form-check form-check-info radio radio-info col-md-2">
+                              <input class="form-check-input" type="radio" name="color_events" id="inlineRadio4" value="info" >
+                              <label class="form-check-label" for="inlineRadio4">
+                                 <span class="badge badge-pill badge-info">Info</span>
+                              </label>
+                           </div>
+                        </div>
+   
+                        <div class="col-md-4 mb-3">
+                           <div class="form-check form-check-warning radio radio-warning col-md-2">
+                              <input class="form-check-input" type="radio" name="color_events" id="inlineRadio5" value="warning" >
+                              <label class="form-check-label" for="inlineRadio5">
+                                 <span class="badge badge-pill badge-warning">Warning</span>
+                              </label>
                            </div>
                         </div>
                      </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12">
-                        <div class="form__div form__div-one content__TA" style="margin-bottom: 1rem;">
-                           <div class="form__icon">
-                              <i class='bx bx-notepad bx-tada' ></i>
-                           </div>
-      
-                           <div class="form__div-input">
-                              <label for="" class="form__label">Descripción</label>
-                              <textarea class="form__input" name="description_events" id="description_events" oninput="autoSize(this)"></textarea>
+   
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form__div form__div-one">
+                              <div class="form__icon">
+                                 <i class='bx bx-calendar-check bx-tada' ></i>
+                              </div>
+         
+                              <div class="form__div-input">
+                                 <label for="" class="form__label">Fecha</label>
+                                 <input type="date" class="form__input" id="fech_events" name="fech_events" required>
+                              </div>
                            </div>
                         </div>
                      </div>
-                  </div>
+   
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form__div form__div-one">
+                              <div class="form__icon">
+                                 <i class='bx bx-notepad bx-tada' ></i>
+                              </div>
+         
+                              <div class="form__div-input">
+                                 <label for="" class="form__label">Título</label>
+                                 <input type="text" class="form__input" id="tittle_events" name="tittle_events" required>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+   
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form__div form__div-one content__TA" style="margin-bottom: 1rem;">
+                              <div class="form__icon">
+                                 <i class='bx bx-notepad bx-tada' ></i>
+                              </div>
+         
+                              <div class="form__div-input">
+                                 <label for="" class="form__label">Descripción</label>
+                                 <textarea class="form__input" name="description_events" id="description_events" oninput="autoSize(this)" maxlength="255"></textarea>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+   
+                     {{!-- <div class="row">
+                        <div class="col-md-12">
+                           <div class="containerImg">
+                              <div class="wrapperImg">
+                                 <div class="image">
+                                    <img class="imgTrans"/>
+                                 </div>
+                                 <div class="content">
+                                    <div class="icon">
+                                       <i class='bx bx-cloud-upload' ></i>
+                                    </div>
+                                    <div class="text">¡Aún no se ha elegido ningún archivo!</div>
+                                 </div>
+                                 <div id="cancel-btn">
+                                    <i class='bx bx-x' ></i>
+                                 </div>
+                                 <div class="file-name">Nombre de archivo aquí</div>
+                              </div>
+                              
+                              <button type="button" onclick="defaultBtnActive()" id="custom-btn">
+                                 Buscar archivo
+                              </button>
+   
+                              <input id="default-btn" name="file_events" type="file" accept="image/*" hidden required/>
+                           </div>
+                        </div>
+                     </div> --}}
+                  </form>
                </div>
 
                <div class="modal-footer footer__modal">
@@ -184,6 +264,7 @@
                <div class="modal-header header__modal">
                   <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Añadir evento</h5>
                </div>
+
                <div class="modal-body body__modal">
                   <div class="row mb-1">
                      <div class="col-md-4 mb-3">
@@ -253,6 +334,21 @@
 
                   <div class="row">
                      <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-notepad bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Título</label>
+                              <input type="text" class="form__input" id="tittle_eventsEd" name="tittle_eventsEd" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
                         <div class="form__div form__div-one content__TAEd" style="margin-bottom: 1rem;">
                            <div class="form__icon">
                               <i class='bx bx-notepad bx-tada' ></i>
@@ -276,10 +372,67 @@
          </div>
       </div>
 
+      {{!-- Modal File Evento --}}
+      <div class="modal fade" id="modalAddFileEvents" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">Imagen de evento</h5>
+               </div>
+
+               <form enctype="multipart/form-data" action="/s/saveEventoFile" method="POST" id="formEvents">
+                  <div class="modal-body body__modal">
+                     <div class="row">
+                        <div class="col-md-12">
+                           <input type="hidden" class="form__input" id="id_events" name="id_events" required>
+                        </div>
+                     </div>
+
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="containerImg">
+                              <div class="wrapperImg">
+                                 <div class="image">
+                                    <img class="imgTrans"/>
+                                 </div>
+                                 <div class="content">
+                                    <div class="icon">
+                                       <i class='bx bx-cloud-upload' ></i>
+                                    </div>
+                                    <div class="text">¡Aún no se ha elegido ningún archivo!</div>
+                                 </div>
+                                 <div id="cancel-btn">
+                                    <i class='bx bx-x' ></i>
+                                 </div>
+                                 <div class="file-name">Nombre de archivo aquí</div>
+                              </div>
+                              
+                              <button type="button" onclick="defaultBtnActive()" id="custom-btn">
+                                 Buscar archivo
+                              </button>
+   
+                              <input id="default-btn" name="file_events" type="file" accept="image/*" hidden required/>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="modal-footer footer__modal">
+                     <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                     <button type="submit" class="btn__Send">Actualizar</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+
       <script src="/js/login.min.js"></script>
+      <script src="/js/drapArea.min.js"></script>
 
       <script>
          const openModalAdd = document.querySelector('.btn__Add');
+         const imageModal = document.querySelector('.image');
 
          openModalAdd.onclick = () => {
             $('input[name="color_events"]').prop('checked', false);
@@ -291,8 +444,10 @@
          const content__TA = document.querySelector('.content__TA');
 
          function autoSize(textarea) {
-            textarea.style.height = "44px";
-            content__TA.style.height = "42px";
+            /*textarea.style.height = "44px";
+            content__TA.style.height = "42px";*/
+            textarea.style.height = "35px";
+            content__TA.style.height = "38px";
             textarea.style.height = (textarea.scrollHeight)+"px";
             content__TA.style.height = (textarea.scrollHeight)+"px";
          }
@@ -300,8 +455,10 @@
          const content__TAEd = document.querySelector('.content__TAEd');
 
          function autoSizeEd(textarea) {
-            textarea.style.height = "44px";
-            content__TAEd.style.height = "42px";
+            /*textarea.style.height = "44px";
+            content__TA.style.height = "42px";*/
+            textarea.style.height = "35px";
+            content__TAEd.style.height = "38px";
             textarea.style.height = (textarea.scrollHeight)+"px";
             content__TAEd.style.height = (textarea.scrollHeight)+"px";
          }
@@ -310,10 +467,11 @@
 
          btn__Send.onclick = (e) => {
             fechaEv = $.trim($('#fech_events').val());
+            tittleEv = $.trim($('#tittle_events').val());
             descriptionEv = $.trim($('#description_events').val());
             colorEv = $.trim($('input[name="color_events"]:checked').val());
 
-            if (fechaEv === '' || descriptionEv === '' || colorEv === '') {
+            if (fechaEv === '' || tittleEv === '' || descriptionEv === '' || colorEv === '') {
                Swal.fire({
                   position: 'top-end',
                   imageUrl: '/img/SMMIglesia.png',
@@ -353,8 +511,9 @@
                         dataType: 'json',
                         data: {
                            fechaEv,
-                           colorEv,
-                           descriptionEv
+                           tittleEv,
+                           descriptionEv,
+                           colorEv
                         }
                      })
                      .done(function(res) {
@@ -476,6 +635,7 @@
                $('#id_eventsEd').val('');
                $('input[name="color_eventsEd"]').prop('checked', false);
                $('#fech_eventsEd').val('');
+               $('#tittle_eventsEd').val('');
                $('#description_eventsEd').val('');
 
                if (res.res == 'data') {
@@ -484,6 +644,7 @@
                   $('#id_eventsEd').val(`${res.data.id}`);
                   $(`input[name=color_eventsEd][value='${res.data.color}']`).prop("checked", true);
                   $('#fech_eventsEd').val(`${res.data.fecha}`);
+                  $('#tittle_eventsEd').val(`${res.data.tittle}`);
                   $('#description_eventsEd').val(`${res.data.descripcion}`);
                   $('#modalEditEvents').modal('show');
                }
@@ -513,10 +674,11 @@
          btn__Update.onclick = (e) => {
             idEv = $.trim($('#id_eventsEd').val());
             fechaEv = $.trim($('#fech_eventsEd').val());
+            tittleEv = $.trim($('#tittle_eventsEd').val());
             descriptionEv = $.trim($('#description_eventsEd').val());
             colorEv = $.trim($('input[name="color_eventsEd"]:checked').val());
 
-            if (idEv === '' || fechaEv === '' || descriptionEv === '' || colorEv === '') {
+            if (idEv === '' || fechaEv === '' || descriptionEv === '' || tittleEv === '' || colorEv === '') {
                Swal.fire({
                   position: 'top-end',
                   imageUrl: '/img/SMMIglesia.png',
@@ -558,6 +720,7 @@
                            idEv,
                            fechaEv,
                            colorEv,
+                           tittleEv,
                            descriptionEv
                         }
                      })
@@ -599,4 +762,17 @@
             }
          }
 
+         const editImage = (id, img) => {
+            $('.wrapperImg').addClass('active');
+            document.querySelector('.image').innerHTML = `<img class="imgTrans" src="/events/${img}"/>`;
+            document.querySelector('.file-name').innerHTML = `${img}`;
+            $('#id_events').val(`${id}`);
+            $('#modalAddFileEvents').modal('show');
+         }
+
+
+         lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true
+         })
       </script>

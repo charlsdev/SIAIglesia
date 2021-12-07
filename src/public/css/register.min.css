@@ -137,7 +137,8 @@ input[type="time" i],
    border: none;
    outline: none;
    background: none;
-   padding: .5rem .75rem;
+   /* padding: .5rem .75rem; */
+   padding: 0 .75rem;
    font-size: .9rem;
    color: var(--negroSuave);
    transition: .3s;

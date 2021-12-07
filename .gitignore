@@ -3,3 +3,5 @@ node_modules
 morgandoc.log
 src/public/comprobantes
 actas
+src/public/events
+src/utils

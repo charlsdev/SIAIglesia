@@ -1,3 +1,4 @@
+const { nanoid } = require('nanoid');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const fse = require('fs-extra');
@@ -336,14 +337,16 @@ secretariaControllers.saveEvento = async (req, res) => {
    const {
       colorEv,
       fechaEv,
+      tittleEv,
       descriptionEv
    } = req.body;
 
    var colorEvents = colorEv.trim(),
       fechaEvents = fechaEv.trim(),
+      tittleEvents = tittleEv.trim(),
       descriptionEvents = descriptionEv.trim();
 
-   if (fechaEvents == '' || descriptionEvents == '' || colorEvents == '') {
+   if (fechaEvents == '' || tittleEvents == '' || descriptionEvents == '' || colorEvents == '') {
       res.json({
          res: 'icon',
          tittle: 'CAMPOS VACÍOS',
@@ -354,7 +357,9 @@ secretariaControllers.saveEvento = async (req, res) => {
       const newEvents = {
          color: colorEvents,
          fecha: fechaEvents,
+         tittle: tittleEvents,
          descripcion: descriptionEvents,
+         images: 'notImage.png',
          cedUser: req.user.cedula
       };
 
@@ -442,9 +447,9 @@ secretariaControllers.searchEvento = async (req, res) => {
    } = req.query;
 
    try {
-      const resEvent = await connectionDB.query(`  SELECT * 
-                                                   FROM eventos 
-                                                   WHERE id = ?`, idEvent);
+      const resEvent = await connectionDB.query(`SELECT * 
+                                                FROM eventos 
+                                                WHERE id = ?`, idEvent);
       // console.log(resEvent[0]);
       
       if (resEvent) {
@@ -476,15 +481,17 @@ secretariaControllers.updateEvento = async (req, res) => {
       idEv,
       colorEv,
       fechaEv,
+      tittleEv,
       descriptionEv
    } = req.body;
 
    var idEvents = idEv.trim(),
       colorEvents = colorEv.trim(),
       fechaEvents = fechaEv.trim(),
+      tittleEvents = tittleEv.trim(),
       descriptionEvents = descriptionEv.trim();
 
-   if (idEvents == '' || fechaEvents == '' || descriptionEvents == '' || colorEvents == '') {
+   if (idEvents === '' || fechaEvents === '' || tittleEvents === '' || descriptionEvents === '' || colorEvents === '') {
       res.json({
          res: 'icon',
          tittle: 'CAMPOS VACÍOS',
@@ -495,7 +502,9 @@ secretariaControllers.updateEvento = async (req, res) => {
       const updateEvents = {
          color: colorEvents,
          fecha: fechaEvents,
+         tittle: tittleEvents,
          descripcion: descriptionEvents,
+         // images: 'notImage.png',
          cedUser: req.user.cedula
       };
 
@@ -527,6 +536,114 @@ secretariaControllers.updateEvento = async (req, res) => {
             icon: 'error',
             description: 'Upss! Error interno x_x. Intentelo más luego.'
          });
+      }
+   }
+};
+
+secretariaControllers.saveEventoFile = async (req, res) => {
+   const {
+      id_events
+   } = req.body;
+
+   let ID = id_events.trim();
+
+   if (ID === '') {
+      if (req.file) {
+         const tempPathFiles = req.file.path;
+         await fse.unlink(tempPathFiles);   
+      }
+
+      req.flash('warning_msg', 'Los campos no pueden vacios o con espacios...');
+      res.redirect('/s/eventos');
+   } else {
+      if (!numbersVer(ID)) {
+         if (req.file) {
+            const tempPathFiles = req.file.path;
+            await fse.unlink(tempPathFiles);   
+         }
+
+         req.flash('error_msg', 'Tipo de dato incorrecto...');
+         res.redirect('/s/eventos');
+      } else {
+         try {
+            const searchOf = await connectionDB.query(`SELECT id
+                                                      FROM eventos
+                                                      WHERE id = ?`, [ID]);
+            // console.log(searchOf);
+
+            if (searchOf.length > 0) {
+               const nameIMG = `${nanoid(12)}`;
+
+               const extFiles = path.extname(req.file.originalname).toLowerCase();
+               
+               if (extFiles === '.jpg' || extFiles === '.jpeg' || extFiles === '.png') {
+                  const nameEndFiles = `${nameIMG}${extFiles}`;
+                  const destinationFiles = path.resolve(`src/public/events/${nameEndFiles}`);
+                  const tempPathFiles = req.file.path;
+               
+                  await fse.copy(tempPathFiles, destinationFiles);
+               
+                  const imgID = async () => {
+
+                     const reviewIMG = await connectionDB.query(`SELECT images
+                                                               FROM eventos
+                                                               WHERE images = ?`, nameEndFiles);
+                     // console.log(reviewIMG);
+
+                     if (reviewIMG.length > 0) {
+                        imgID();
+                     } else {
+                        const nameFileNew = {
+                           images: nameEndFiles
+                        };
+
+                        const saveImage = await connectionDB.query(`UPDATE eventos 
+                                                                  SET ?
+                                                                  WHERE id = ?`, [nameFileNew, ID]);
+                        // console.log(saveImage);
+      
+                        if (saveImage.affectedRows > 0) {
+                           req.flash('success_msg', 'Imagen publicada con éxito...');
+                           res.redirect('/s/eventos');
+                        } else {
+                           req.flash('error_msg', '¡Uppsss! No se ha podido guardar la imagen del evento...');
+                           res.redirect('/s/eventos');
+                        }
+                     }
+                  };
+
+                  imgID();
+
+                  await fse.unlink(tempPathFiles);
+               } else {
+                  if (req.file) {
+                     const tempPathFiles = req.file.path;
+                     await fse.unlink(tempPathFiles);   
+                  }
+   
+                  req.flash('info_msg', '¡Uppsss! Extensión de imagen no válida.');
+                  res.redirect('/s/eventos');
+               }
+            } else {
+               if (req.file) {
+                  const tempPathFiles = req.file.path;
+                  await fse.unlink(tempPathFiles);   
+               }
+
+               req.flash('info_msg', '¡Uppsss! Evento no encontrado.');
+               res.redirect('/s/eventos');
+            }
+         } catch (e) {
+            console.log(e);
+            
+            if (req.file) {
+               const tempPathFiles = req.file.path;
+               await fse.unlink(tempPathFiles);   
+            }
+
+            req.flash('error_msg', '¡Uppsss! Error inesperado, inténtalo más luego x_x.');
+            res.redirect('/s/eventos');
+         }
       }
    }
 };
