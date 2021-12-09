@@ -7,7 +7,7 @@ const configPDF  = require('../helpers/optionsPDF');
 const moment = require('moment');
 moment.locale('es');
 
-const secretariaControllers = {};
+const sacerdoteControllers = {};
 
 const connectionDB = require('../database');
 
@@ -24,11 +24,11 @@ const {
    emailVer
 } = require('../helpers/validations');
 
-secretariaControllers.redirectWelcome = async (req, res) => {
-   res.redirect('/s/welcome');
+sacerdoteControllers.redirectWelcome = async (req, res) => {
+   res.redirect('/p/welcome');
 };
 
-secretariaControllers.renderWelcome = async (req, res) => {
+sacerdoteControllers.renderWelcome = async (req, res) => {
    var h = new Date().getHours(),
       m = new Date().getMinutes(),
       s = new Date().getSeconds();
@@ -65,14 +65,14 @@ secretariaControllers.renderWelcome = async (req, res) => {
       console.log(e);
    }
 
-   res.render('secretaria/welcome', {
+   res.render('sacerdote/welcome', {
       h, m, s,
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, ofr, bau, comu, conf, mat
    });
 };
 
-secretariaControllers.renderProfile = async (req, res) => {
+sacerdoteControllers.renderProfile = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -88,13 +88,13 @@ secretariaControllers.renderProfile = async (req, res) => {
 
    let est = (estado == 'Enabled') ? true : false;
 
-   res.render('secretaria/profile', { 
+   res.render('sacerdote/profile', { 
       cedula, apellidos, nombres, fechNacimiento, genero, telefono, email, privilegio, estado, photoProfile,
       est
    });
 };
 
-secretariaControllers.photoProfile = async (req, res) => {
+sacerdoteControllers.photoProfile = async (req, res) => {
    if (!req.file) {
       if (req.file) {
          const tempPathFiles = req.file.path;
@@ -102,7 +102,7 @@ secretariaControllers.photoProfile = async (req, res) => {
       }
 
       req.flash('warning_msg', 'No se puede enviar imagenes vacias...');
-      res.redirect('/s/prgfile');
+      res.redirect('/p/prgfile');
    } else {
       try {
          const nameIMG = `${nanoid(20)}`;
@@ -137,10 +137,10 @@ secretariaControllers.photoProfile = async (req, res) => {
       
                   if (saveImage.affectedRows > 0) {
                      req.flash('success_msg', 'Imagen de perfil actualizada con éxito...');
-                     res.redirect('/s/profile');
+                     res.redirect('/p/profile');
                   } else {
                      req.flash('error_msg', '¡Uppsss! No se ha podido actualizar la imagen de perfil...');
-                     res.redirect('/s/profile');
+                     res.redirect('/p/profile');
                   }
                }
             };
@@ -155,7 +155,7 @@ secretariaControllers.photoProfile = async (req, res) => {
             }
    
             req.flash('info_msg', '¡Uppsss! Extensión de imagen no válida.');
-            res.redirect('/s/profile');
+            res.redirect('/p/profile');
          }
          
       } catch (e) {
@@ -167,12 +167,12 @@ secretariaControllers.photoProfile = async (req, res) => {
          }
 
          req.flash('error_msg', '¡Uppsss! Error inesperado, inténtalo más luego x_x.');
-         res.redirect('/s/profile');
+         res.redirect('/p/profile');
       }
    }
 };
 
-secretariaControllers.dataProfile = async (req, res) => {
+sacerdoteControllers.dataProfile = async (req, res) => {
    const {
       apellidos,
       nombres,
@@ -264,7 +264,7 @@ secretariaControllers.dataProfile = async (req, res) => {
    }
 };
 
-secretariaControllers.renderPassword = async (req, res) => {
+sacerdoteControllers.renderPassword = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -278,13 +278,13 @@ secretariaControllers.renderPassword = async (req, res) => {
          .format('YYYY-MM-DD'),
       est = (estado == 'Enabled') ? true : false;
 
-   res.render('secretaria/password', {
+   res.render('sacerdote/password', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, nowFecha
    });
 };
 
-secretariaControllers.changePassword = async (req, res) => {
+sacerdoteControllers.changePassword = async (req, res) => {
    const errors = [];
 
    const {
@@ -333,7 +333,7 @@ secretariaControllers.changePassword = async (req, res) => {
    }
 
    if (errors.length > 0) {
-      res.render('secretaria/password', {
+      res.render('sacerdote/password', {
          cedula, apellidos, nombres, privilegio, estado, photoProfile,
          est, nowFecha,
          errors,
@@ -371,7 +371,7 @@ secretariaControllers.changePassword = async (req, res) => {
          }
 
          if (errors.length > 0) {
-            res.render('secretaria/password', {
+            res.render('sacerdote/password', {
                cedula, apellidos, nombres, privilegio, estado, photoProfile,
                est, nowFecha,
                errors,
@@ -394,17 +394,17 @@ secretariaControllers.changePassword = async (req, res) => {
                res.redirect('/login');
             } else {
                req.flash('error_msg', '!Upsss¡ No se ha podido cambiar la contraseña...');
-               res.redirect('/s/password');
+               res.redirect('/p/password');
             }
          }
       } catch (e) {
          req.flash('error_msg', '!Upsss¡ No se ha podido cambiar la contraseña...');
-         res.redirect('/s/password');
+         res.redirect('/p/password');
       }
    }
 };
 
-secretariaControllers.renderOfrendas = async (req, res) => {
+sacerdoteControllers.renderOfrendas = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -418,13 +418,13 @@ secretariaControllers.renderOfrendas = async (req, res) => {
          .format('YYYY-MM-DD'),
       est = (estado == 'Enabled') ? true : false;
 
-   res.render('secretaria/ofrendas', {
+   res.render('sacerdote/ofrendas', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, nowFecha
    });
 };
 
-secretariaControllers.getOfrendas = async (req, res) => {
+sacerdoteControllers.getOfrendas = async (req, res) => {
    let searchOfrendas;
 
    try {
@@ -442,7 +442,7 @@ secretariaControllers.getOfrendas = async (req, res) => {
    }
 };
 
-secretariaControllers.changeEstOf = async (req, res) => {
+sacerdoteControllers.changeEstOf = async (req, res) => {
    const {
       idOf,
       value
@@ -594,7 +594,7 @@ secretariaControllers.changeEstOf = async (req, res) => {
    }
 };
 
-secretariaControllers.searchDatesOf = async (req, res) => {
+sacerdoteControllers.searchDatesOf = async (req, res) => {
    const {
       idOf
    } = req.query;
@@ -639,7 +639,7 @@ secretariaControllers.searchDatesOf = async (req, res) => {
    }
 };
 
-secretariaControllers.renderEventos = async (req, res) => {
+sacerdoteControllers.renderEventos = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -661,17 +661,17 @@ secretariaControllers.renderEventos = async (req, res) => {
    } catch (e) {
       console.log(e);
       req.flash('error_msg', 'No se ha podido cargar el contenido...');
-      res.redirect('/s/welcome');
+      res.redirect('/p/welcome');
    }
 
-   res.render('secretaria/eventos', {
+   res.render('sacerdote/eventos', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, nowFecha,
       listEvents
    });
 };
 
-secretariaControllers.saveEvento = async (req, res) => {
+sacerdoteControllers.saveEvento = async (req, res) => {
    const {
       colorEv,
       fechaEv,
@@ -731,7 +731,7 @@ secretariaControllers.saveEvento = async (req, res) => {
    }
 };
 
-secretariaControllers.deleteEvento = async (req, res) => {
+sacerdoteControllers.deleteEvento = async (req, res) => {
    const {
       idEvent
    } = req.body;
@@ -779,7 +779,7 @@ secretariaControllers.deleteEvento = async (req, res) => {
    }
 };
 
-secretariaControllers.searchEvento = async (req, res) => {
+sacerdoteControllers.searchEvento = async (req, res) => {
    const {
       idEvent
    } = req.query;
@@ -814,7 +814,7 @@ secretariaControllers.searchEvento = async (req, res) => {
    }
 };
 
-secretariaControllers.updateEvento = async (req, res) => {
+sacerdoteControllers.updateEvento = async (req, res) => {
    const {
       idEv,
       colorEv,
@@ -878,7 +878,7 @@ secretariaControllers.updateEvento = async (req, res) => {
    }
 };
 
-secretariaControllers.saveEventoFile = async (req, res) => {
+sacerdoteControllers.saveEventoFile = async (req, res) => {
    const {
       id_events
    } = req.body;
@@ -892,7 +892,7 @@ secretariaControllers.saveEventoFile = async (req, res) => {
       }
 
       req.flash('warning_msg', 'Los campos no pueden vacios o con espacios...');
-      res.redirect('/s/eventos');
+      res.redirect('/p/eventos');
    } else {
       if (!numbersVer(ID)) {
          if (req.file) {
@@ -901,7 +901,7 @@ secretariaControllers.saveEventoFile = async (req, res) => {
          }
 
          req.flash('error_msg', 'Tipo de dato incorrecto...');
-         res.redirect('/s/eventos');
+         res.redirect('/p/eventos');
       } else {
          try {
             const searchOf = await connectionDB.query(`SELECT id
@@ -942,10 +942,10 @@ secretariaControllers.saveEventoFile = async (req, res) => {
       
                         if (saveImage.affectedRows > 0) {
                            req.flash('success_msg', 'Imagen publicada con éxito...');
-                           res.redirect('/s/eventos');
+                           res.redirect('/p/eventos');
                         } else {
                            req.flash('error_msg', '¡Uppsss! No se ha podido guardar la imagen del evento...');
-                           res.redirect('/s/eventos');
+                           res.redirect('/p/eventos');
                         }
                      }
                   };
@@ -960,7 +960,7 @@ secretariaControllers.saveEventoFile = async (req, res) => {
                   }
    
                   req.flash('info_msg', '¡Uppsss! Extensión de imagen no válida.');
-                  res.redirect('/s/eventos');
+                  res.redirect('/p/eventos');
                }
             } else {
                if (req.file) {
@@ -969,7 +969,7 @@ secretariaControllers.saveEventoFile = async (req, res) => {
                }
 
                req.flash('info_msg', '¡Uppsss! Evento no encontrado.');
-               res.redirect('/s/eventos');
+               res.redirect('/p/eventos');
             }
          } catch (e) {
             console.log(e);
@@ -980,13 +980,13 @@ secretariaControllers.saveEventoFile = async (req, res) => {
             }
 
             req.flash('error_msg', '¡Uppsss! Error inesperado, inténtalo más luego x_x.');
-            res.redirect('/s/eventos');
+            res.redirect('/p/eventos');
          }
       }
    }
 };
 
-secretariaControllers.renderBautizo = async (req, res) => {
+sacerdoteControllers.renderBautizo = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -1000,13 +1000,13 @@ secretariaControllers.renderBautizo = async (req, res) => {
          .format('YYYY-MM-DD'),*/
       est = (estado == 'Enabled') ? true : false;
    
-   res.render('secretaria/bautizo', {
+   res.render('sacerdote/bautizo', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est,
    });
 };
 
-secretariaControllers.getBautizos = async (req, res) => {
+sacerdoteControllers.getBautizos = async (req, res) => {
    let listBautizos;
 
    try {
@@ -1022,7 +1022,7 @@ secretariaControllers.getBautizos = async (req, res) => {
    }
 };
 
-secretariaControllers.saveBautizo = async (req, res) => {
+sacerdoteControllers.saveBautizo = async (req, res) => {
    const {
       cedula,
       dateBautizo,
@@ -1196,7 +1196,7 @@ secretariaControllers.saveBautizo = async (req, res) => {
    }
 };
 
-secretariaControllers.searchBautizo = async (req, res) => {
+sacerdoteControllers.searchBautizo = async (req, res) => {
    const {
       cedula
    } = req.query;
@@ -1241,7 +1241,7 @@ secretariaControllers.searchBautizo = async (req, res) => {
    }
 };
 
-secretariaControllers.updateBautizo = async (req, res) => {
+sacerdoteControllers.updateBautizo = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -1415,7 +1415,7 @@ secretariaControllers.updateBautizo = async (req, res) => {
    }
 };
 
-secretariaControllers.deleteBautizo = async (req, res) => {
+sacerdoteControllers.deleteBautizo = async (req, res) => {
    const {
       cedula
    } = req.body;
@@ -1478,7 +1478,7 @@ secretariaControllers.deleteBautizo = async (req, res) => {
    }
 };
 
-secretariaControllers.downloadPDFBautizo = async (req, res) => {
+sacerdoteControllers.downloadPDFBautizo = async (req, res) => {
    let errors = 0,
       idBauN = req.params.idBau.trim();
 
@@ -1486,13 +1486,13 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
       idBauN === ''
    ) {
       req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
-      res.redirect('/s/bautizos');
+      res.redirect('/p/bautizos');
    } else {
       errors += (!cedulaVal(idBauN)) ? 1 : 0;
 
       if (errors > 0) {
          req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
-         res.redirect('/s/bautizos');
+         res.redirect('/p/bautizos');
       } else {
          try {
    
@@ -1503,7 +1503,7 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
    
             if (!dataBautizo) {
                req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
-               res.redirect('/s/bautizos');
+               res.redirect('/p/bautizos');
             } else {
                try {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/bautizo.html'), 'utf-8');
@@ -1555,13 +1555,13 @@ secretariaControllers.downloadPDFBautizo = async (req, res) => {
          } catch (e) {
             console.log(e);
             req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
-            res.redirect('/s/bautizos');
+            res.redirect('/p/bautizos');
          }
       }
    }
 };
 
-secretariaControllers.renderComunion = async (req, res) => {
+sacerdoteControllers.renderComunion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -1575,13 +1575,13 @@ secretariaControllers.renderComunion = async (req, res) => {
          .format('YYYY-MM-DD'),*/
       est = (estado == 'Enabled') ? true : false;
    
-   res.render('secretaria/comunion', {
+   res.render('sacerdote/comunion', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est,
    });
 };
 
-secretariaControllers.getComuniones = async (req, res) => {
+sacerdoteControllers.getComuniones = async (req, res) => {
    let listComuniones;
 
    try {
@@ -1597,7 +1597,7 @@ secretariaControllers.getComuniones = async (req, res) => {
    }
 };
 
-secretariaControllers.saveComunion = async (req, res) => {
+sacerdoteControllers.saveComunion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -1718,7 +1718,7 @@ secretariaControllers.saveComunion = async (req, res) => {
    }
 };
 
-secretariaControllers.searchComunion = async (req, res) => {
+sacerdoteControllers.searchComunion = async (req, res) => {
    const {
       cedula
    } = req.query;
@@ -1763,7 +1763,7 @@ secretariaControllers.searchComunion = async (req, res) => {
    }
 };
 
-secretariaControllers.updateComunion = async (req, res) => {
+sacerdoteControllers.updateComunion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -1882,7 +1882,7 @@ secretariaControllers.updateComunion = async (req, res) => {
    }
 };
 
-secretariaControllers.deleteComunion = async (req, res) => {
+sacerdoteControllers.deleteComunion = async (req, res) => {
    const {
       cedula
    } = req.body;
@@ -1945,7 +1945,7 @@ secretariaControllers.deleteComunion = async (req, res) => {
    }
 };
 
-secretariaControllers.downloadPDFComunion = async (req, res) => {
+sacerdoteControllers.downloadPDFComunion = async (req, res) => {
    let errors = 0,
       idBauN = req.params.idBau.trim();
 
@@ -1953,13 +1953,13 @@ secretariaControllers.downloadPDFComunion = async (req, res) => {
       idBauN === ''
    ) {
       req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
-      res.redirect('/s/comuniones');
+      res.redirect('/p/comuniones');
    } else {
       errors += (!cedulaVal(idBauN)) ? 1 : 0;
 
       if (errors > 0) {
          req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
-         res.redirect('/s/comuniones');
+         res.redirect('/p/comuniones');
       } else {
          try {
    
@@ -1970,7 +1970,7 @@ secretariaControllers.downloadPDFComunion = async (req, res) => {
    
             if (!dataComunion) {
                req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
-               res.redirect('/s/bautizos');
+               res.redirect('/p/bautizos');
             } else {
                try {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/comunion.html'), 'utf-8');
@@ -2011,13 +2011,13 @@ secretariaControllers.downloadPDFComunion = async (req, res) => {
          } catch (e) {
             console.log(e);
             req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
-            res.redirect('/s/comuniones');
+            res.redirect('/p/comuniones');
          }
       }
    }
 };
 
-secretariaControllers.renderConfirmacion = async (req, res) => {
+sacerdoteControllers.renderConfirmacion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -2031,13 +2031,13 @@ secretariaControllers.renderConfirmacion = async (req, res) => {
          .format('YYYY-MM-DD'),*/
       est = (estado == 'Enabled') ? true : false;
    
-   res.render('secretaria/confirmacion', {
+   res.render('sacerdote/confirmacion', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est,
    });
 };
 
-secretariaControllers.getConfirmaciones = async (req, res) => {
+sacerdoteControllers.getConfirmaciones = async (req, res) => {
    let listConfirmacion;
 
    try {
@@ -2053,7 +2053,7 @@ secretariaControllers.getConfirmaciones = async (req, res) => {
    }
 };
 
-secretariaControllers.saveConfirmacion = async (req, res) => {
+sacerdoteControllers.saveConfirmacion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -2169,7 +2169,7 @@ secretariaControllers.saveConfirmacion = async (req, res) => {
    }
 };
 
-secretariaControllers.searchConfirmacion = async (req, res) => {
+sacerdoteControllers.searchConfirmacion = async (req, res) => {
    const {
       cedula
    } = req.query;
@@ -2214,7 +2214,7 @@ secretariaControllers.searchConfirmacion = async (req, res) => {
    }
 };
 
-secretariaControllers.updateConfirmacion = async (req, res) => {
+sacerdoteControllers.updateConfirmacion = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -2328,7 +2328,7 @@ secretariaControllers.updateConfirmacion = async (req, res) => {
    }
 };
 
-secretariaControllers.deleteConfirmacion = async (req, res) => {
+sacerdoteControllers.deleteConfirmacion = async (req, res) => {
    const {
       cedula
    } = req.body;
@@ -2391,7 +2391,7 @@ secretariaControllers.deleteConfirmacion = async (req, res) => {
    }
 };
 
-secretariaControllers.downloadPDFConfirmacion = async (req, res) => {
+sacerdoteControllers.downloadPDFConfirmacion = async (req, res) => {
    let errors = 0,
       idBauN = req.params.idBau.trim();
 
@@ -2399,13 +2399,13 @@ secretariaControllers.downloadPDFConfirmacion = async (req, res) => {
       idBauN === ''
    ) {
       req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
-      res.redirect('/s/comuniones');
+      res.redirect('/p/comuniones');
    } else {
       errors += (!cedulaVal(idBauN)) ? 1 : 0;
 
       if (errors > 0) {
          req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
-         res.redirect('/s/confirmaciones');
+         res.redirect('/p/confirmaciones');
       } else {
          try {
    
@@ -2416,7 +2416,7 @@ secretariaControllers.downloadPDFConfirmacion = async (req, res) => {
    
             if (!dataConfirmacion) {
                req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
-               res.redirect('/s/confirmaciones');
+               res.redirect('/p/confirmaciones');
             } else {
                try {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/confirmacion.html'), 'utf-8');
@@ -2456,13 +2456,13 @@ secretariaControllers.downloadPDFConfirmacion = async (req, res) => {
          } catch (e) {
             console.log(e);
             req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
-            res.redirect('/s/confirmaciones');
+            res.redirect('/p/confirmaciones');
          }
       }
    }
 };
 
-secretariaControllers.renderMatrimonio = async (req, res) => {
+sacerdoteControllers.renderMatrimonio = async (req, res) => {
    const {
       cedula,
       apellidos,
@@ -2476,13 +2476,13 @@ secretariaControllers.renderMatrimonio = async (req, res) => {
          .format('YYYY-MM-DD'),*/
       est = (estado == 'Enabled') ? true : false;
    
-   res.render('secretaria/matrimonio', {
+   res.render('sacerdote/matrimonio', {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est,
    });
 };
 
-secretariaControllers.getMatrimonios = async (req, res) => {
+sacerdoteControllers.getMatrimonios = async (req, res) => {
    let listMatrimonios;
 
    try {
@@ -2498,7 +2498,7 @@ secretariaControllers.getMatrimonios = async (req, res) => {
    }
 };
 
-secretariaControllers.saveMatrimonio = async (req, res) => {
+sacerdoteControllers.saveMatrimonio = async (req, res) => {
    const {
       fechaMatrimonio,
       nameSacerdote,
@@ -2634,7 +2634,7 @@ secretariaControllers.saveMatrimonio = async (req, res) => {
    }
 };
 
-secretariaControllers.searchMatrimonio = async (req, res) => {
+sacerdoteControllers.searchMatrimonio = async (req, res) => {
    const {
       id
    } = req.query;
@@ -2679,7 +2679,7 @@ secretariaControllers.searchMatrimonio = async (req, res) => {
    }
 };
 
-secretariaControllers.updateMatrimonio = async (req, res) => {
+sacerdoteControllers.updateMatrimonio = async (req, res) => {
    const {
       id,
       fechaMatrimonio,
@@ -2832,7 +2832,7 @@ secretariaControllers.updateMatrimonio = async (req, res) => {
    }
 };
 
-secretariaControllers.deleteMatrimonio = async (req, res) => {
+sacerdoteControllers.deleteMatrimonio = async (req, res) => {
    const {
       id
    } = req.body;
@@ -2895,7 +2895,7 @@ secretariaControllers.deleteMatrimonio = async (req, res) => {
    }
 };
 
-secretariaControllers.downloadPDFMatrimonio = async (req, res) => {
+sacerdoteControllers.downloadPDFMatrimonio = async (req, res) => {
    let errors = 0,
       idBauN = req.params.idBau.trim();
 
@@ -2903,13 +2903,13 @@ secretariaControllers.downloadPDFMatrimonio = async (req, res) => {
       idBauN === ''
    ) {
       req.flash('danger_msg', 'Los campos no pueden ir vacíos o con espacios...');
-      res.redirect('/s/comuniones');
+      res.redirect('/p/comuniones');
    } else {
       errors += (!numbersVer(idBauN)) ? 1 : 0;
 
       if (errors > 0) {
          req.flash('danger_msg', 'Los tipos de datos solicitados y enviados son incorrectos.');
-         res.redirect('/s/matrimonios');
+         res.redirect('/p/matrimonios');
       } else {
          try {
    
@@ -2920,7 +2920,7 @@ secretariaControllers.downloadPDFMatrimonio = async (req, res) => {
    
             if (!dataMatrimonio) {
                req.flash('danger_msg', 'La acta con el ID solicitado no existe.');
-               res.redirect('/s/matrimonios');
+               res.redirect('/p/matrimonios');
             } else {
                try {
                   const html = fse.readFileSync(path.join(__dirname, '../templates/docs/matrimonio.html'), 'utf-8');
@@ -2967,10 +2967,10 @@ secretariaControllers.downloadPDFMatrimonio = async (req, res) => {
          } catch (e) {
             console.log(e);
             req.flash('danger_msg', 'Upss! Error interno x_x. Intentelo más luego.');
-            res.redirect('/s/matrimonios');
+            res.redirect('/p/matrimonios');
          }
       }
    }
 };
 
-module.exports = secretariaControllers;
+module.exports = sacerdoteControllers;

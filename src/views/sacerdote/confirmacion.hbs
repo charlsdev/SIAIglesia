@@ -1,0 +1,715 @@
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+      <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
+
+      <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+
+      <link rel="stylesheet" href="/css/ofrendasSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+
+      <style>
+         .swal2-radio {
+            font-size: .9rem;
+         }
+
+         .swal2-actions {
+            margin-top: .25rem;
+         }
+
+         .modal {
+            z-index: 1041;
+         }
+      </style>
+      
+   </head>
+
+	<body>
+      {{> loader}}
+      {{> navBarP}}
+
+      <div class="container p-30">
+         <div class="row">
+            <div class="col-md-12 tittleSEC">
+               <div class="service__title">Confirmaciones</div>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-6 mx-auto">
+               {{> alerts}}
+               {{> errors}}
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-3">
+               <button class="btn__Add" onclick="modalConfirmacion()"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
+            </div>
+         </div>
+
+         <div class="row tableUI">
+            <div class="col-md-12">
+               <table id="listConfirmaciones" class="table is-striped table-striped table-bordered tableList">
+                  <thead>
+                     <tr>
+                        <th scope="col">Cédula</th>
+                        <th nowrap scope="col">Nombres Completos</th>
+                        <th scope="col">Año Sacramento</th>
+                        <th nowrap scope="col">Monseñor</th>
+                        <th scope="col"></th>
+                     </tr>
+                  </thead>
+               </table>
+            </div>
+         </div>
+      </div>
+
+      {{!-- <br><br> --}}
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/sweetalert2/sweetalert2.min.js"></script>
+      <script src="/fontawesome/js/all.min.js"></script>
+      <script src="/js/navSecretaria.min.js"></script>
+      <script src="/js/validation.min.js"></script>
+
+      <script src="/dataTables/jquery.dataTables.min.js"></script>
+      <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
+      <script src="/dataTables/dataTables.responsive.min.js"></script>
+      <script src="/dataTables/theme/responsive.bulma.min.js"></script>
+
+      {{!-- Modal Register New Confirmación --}}
+      <div class="modal fade" id="modalConfirmacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
+                     Registrar Confirmación
+                  </h5>
+               </div>
+
+               <div class="modal-body body__modal">
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos Básicos
+                        </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-credit-card-front bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Cédula</label>
+                              <input type="text" class="form__input" name="cedula" id="cedula" onkeypress="return numeros(event)" onkeyUp="return Cedula(this);" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Apellidos</label>
+                              <input type="text" class="form__input" name="apellidos" id="apellidos" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres</label>
+                              <input type="text" class="form__input" name="nombres" id="nombres" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-calendar-star bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Año Sacramento</label>
+                              <input type="text" class="form__input" name="anioSacramento" id="anioSacramento" maxlength="4" onkeypress="return numeros(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del padrino</label>
+                              <input type="text" class="form__input" name="namePadrino" id="namePadrino" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos de la madrina</label>
+                              <input type="text" class="form__input" name="nameMadrina" id="nameMadrina" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bxs-group bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres completos del Monseñor</label>
+                              <input type="text" class="form__input" name="nameMonsenior" id="nameMonsenior" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-church bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombre del templo</label>
+                              <input type="text" class="form__input" name="nameTemplo" id="nameTemplo" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal-footer footer__modal">
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                  {{!-- <button type="button" class="btn__Send">Enviar</button> --}}
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
+
+      <script>
+         const modalConfirmacion = () => {
+            bloqueointerface();
+            $("#cedula").prop('disabled', false);
+            $(".form__div-one").removeClass("focus");
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Registrar Confirmación';
+            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveConfirmacion()">Enviar</button>';
+            
+            $('#cedula').val('');
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#anioSacramento').val('');
+            $('#namePadrino').val('');
+            $('#nameMadrina').val('');
+            $('#nameMonsenior').val('');
+            $('#nameTemplo').val('');
+            
+            $('#modalConfirmacion').modal('show');
+            desbloqueointerface();
+         }
+
+         $(document).ready(function() {
+            listConfirmacion = $('#listConfirmaciones').DataTable({
+               destroy: true,
+               "ajax": {
+                  "url": '/p/getConfirmaciones',
+                  "dataSrc":""
+               },
+               "columns": [
+                  {"data": "cedula"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.apellidos + ' ' + row.nombres;
+                        }
+                  },
+                  {"data": "anioSacramento"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.nameMonsenior ;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
+                           <div class="dropdown-menu 1 menuD"> 
+                              <a class="dropdown-item" onclick="editConfirmacion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-edit-alt' ></i>
+                                 Editar 
+                              </a> 
+                              <a class="dropdown-item" onclick="deleteConfirmacion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-trash' ></i> 
+                                 Eliminar 
+                              </a> 
+                              <form id="urlReportPDF" method="GET" action="downloadPDFConfirmacion/${row.cedula}">
+                                 <a class="dropdown-item" onclick="reportPDF()"> 
+                                    <i class='bx bxs-file-pdf' ></i>
+                                    Generar Acta 
+                                 </a>
+                              </form>`;
+                        }
+                  },
+               ],
+               responsive: true,
+               language: idioma,
+            });
+         });
+
+         var idioma = {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla =(",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+               "sFirst":    "Primero",
+               "sLast":     "Último",
+               "sNext":     "Siguiente",
+               "sPrevious": "Anterior"
+            },
+            "oAria": {
+               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+               "copy": "Copiar",
+               "colvis": "Visibilidad"
+
+            }
+         }
+
+         const saveConfirmacion = () => {
+            cedula = $.trim($('#cedula').val());
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            anioSacramento = $.trim($('#anioSacramento').val());
+            namePadrino = $.trim($('#namePadrino').val());
+            nameMadrina = $.trim($('#nameMadrina').val());
+            nameMonsenior = $.trim($('#nameMonsenior').val());
+            nameTemplo = $.trim($('#nameTemplo').val());
+
+            if (
+               cedula === '' || 
+               apellidos === '' || 
+               nombres === '' || 
+               anioSacramento === '' || 
+               namePadrino === '' || 
+               nameMadrina === '' || 
+               nameMonsenior === '' || 
+               nameTemplo === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR REGISTRO DE CONFIRMACIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar el registro de confirmación?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/p/saveConfirmacion`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula,
+                           apellidos,
+                           nombres,
+                           anioSacramento,
+                           namePadrino,
+                           nameMadrina,
+                           nameMonsenior,
+                           nameTemplo
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalConfirmacion").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const editConfirmacion = (cedula, name, apell) => {
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Acta de Confirmación';
+            
+            $('#cedula').val('');
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#anioSacramento').val('');
+            $('#namePadrino').val('');
+            $('#nameMadrina').val('');
+            $('#nameMonsenior').val('');
+            $('#nameTemplo').val('');
+
+            Swal.fire({
+               title: `EDITAR ACTA DE CONFIRMACIÓN`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar la acta de confirmación de <b>${apell} ${name}</b>?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, editar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/p/searchConfirmacion`,
+                     type: 'GET',
+                     dataType: 'json',
+                     data: {
+                        cedula
+                     }
+                  })
+                  .done(function(res) {
+                     if (res.res === 'data') {
+                        $('#cedula').val(`${res.searchData.cedula}`);
+                        $('#apellidos').val(`${res.searchData.apellidos}`);
+                        $('#nombres').val(`${res.searchData.nombres}`);
+                        $('#anioSacramento').val(`${res.searchData.anioSacramento}`);
+                        $('#namePadrino').val(`${res.searchData.namePadrino}`);
+                        $('#nameMadrina').val(`${res.searchData.nameMadrina}`);
+                        $('#nameMonsenior').val(`${res.searchData.nameMonsenior}`);
+                        $('#nameTemplo').val(`${res.searchData.temploComunion}`);
+
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateConfirmacion('${res.searchData.cedula}')">Actualizar</button>`;
+
+                        $(".form__div-one").addClass("focus");
+                        $("#cedula").prop('disabled', true);
+                        $('#modalConfirmacion').modal('show');
+                        desbloqueointerface();
+                     }
+
+                     if (res.res === 'notData') {
+                        desbloqueointerface();
+
+                        Swal.fire({
+                           title: res.tittle,
+                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                           icon: res.icon,
+                           allowOutsideClick: false
+                        })
+                     }
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }
+
+         const updateConfirmacion = (cedula) => {
+            cedula = $.trim($('#cedula').val());
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            anioSacramento = $.trim($('#anioSacramento').val());
+            namePadrino = $.trim($('#namePadrino').val());
+            nameMadrina = $.trim($('#nameMadrina').val());
+            nameMonsenior = $.trim($('#nameMonsenior').val());
+            nameTemplo = $.trim($('#nameTemplo').val());
+
+            if (
+               cedula === '' || 
+               apellidos === '' || 
+               nombres === '' || 
+               anioSacramento === '' || 
+               namePadrino === '' || 
+               nameMadrina === '' || 
+               nameMonsenior === '' || 
+               nameTemplo === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR REGISTRO DE CONFIRMACIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas actualizar y guardar el registro de confirmación?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/p/updateConfirmacion`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula,
+                           apellidos,
+                           nombres,
+                           anioSacramento,
+                           namePadrino,
+                           nameMadrina,
+                           nameMonsenior,
+                           nameTemplo
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalConfirmacion").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const deleteConfirmacion = (cedula, name, apell) => {
+            cedula = $.trim(cedula);
+
+            if (
+               cedula === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `ELIMINAR ACTA DE CONFIRMACIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de confirmación de <b>${apell} ${name}</b>?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, eliminar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     $.ajax({
+                        url: `/p/deleteConfirmacion`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalConfirmacion").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
+         
+      </script>

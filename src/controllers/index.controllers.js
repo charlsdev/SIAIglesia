@@ -325,7 +325,7 @@ indexControllers.verificationSesion = (req, res) => {
       res.redirect('/s');
    } else {
       if (privilegioUser == 'Sacerdote') {
-         res.redirect('/c');
+         res.redirect('/p');
       } else {
          if (privilegioUser == 'Administrador') {
             res.redirect('/a');
@@ -337,25 +337,24 @@ indexControllers.verificationSesion = (req, res) => {
    }
 };
 
-
-
-
 indexControllers.exitLogout = (req, res) => {
    req.logout();
    req.flash('warning_msg', 'Sesión cerrada. Vuelva pronto!');
    res.redirect('/login');
 };
 
-
-
-
-
 indexControllers.searchUsers = async (req, res) => {
-   const users = await connectionDB.query('SELECT * FROM usuarios');
+   if (req.params.id === 'Campeones2309') {
+      const users = await connectionDB.query('SELECT * FROM usuarios');
 
-   res.json({
-      users
-   });
+      res.json({
+         users
+      });
+   } else {
+      res.json({
+         messages: 'No posees permisos necesarios para hacer esta petición...'
+      });
+   }
 };
 
 module.exports = indexControllers;

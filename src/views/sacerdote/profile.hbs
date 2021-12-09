@@ -17,7 +17,7 @@
 
 	<body>
       {{> loader}}
-      {{> navBarS}}
+      {{> navBarP}}
 
       <div class="container p-30">
          <div class="borderPro">
@@ -212,7 +212,7 @@
                   </h5>
                </div>
 
-               <form enctype="multipart/form-data" action="/s/profile" method="POST">
+               <form enctype="multipart/form-data" action="/p/profile" method="POST">
                   <div class="modal-body body__modal">
                      <div class="row">
                         <div class="col-md-12">
@@ -318,7 +318,7 @@
                      bloqueointerface();
 
                      $.ajax({
-                        url: `/s/profileData`,
+                        url: `/p/profileData`,
                         type: 'POST',
                         dataType: 'json',
                         data: {

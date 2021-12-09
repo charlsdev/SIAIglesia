@@ -4,13 +4,20 @@ const router = Router();
 const path = require('path');
 const multer = require('multer');
 const uploadEvents = multer({
-   dest: path.join(__dirname, '../public/events/temp')
+   // Esta ruta es relativa
+   dest: path.join(__dirname, '../public/temp')
 });
 
 const {
    redirectWelcome,
    renderWelcome,
+   
    renderProfile,
+   photoProfile,
+   dataProfile,
+   
+   renderPassword,
+   changePassword,
 
    renderOfrendas,
    getOfrendas,
@@ -64,7 +71,13 @@ const {
 
 router.get('/', isAuthenticated, authSecretaria, redirectWelcome);
 router.get('/welcome', isAuthenticated, authSecretaria, renderWelcome);
+
 router.get('/profile', isAuthenticated, authSecretaria, renderProfile);
+router.post('/profile', isAuthenticated, authSecretaria, uploadEvents.single('photo'), photoProfile);
+router.post('/profileData', isAuthenticated, authSecretaria, dataProfile);
+
+router.get('/password', isAuthenticated, authSecretaria, renderPassword);
+router.post('/password', isAuthenticated, authSecretaria, changePassword);
 
 router.get('/ofrendas', isAuthenticated, authSecretaria, renderOfrendas);
 router.get('/getOfrendas', isAuthenticated, authSecretaria, getOfrendas);

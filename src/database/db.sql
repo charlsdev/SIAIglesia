@@ -166,3 +166,13 @@ CREATE TABLE `eventos` (
    KEY `fk_idEvents` (`cedUser`),
    CONSTRAINT `fk_idEvents` FOREIGN KEY (`cedUser`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Creamos la tabla `Verificaciones`
+--
+CREATE TABLE `verificaciones` (
+   `cedula` varchar(10) NOT NULL,
+   `motivo` varchar(75) NOT NULL,
+   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+   PRIMARY KEY (`cedula`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

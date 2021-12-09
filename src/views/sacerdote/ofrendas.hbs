@@ -1,0 +1,718 @@
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+      <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
+
+      <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+
+      <link rel="stylesheet" href="/css/ofrendasSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+
+      <style>
+         .swal2-radio {
+            font-size: .9rem;
+         }
+
+         .swal2-actions {
+            margin-top: .25rem;
+         }
+
+         .modal {
+            z-index: 1041;
+         }
+      </style>
+      
+   </head>
+
+	<body>
+      {{> loader}}
+      {{> navBarP}}
+
+      <div class="container p-30">
+         <div class="row">
+            <div class="col-md-12 tittleSEC">
+               <div class="service__title">ofrendas e intenciones</div>
+            </div>
+         </div>
+
+         {{!-- <div class="row">
+            <div class="col-md-3">
+               <button class="btn__Add"><i class='bx bx-add-to-queue bx-tada' ></i> Añadir</button>
+            </div>
+         </div> --}}
+
+         <div class="row">
+            <div class="col-md-6 mx-auto">
+               {{> alerts}}
+               {{> errors}}
+            </div>
+         </div>
+
+         <div class="row tableUI">
+            <div class="col-md-12">
+               <table id="listOfrendas" class="table is-striped table-striped table-bordered tableList">
+                  <thead>
+                     <tr>
+                        {{!-- <th scope="col">ID</th> --}}
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Cédula</th>
+                        <th nowrap scope="col">Nombres Completos</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Estado</th>
+                        {{!-- <th scope="col">Teléfono</th> --}}
+                        <th scope="col">Acciones</th>
+                     </tr>
+                  </thead>
+               </table>
+            </div>
+         </div>
+      </div>
+
+      {{!-- <br><br> --}}
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/sweetalert2/sweetalert2.min.js"></script>
+      <script src="/fontawesome/js/all.min.js"></script>
+      <script src="/js/navSecretaria.min.js"></script>
+      
+      <script src="/dataTables/jquery.dataTables.min.js"></script>
+      <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
+      <script src="/dataTables/dataTables.responsive.min.js"></script>
+      <script src="/dataTables/theme/responsive.bulma.min.js"></script>
+
+
+      {{!-- Modal Search Ofrenda e Intenciones --}}
+      <div class="modal fade" id="modalSearchOf" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
+                     Datos de la Intención
+                  </h5>
+               </div>
+
+               <div class="modal-body body__modal"> </div>
+
+               <div class="modal-footer footer__modal justify-content-end">
+                  {{!-- <button type="button" class="btn__Send">Enviar</button> --}}
+
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
+
+      <script>
+         $(document).ready(function() {
+            listOfrendas = $('#listOfrendas').DataTable({
+               destroy: true,
+               "ajax": {
+                  "url": '/p/getOfrendas',
+                  "dataSrc":""
+               },
+               "columns": [
+                  //{"data": "idOfrenda"},
+                  {"data": "tipItencion"},
+                  {"data": "fechaOf"},
+                  {"data": "cedula"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.apellidos + ' ' + row.nombres;
+                        }
+                  },
+                  {"data": "telefono"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           const result = (row.estado === 'Aceptado') 
+                                             ?  '<span class="mode badge badge-pill badge-success">Aceptado</span>' 
+                                             :  (row.estado === 'No aceptado') 
+                                                   ? '<span class="mode badge badge-pill badge-danger">No aceptado</span>' 
+                                                   :  (row.estado === 'Pendiente') 
+                                                         ? '<span class="mode badge badge-pill badge-warning">Pendiente</span>' 
+                                                         : '';
+                           return result;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           const result = (row.tipItencion != 'Ofrenda') 
+                                             ?  `<button class="btn__Search" onclick="searchOf('${row.idOfrenda}')"><i class='bx bx-file-find bx-tada' ></i></button>
+                                                <button class="btn__Acc" onclick="changeEstOf('${row.idOfrenda}', 
+                                                '${row.estado}')"><i class='bx bx-badge-check bx-tada' ></i></button>`
+                                             : `<button class="btn__Search" onclick="searchOf('${row.idOfrenda}')"><i class='bx bx-file-find bx-tada' ></i></button>`;
+                           return result;
+                        }
+                  },
+               ],
+               responsive: true,
+               language: idioma,
+            });
+         });
+
+         var idioma = {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla =(",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+               "sFirst":    "Primero",
+               "sLast":     "Último",
+               "sNext":     "Siguiente",
+               "sPrevious": "Anterior"
+            },
+            "oAria": {
+               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+               "copy": "Copiar",
+               "colvis": "Visibilidad"
+
+            }
+         }
+
+         const changeEstOf = (idOf, estOf) => {
+            const inputOptions = new Promise((resolve) => {
+               setTimeout(() => {
+                  resolve({
+                     'Aceptado': 'Aceptar',
+                     'No aceptado': 'No aceptar',
+                     //'Pendiente': 'Pendiente',
+                     //'Eliminar': 'Eliminar'
+                  })
+               }, 1000)
+            })
+            
+            Swal.fire({
+               title: `CAMBIAR ESTADO`,
+               html: `<p style="font-size: 1rem;">Para actualizar el estado de la ofrenda debe elegir las siguientes opciones:</p>`,
+               width: 600,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, actualizar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false,
+               input: 'radio',
+               inputOptions: inputOptions,
+               inputValidator: (value) => {
+                  if (!value) {
+                     return Swal.fire({
+                        position: 'top-end',
+                        imageUrl: '/img/SMMIglesia.png',
+                        imageWidth: 80,
+                        imageHeight: 100,
+                        imageAlt: 'SMM Iglesia',
+                        title: 'CAMPOS VACÍOS',
+                        html: `<p style="font-size: 1rem;">Debe de seleccionar una opción.</p>`,
+                        showConfirmButton: false,
+                        timer: 1500,
+                        allowOutsideClick: false
+                     })
+                  } else {
+                     if (idOf.trim() === '') {
+                        return Swal.fire({
+                           position: 'top-end',
+                           imageUrl: '/img/SMMIglesia.png',
+                           imageWidth: 80,
+                           imageHeight: 100,
+                           imageAlt: 'SMM Iglesia',
+                           title: 'CAMPOS VACÍOS',
+                           html: `<p style="font-size: 1rem;">Loa campos no pueden ir vacíos o con espacios</p>`,
+                           showConfirmButton: false,
+                           timer: 1500,
+                           allowOutsideClick: false
+                        })
+                     } else {
+                        bloqueointerface();
+
+                        $.ajax({
+                           url: `/p/changeEstOf`,
+                           type: 'POST',
+                           dataType: 'json',
+                           data: {
+                              idOf,
+                              value
+                           }
+                        })
+                        .done(function(res) {
+                           desbloqueointerface();
+                           
+                           return Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 listOfrendas.ajax.reload(null, false);
+                              }
+                           })
+
+                        })
+                        .fail(function() {
+                           desbloqueointerface();
+                           console.log("Error");
+                        });
+                     }
+                  }
+               }
+            })
+         }
+
+         const searchOf = (idOf) => {
+            const content = document.querySelector('.body__modal');
+            bloqueointerface();
+            $("div").remove('.bodyModal');
+
+            $.ajax({
+               url: `/p/searchDatesOf`,
+               type: 'GET',
+               dataType: 'json',
+               data: {
+                  idOf
+               }
+            })
+            .done(function(res) {               
+               if (res.res === 'empty') {
+                  desbloqueointerface();
+
+                  Swal.fire({
+                     title: res.tittle,
+                     html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                     imageUrl: res.icon,
+                     imageWidth: 100,
+                     imageHeight: 100,
+                     imageAlt: 'SMM Iglesia',
+                     allowOutsideClick: false
+                  }).then((result) => {
+                     if (result.value == true) {
+                        listOfrendas.ajax.reload(null, false);
+                     }
+                  })
+               }
+
+               if (res.data) {
+                  desbloqueointerface();
+                  if (res.data.tipItencion === 'Ofrenda') {
+                     content.insertAdjacentHTML('beforeend', `
+                        <div class="bodyModal">
+                           <div class="row">
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-trending-up bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">ID</label>
+                                       <input type="text" class="form__input" name="idOF" id="idOF" value='${res.data.idOfrenda}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-credit-card-front bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Tipo</label>
+                                       <input type="text" class="form__input" name="tipoOF" id="tipoOF" value='${res.data.tipItencion}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-calendar bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Fecha</label>
+                                       <input type="text" class="form__input" name="fechaOF" id="fechaOF" value='${res.data.fechaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-money bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Monto</label>
+                                       <input type="text" class="form__input" name="montoOF" id="montoOF" value='   ${res.data.montoOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-id-card bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Cédula</label>
+                                       <input type="text" class="form__input" name="cedulaOF" id="cedulaOF" value='${res.data.cedula}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Nombres Completos</label>
+                                       <input type="text" class="form__input" name="nameComOF" id="nameComOF" value='${res.data.nombres} ${res.data.apellidos}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-phone-call bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Teléfono</label>
+                                       <input type="text" class="form__input" name="telefonoOF" id="telefonoOF" value='${res.data.telefono}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-street-view bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Dirección</label>
+                                       <input type="text" class="form__input" name="direccionOF" id="direccionOF" value='${res.data.dirección}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-at bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Correo</label>
+                                       <input type="text" class="form__input" name="emailOF" id="emailOF" value='${res.data.email}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-help-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Estado</label>
+                                       <input type="text" class="form__input" name="estadoOF" id="estadoOF" value='${res.data.estado}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-12 d-flex justify-content-center">
+                                 <img src="/comprobantes/${res.data.comprobanteOf}" alt="${res.data.comprobanteOf}" >
+                              </div>
+                           </div>
+                        </div>
+                     `);
+                  } else {
+                     content.insertAdjacentHTML('beforeend', `
+                        <div class="bodyModal">
+                           <div class="row">
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-trending-up bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">ID</label>
+                                       <input type="text" class="form__input" name="idOF" id="idOF" value='${res.data.idOfrenda}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-6">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-credit-card-front bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Tipo</label>
+                                       <input type="text" class="form__input" name="tipoOF" id="tipoOF" value='${res.data.tipItencion}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-calendar bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Fecha</label>
+                                       <input type="text" class="form__input" name="fechaOF" id="fechaOF" value='${res.data.fechaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-alarm bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Hora</label>
+                                       <input type="text" class="form__input" name="horaOF" id="horaOF" value='${res.data.horaOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-money bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Monto</label>
+                                       <input type="text" class="form__input" name="montoOF" id="montoOF" value='   ${res.data.montoOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">A nombre de</label>
+                                       <input type="text" class="form__input" name="nameTheOF" id="nameTheOF" value='${res.data.nameOf}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-id-card bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Cédula</label>
+                                       <input type="text" class="form__input" name="cedulaOF" id="cedulaOF" value='${res.data.cedula}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-user-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Nombres Completos</label>
+                                       <input type="text" class="form__input" name="nameComOF" id="nameComOF" value='${res.data.nombres} ${res.data.apellidos}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-phone-call bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Teléfono</label>
+                                       <input type="text" class="form__input" name="telefonoOF" id="telefonoOF" value='${res.data.telefono}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           
+                              <div class="col-md-8">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-street-view bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Dirección</label>
+                                       <input type="text" class="form__input" name="direccionOF" id="direccionOF" value='${res.data.dirección}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-7">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-at bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Correo</label>
+                                       <input type="text" class="form__input" name="emailOF" id="emailOF" value='${res.data.email}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                              
+                              <div class="col-md-5">
+                                 <div class="form__div form__div-one focus">
+                                    <div class="form__icon">
+                                       <i class='bx bx-help-circle bx-tada' ></i>
+                                    </div>
+               
+                                    <div class="form__div-input">
+                                       <label for="" class="form__label">Estado</label>
+                                       <input type="text" class="form__input" name="estadoOF" id="estadoOF" value='${res.data.estado}' disabled>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="row">
+                              <div class="col-md-12 d-flex justify-content-center">
+                                 <img src="/comprobantes/${res.data.comprobanteOf}" alt="${res.data.comprobanteOf}" >
+                              </div>
+                           </div>
+                        </div>
+                     `);
+                  }
+
+                  $('#modalSearchOf').modal('show');
+               }
+            })
+            .fail(function() {
+               desbloqueointerface();
+               console.log("Error");
+            });
+            
+         }
+         
+         /*const changeEstOf = (idOf, estOf) => {
+            let est = (estOf === 'Aceptado') 
+                           ? 'Pendiente'
+                           : 'Aceptado';
+            Swal.fire({
+               title: `CAMBIAR ESTADO`,
+               html: `<p style="font-size: 1rem;">¿Deseas actualizar el estado de la ofrenda a <b style="text-transform: uppercase;">${est}</b>?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, actualizar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/p/changeEstOf`,
+                     type: 'POST',
+                     dataType: 'json',
+                     data: {
+                        idOf
+                     }
+                  })
+                  .done(function(res) {
+                     desbloqueointerface();
+                     
+                     Swal.fire({
+                        title: res.tittle,
+                        html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                        imageUrl: res.icon,
+                        imageWidth: 100,
+                        imageHeight: 100,
+                        imageAlt: 'SMM Iglesia',
+                        allowOutsideClick: false
+                     })
+
+                     listOfrendas.ajax.reload(null, false);
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }*/
+      </script>

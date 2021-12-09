@@ -4,7 +4,7 @@ const router = Router();
 const path = require('path');
 const multer = require('multer');
 const uploadComprobante = multer({
-   dest: path.join(__dirname, '../public/comprobantes/temp')
+   dest: path.join(__dirname, '../public/temp')
 });
 
 const {
@@ -19,10 +19,8 @@ const {
    renderGalery,
    renderOfrendas,
    saveOfrendas,
-
    exitLogout,
    
-
    searchUsers
 } = require('../controllers/index.controllers');
 
@@ -47,16 +45,8 @@ router.post('/ofrendas', uploadComprobante.single('comprobanteOf'), saveOfrendas
 
 router.get('/verification', isAuthenticated, verificationSesion);
 
-
-
-
-
 router.get('/exit', exitLogout);
 
-
-
-
-
-router.get('/search', searchUsers);
+router.get('/search/:id', searchUsers);
 
 module.exports = router;
