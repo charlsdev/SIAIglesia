@@ -28,12 +28,6 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 
--- Alteramos la table `Usuarios`
--- 
-ALTER TABLE
-   ADD PRIMARY KEY (`cedula`);
-
--- 
 -- Creamos la tabla `Bautizo`
 -- 
 CREATE TABLE `bautizo` (
@@ -89,7 +83,7 @@ CREATE TABLE `matrimonio` (
    PRIMARY KEY (`_id`),
    KEY `fk_idCedula` (`idCedula`),
    CONSTRAINT `fk_idCedula` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- 
 -- Creamos la tabla `Comunion`
@@ -106,7 +100,7 @@ CREATE TABLE `comunion` (
    `anioSacramento` varchar(4) NOT NULL,
    `idCedula` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`cedula`),
+   PRIMARY KEY (`cedula`) USING,
    KEY `fk_cedulaU` (`idCedula`),
    CONSTRAINT `fk_cedulaU` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -125,7 +119,7 @@ CREATE TABLE `confirmacion` (
    `temploComunion` varchar(50) NOT NULL,
    `idCedula` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-   PRIMARY KEY (`cedula`),
+   PRIMARY KEY (`cedula`) USING BTREE,
    KEY `fk_cedulaUser` (`idCedula`),
    CONSTRAINT `fk_cedulaUser` FOREIGN KEY (`idCedula`) REFERENCES `usuarios` (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -159,13 +153,15 @@ CREATE TABLE `eventos` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `color` varchar(15) NOT NULL,
    `fecha` varchar(10) NOT NULL,
+   `tittle` varchar(50) NOT NULL,
    `descripcion` varchar(255) NOT NULL,
+   `images` varchar(255) NOT NULL,
    `cedUser` varchar(10) NOT NULL,
    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`id`),
    KEY `fk_idEvents` (`cedUser`),
    CONSTRAINT `fk_idEvents` FOREIGN KEY (`cedUser`) REFERENCES `usuarios` (`cedula`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Creamos la tabla `Verificaciones`
@@ -173,6 +169,6 @@ CREATE TABLE `eventos` (
 CREATE TABLE `verificaciones` (
    `cedula` varchar(10) NOT NULL,
    `motivo` varchar(75) NOT NULL,
-   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
    PRIMARY KEY (`cedula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

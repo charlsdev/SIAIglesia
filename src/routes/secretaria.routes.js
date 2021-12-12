@@ -36,7 +36,7 @@ const {
    saveBautizo,
    searchBautizo,
    updateBautizo,
-   deleteBautizo,
+   // deleteBautizo,
    downloadPDFBautizo,
 
    renderComunion,
@@ -44,7 +44,7 @@ const {
    saveComunion,
    searchComunion,
    updateComunion,
-   deleteComunion,
+   // deleteComunion,
    downloadPDFComunion,
 
    renderConfirmacion,
@@ -52,7 +52,7 @@ const {
    saveConfirmacion,
    searchConfirmacion,
    updateConfirmacion,
-   deleteConfirmacion,
+   // deleteConfirmacion,
    downloadPDFConfirmacion,
 
    renderMatrimonio,
@@ -60,7 +60,7 @@ const {
    saveMatrimonio,
    searchMatrimonio,
    updateMatrimonio,
-   deleteMatrimonio,
+   // deleteMatrimonio,
    downloadPDFMatrimonio
 } = require('../controllers/secretaria.controllers');
 
@@ -96,7 +96,7 @@ router.get('/getBautizos', isAuthenticated, authSecretaria, getBautizos);
 router.post('/saveBautizo', isAuthenticated, authSecretaria, saveBautizo);
 router.get('/searchBautizo', isAuthenticated, authSecretaria, searchBautizo);
 router.post('/updateBautizo', isAuthenticated, authSecretaria, updateBautizo);
-router.post('/deleteBautizo', isAuthenticated, authSecretaria, deleteBautizo);
+// router.post('/deleteBautizo', isAuthenticated, authSecretaria, deleteBautizo);
 router.get('/downloadPDFBautizo/:idBau', isAuthenticated, authSecretaria, downloadPDFBautizo);
 
 router.get('/comuniones', isAuthenticated, authSecretaria, renderComunion);
@@ -104,7 +104,7 @@ router.get('/getComuniones', isAuthenticated, authSecretaria, getComuniones);
 router.post('/saveComunion', isAuthenticated, authSecretaria, saveComunion);
 router.get('/searchComunion', isAuthenticated, authSecretaria, searchComunion);
 router.post('/updateComunion', isAuthenticated, authSecretaria, updateComunion);
-router.post('/deleteComunion', isAuthenticated, authSecretaria, deleteComunion);
+// router.post('/deleteComunion', isAuthenticated, authSecretaria, deleteComunion);
 router.get('/downloadPDFComunion/:idBau', isAuthenticated, authSecretaria, downloadPDFComunion);
 
 router.get('/confirmaciones', isAuthenticated, authSecretaria, renderConfirmacion);
@@ -112,7 +112,7 @@ router.get('/getConfirmaciones', isAuthenticated, authSecretaria, getConfirmacio
 router.post('/saveConfirmacion', isAuthenticated, authSecretaria, saveConfirmacion);
 router.get('/searchConfirmacion', isAuthenticated, authSecretaria, searchConfirmacion);
 router.post('/updateConfirmacion', isAuthenticated, authSecretaria, updateConfirmacion);
-router.post('/deleteConfirmacion', isAuthenticated, authSecretaria, deleteConfirmacion);
+// router.post('/deleteConfirmacion', isAuthenticated, authSecretaria, deleteConfirmacion);
 router.get('/downloadPDFConfirmacion/:idBau', isAuthenticated, authSecretaria, downloadPDFConfirmacion);
 
 router.get('/matrimonios', isAuthenticated, authSecretaria, renderMatrimonio);
@@ -120,7 +120,7 @@ router.get('/getMatrimonios', isAuthenticated, authSecretaria, getMatrimonios);
 router.post('/saveMatrimonio', isAuthenticated, authSecretaria, saveMatrimonio);
 router.get('/searchMatrimonio', isAuthenticated, authSecretaria, searchMatrimonio);
 router.post('/updateMatrimonio', isAuthenticated, authSecretaria, updateMatrimonio);
-router.post('/deleteMatrimonio', isAuthenticated, authSecretaria, deleteMatrimonio);
+// router.post('/deleteMatrimonio', isAuthenticated, authSecretaria, deleteMatrimonio);
 router.get('/downloadPDFMatrimonio/:idBau', isAuthenticated, authSecretaria, downloadPDFMatrimonio);
 
 module.exports = router;

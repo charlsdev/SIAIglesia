@@ -280,10 +280,10 @@
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteConfirmacion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                              {{!-- <a class="dropdown-item" onclick="deleteConfirmacion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
-                              </a> 
+                              </a>  --}}
                               <form id="urlReportPDF" method="GET" action="downloadPDFConfirmacion/${row.cedula}">
                                  <a class="dropdown-item" onclick="reportPDF()"> 
                                     <i class='bx bxs-file-pdf' ></i>
@@ -620,6 +620,18 @@
             }
          }
 
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
+         
+      </script>
+
+      {{!-- <script>
          const deleteConfirmacion = (cedula, name, apell) => {
             cedula = $.trim(cedula);
 
@@ -702,14 +714,4 @@
                })
             }
          }
-
-         const reportPDF = () => {
-            bloqueointerface();
-            $("#urlReportPDF").submit();
-
-            setTimeout(() => {
-               desbloqueointerface();
-            }, 3000);
-         }
-         
-      </script>
+      </script> --}}

@@ -415,10 +415,10 @@
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteMatrimonio('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
+                              {{!-- <a class="dropdown-item" onclick="deleteMatrimonio('${row._id}', '${row.nameEsposo}', '${row.nameEsposa}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
-                              </a> 
+                              </a>  --}}
                               <form id="urlReportPDF" method="GET" action="downloadPDFMatrimonio/${row._id}">
                                  <a class="dropdown-item" onclick="reportPDF()"> 
                                     <i class='bx bxs-file-pdf' ></i>
@@ -813,6 +813,18 @@
             }
          }
 
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
+         
+      </script>
+
+      {{!-- <script>
          const deleteMatrimonio = (id, nameEsposo, nameEsposa) => {
             id = $.trim(id);
 
@@ -896,13 +908,4 @@
             }
          }
 
-         const reportPDF = () => {
-            bloqueointerface();
-            $("#urlReportPDF").submit();
-
-            setTimeout(() => {
-               desbloqueointerface();
-            }, 3000);
-         }
-         
-      </script>
+      </script> --}}

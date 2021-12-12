@@ -473,8 +473,6 @@
                   {"data": "fechaBautizo"},
                   {"data": "anioRParroquial"},
                   {"data": "tomoRParroquial"},
-                  /*{"data": "paginaRParroquial"},
-                  {"data": "numeroRParroquial"},*/
                   {"data": null,
                         render: function ( data, type, row ) {
                            return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
@@ -483,10 +481,10 @@
                                  <i class='bx bx-edit-alt' ></i>
                                  Editar 
                               </a> 
-                              <a class="dropdown-item" onclick="deleteBautizo('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                              {{!-- <a class="dropdown-item" onclick="deleteBautizo('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
                                  <i class='bx bx-trash' ></i> 
                                  Eliminar 
-                              </a>
+                              </a> --}}
                               <form id="urlReportPDF" method="GET" action="downloadPDFBautizo/${row.cedula}">
                                  <a class="dropdown-item" onclick="reportPDF()"> 
                                     <i class='bx bxs-file-pdf' ></i>
@@ -919,6 +917,18 @@
             }
          }
 
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
+         
+      </script>
+
+      {{!-- <script>
          const deleteBautizo = (cedula, name, apell) => {
             cedula = $.trim(cedula);
 
@@ -1001,14 +1011,4 @@
                })
             }
          }
-
-         const reportPDF = () => {
-            bloqueointerface();
-            $("#urlReportPDF").submit();
-
-            setTimeout(() => {
-               desbloqueointerface();
-            }, 3000);
-         }
-         
-      </script>
+      </script> --}}
