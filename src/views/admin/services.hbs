@@ -1,0 +1,774 @@
+      <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css">
+      <link rel="stylesheet" href="/sweetalert2/sweetalert2.min.css" type="text/css">
+      <link rel="stylesheet" href="/boxicons/boxicons.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/navSecretaria.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/servicesSec.min.css" type="text/css">
+
+      <link rel="stylesheet" href="/dataTables/theme/bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/dataTables.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/theme/responsive.bulma.min.css" type="text/css"/>
+      <link rel="stylesheet" href="/dataTables/dataTablesUI.min.css" type="text/css"/>
+
+      <link rel="stylesheet" href="/css/ofrendasSec.min.css" type="text/css">
+      <link rel="stylesheet" href="/css/register.min.css" type="text/css">
+
+      <style>
+         .swal2-radio {
+            font-size: .9rem;
+         }
+
+         .swal2-actions {
+            margin-top: .25rem;
+         }
+
+         .modal {
+            z-index: 1041;
+         }
+      </style>
+      
+   </head>
+
+	<body>
+      {{> loader}}
+      {{> navBarS}}
+
+      <div class="container p-30">
+         <div class="row">
+            <div class="col-md-12 tittleSEC">
+               <div class="service__title">Cuentas de usuarios</div>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-6 mx-auto">
+               {{> alerts}}
+               {{> errors}}
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-3">
+               <button class="btn__Add" onclick="modalNewUsers()">
+                  <i class='bx bx-add-to-queue bx-tada' ></i>
+                  Registrar
+               </button>
+            </div>
+         </div>
+
+         <div class="row tableUI">
+            <div class="col-md-12">
+               <table id="listConfirmaciones" class="table is-striped table-striped table-bordered tableList">
+                  <thead>
+                     <tr>
+                        <th scope="col">Cédula</th>
+                        <th nowrap scope="col">Nombres Completos</th>
+                        <th nowrap scope="col">Email</th>
+                        <th scope="col">Género</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col"></th>
+                     </tr>
+                  </thead>
+               </table>
+            </div>
+         </div>
+      </div>
+
+      {{!-- <br><br> --}}
+
+      <script src="/js/jquery-3.5.1.min.js"></script>
+      <script src="/js/popper.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/sweetalert2/sweetalert2.min.js"></script>
+      <script src="/fontawesome/js/all.min.js"></script>
+      <script src="/js/navSecretaria.min.js"></script>
+      <script src="/js/validation.min.js"></script>
+
+      <script src="/dataTables/jquery.dataTables.min.js"></script>
+      <script src="/dataTables/theme/dataTables.bulma.min.js"></script>
+      <script src="/dataTables/dataTables.responsive.min.js"></script>
+      <script src="/dataTables/theme/responsive.bulma.min.js"></script>
+
+      {{!-- Modal Register New Confirmación --}}
+      <div class="modal fade" id="modalNewUsers" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+               <div class="modal-header header__modal">
+                  <h5 class="modal-title tittle__modal" id="staticBackdropLabel">
+                     Registrar Usuario Nuevo
+                  </h5>
+               </div>
+
+               <div class="modal-body body__modal">
+                  <div class="row d-flex justify-content-center">
+                     <div class="col-md-10 aviso__modal">
+                        
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12 justify-content-center">
+                        <h5 class="tittle__description">
+                           Datos Básicos
+                        </h5>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-credit-card-front bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Cédula</label>
+                              <input type="text" class="form__input" name="cedula" id="cedula" onkeypress="return numeros(event)" onkeyUp="return Cedula(this);" maxlength="10" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-select-multiple bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Privilegio</label>
+                              <select class="form__input" name="privilegio" id="privilegio" required>
+                                 <option value selected disabled>Seleccionar...</option>
+                                 <option value="Administrador">Administrador</option>
+                                 <option value="Sacerdote">Sacerdote</option>
+                                 <option value="Secretaria">Secretaria</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Apellidos</label>
+                              <input type="text" class="form__input" id="apellidos" name="apellidos" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-12">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Nombres</label>
+                              <input type="text" class="form__input" id="nombres" name="nombres" onkeypress="return letra(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-cake bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Fecha Nacimiento</label>
+                              <input type="date" class="form__input" id="fech_nacimiento" name="fech_nacimiento" onkeypress="return date(event)" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-user-pin bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Género</label>
+                              <select class="form__input" name="genero" id="genero" required>
+                                 <option value selected disabled>Seleccionar...</option>
+                                 <option value="Masculino">Masculino</option>
+                                 <option value="Femenino">Femenino</option>
+                                 <option value="No Definido">No Definido</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-phone-call bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Teléfono</label>
+                              <input type="text" class="form__input" id="telefono" name="telefono" onkeypress="return numeros(event)" maxlength="10" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-mail-send bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Email</label>
+                              <input type="email" class="form__input" name="email" id="email" required>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="form__div form__div-one">
+                           <div class="form__icon">
+                              <i class='bx bx-info-circle bx-tada' ></i>
+                           </div>
+      
+                           <div class="form__div-input">
+                              <label for="" class="form__label">Estado</label>
+                              <select class="form__input" name="estado" id="estado" required>
+                                 <option value selected disabled>Seleccionar...</option>
+                                 <option value="Enabled">Activo</option>
+                                 <option value="Disabled">Desactivado</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                     
+                  </div>
+               </div>
+
+               <div class="modal-footer footer__modal">
+                  <button type="button" class="btn__Close" data-dismiss="modal">Cerrar</button>
+
+                  {{!-- <button type="button" class="btn__Send">Enviar</button> --}}
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <script src="/js/login.min.js"></script>
+
+      <script>
+         const modalNewUsers = () => {
+            bloqueointerface();
+            //$("#cedula").prop('disabled', false);
+            $(".form__div-one").removeClass("focus");
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Registrar Usuario Nuevo';
+            document.querySelector('.footer__modal').innerHTML += '<button type="button" class="btn__Send" onclick="saveNewUser()">Enviar</button>';
+            document.querySelector('.aviso__modal')
+                  .innerHTML = `
+                     <div class="alert alert-danger alert-dismissible fade show" role="alert" style="padding: .5rem 1rem;">
+                        <strong>Aviso</strong>
+                        <p style="text-align: justify; font-size: 0.75em; color: #333;">
+                           La contraseña será la cédula por lo que se deberá recomendar a que el usuario la cambie al primer inicio de sesión.
+                        </p>
+                        {{!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="padding: .05rem .75rem;">
+                           <span aria-hidden="true">&times;</span>
+                        </button> --}}
+                     </div>`;
+            
+            $('#cedula').val('');
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#privilegio').val('');
+            $('#fech_nacimiento').val('');
+            $('#genero').val('');
+            $('#telefono').val('');
+            $('#email').val('');
+            $('#estado').val('');
+            
+            $('#modalNewUsers').modal('show');
+            desbloqueointerface();
+         }
+
+         $(document).ready(function() {
+            listConfirmacion = $('#listConfirmaciones').DataTable({
+               destroy: true,
+               "ajax": {
+                  "url": '/a/searchUsers',
+                  "dataSrc":""
+               },
+               "columns": [
+                  {"data": "cedula"},
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.apellidos + ' ' + row.nombres;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.email;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return row.privilegio;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           const result = (row.estado === 'Enabled') ? '<span class="mode badge badge-pill badge-success">Activo</span>' : '<span class="mode badge badge-pill badge-danger">Desactivado</span>' ;
+                           return result;
+                        }
+                  },
+                  {"data": null,
+                        render: function ( data, type, row ) {
+                           return `<button type="button" class="btnPoint btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"> <i class="fas fa-ellipsis-v" style="margin-right: 5px;"></i> </button> 
+                           <div class="dropdown-menu 1 menuD"> 
+                              <a class="dropdown-item" onclick="editUser('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-edit-alt' ></i>
+                                 Editar 
+                              </a> 
+                              {{!-- <a class="dropdown-item" onclick="deleteConfirmacion('${row.cedula}', '${row.apellidos}', '${row.nombres}')"> 
+                                 <i class='bx bx-trash' ></i> 
+                                 Eliminar 
+                              </a>  --}}
+                              <form id="urlReportPDF" method="GET" action="downloadPDFConfirmacion/${row.cedula}">
+                                 <a class="dropdown-item" onclick="reportPDF()"> 
+                                    <i class='bx bxs-file-pdf' ></i>
+                                    Generar Acta 
+                                 </a>
+                              </form>`;
+                        }
+                  },
+               ],
+               responsive: true,
+               language: idioma,
+            });
+         });
+
+         var idioma = {
+            "sProcessing":     "Procesando...",
+            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sZeroRecords":    "No se encontraron resultados",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla =(",
+            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":    "",
+            "sSearch":         "Buscar:",
+            "sUrl":            "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+               "sFirst":    "Primero",
+               "sLast":     "Último",
+               "sNext":     "Siguiente",
+               "sPrevious": "Anterior"
+            },
+            "oAria": {
+               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            },
+            "buttons": {
+               "copy": "Copiar",
+               "colvis": "Visibilidad"
+
+            }
+         }
+
+         const saveNewUser = () => {
+            cedula = $.trim($('#cedula').val());
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            privilegio = $.trim($('#privilegio').val());
+            fech_nacimiento = $.trim($('#fech_nacimiento').val());
+            genero = $.trim($('#genero').val());
+            telefono = $.trim($('#telefono').val());
+            email = $.trim($('#email').val());
+            estado = $.trim($('#estado').val());
+
+            if (
+               cedula === '' || 
+               apellidos === '' || 
+               nombres === '' || 
+               privilegio === '' || 
+               fech_nacimiento === '' || 
+               genero === '' || 
+               telefono === '' || 
+               email === '' || 
+               estado === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR NUEVO USUARIO`,
+                  html: `<p style="font-size: 1rem;">¿Deseas guardar a <b>${apellidos} ${nombres}</b> como <b>${privilegio}</b>?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/a/saveNewUser`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula,
+                           apellidos,
+                           nombres,
+                           privilegio,
+                           fech_nacimiento,
+                           genero,
+                           telefono,
+                           email,
+                           estado
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewUsers").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const editUser = (cedula, name, apell) => {
+            $("button").remove('.btn__Send');
+
+            document.querySelector('.tittle__modal').innerHTML = 'Actualizar Datos del Usuario';
+            
+            $('#cedula').val('');
+            $('#apellidos').val('');
+            $('#nombres').val('');
+            $('#privilegio').val('');
+            $('#fech_nacimiento').val('');
+            $('#genero').val('');
+            $('#telefono').val('');
+            $('#email').val('');
+            $('#estado').val('');
+
+            Swal.fire({
+               title: `EDITAR USUARIO`,
+               html: `<p style="font-size: 1rem;">¿Deseas editar los datos de <b>${apell} ${name}</b>?</p>`,
+               imageUrl: '/img/SMMIglesia.png',
+               imageWidth: 80,
+               imageHeight: 100,
+               imageAlt: 'SMM Iglesia',
+               showCancelButton: true,
+               confirmButtonColor: '#049947',
+               cancelButtonColor: '#f34943',
+               confirmButtonText: 'Sí, editar!',
+               cancelButtonText: 'No, cancelar!',
+               reverseButtons: true,
+               focusConfirm: false,
+               focusCancel: true,
+               allowOutsideClick: false
+            }).then((result) => {
+               if (result.value == true) {
+                  bloqueointerface();
+
+                  $.ajax({
+                     url: `/a/searchOneUser`,
+                     type: 'GET',
+                     dataType: 'json',
+                     data: {
+                        cedula
+                     }
+                  })
+                  .done(function(res) {
+                     if (res.res === 'data') {
+                        $('#cedula').val(`${res.searchData.cedula}`);
+                        $('#apellidos').val(`${res.searchData.apellidos}`);
+                        $('#nombres').val(`${res.searchData.nombres}`);
+                        $('#privilegio').val(`${res.searchData.privilegio}`);
+                        $('#fech_nacimiento').val(`${res.searchData.fechNacimiento}`);
+                        $('#genero').val(`${res.searchData.genero}`);
+                        $('#telefono').val(`${res.searchData.telefono}`);
+                        $('#email').val(`${res.searchData.email}`);
+                        $('#estado').val(`${res.searchData.estado}`);
+
+                        document.querySelector('.footer__modal').innerHTML += `<button type="button" class="btn__Send" onclick="updateUser('${res.searchData.cedula}')">Actualizar</button>`;
+
+                        $(".form__div-one").addClass("focus");
+                        //$("#cedula").prop('disabled', true);
+                        $('#modalNewUsers').modal('show');
+                        desbloqueointerface();
+                     }
+
+                     if (res.res === 'notData') {
+                        desbloqueointerface();
+
+                        Swal.fire({
+                           title: res.tittle,
+                           html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                           icon: res.icon,
+                           allowOutsideClick: false
+                        })
+                     }
+                  })
+                  .fail(function() {
+                     desbloqueointerface();
+                     console.log("Error");
+                  });
+               }
+            })
+         }
+
+         const updateUser = (cedula) => {
+            cedula = $.trim($('#cedula').val());
+            apellidos = $.trim($('#apellidos').val());
+            nombres = $.trim($('#nombres').val());
+            anioSacramento = $.trim($('#anioSacramento').val());
+            namePadrino = $.trim($('#namePadrino').val());
+            nameMadrina = $.trim($('#nameMadrina').val());
+            nameMonsenior = $.trim($('#nameMonsenior').val());
+            nameTemplo = $.trim($('#nameTemplo').val());
+
+            if (
+               cedula === '' || 
+               apellidos === '' || 
+               nombres === '' || 
+               anioSacramento === '' || 
+               namePadrino === '' || 
+               nameMadrina === '' || 
+               nameMonsenior === '' || 
+               nameTemplo === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `GUARDAR REGISTRO DE CONFIRMACIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas actualizar y guardar el registro de confirmación?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, guardar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     bloqueointerface();
+
+                     $.ajax({
+                        url: `/s/updateUser`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula,
+                           apellidos,
+                           nombres,
+                           anioSacramento,
+                           namePadrino,
+                           nameMadrina,
+                           nameMonsenior,
+                           nameTemplo
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewUsers").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+
+         const reportPDF = () => {
+            bloqueointerface();
+            $("#urlReportPDF").submit();
+
+            setTimeout(() => {
+               desbloqueointerface();
+            }, 3000);
+         }
+         
+      </script>
+
+      {{!-- <script>
+         const deleteConfirmacion = (cedula, name, apell) => {
+            cedula = $.trim(cedula);
+
+            if (
+               cedula === ''
+            ) {
+               Swal.fire({
+                  position: 'top-end',
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  title: 'CAMPOS VACÍOS',
+                  html: `<p style="font-size: 1rem;">Los campos no pueden ir vacíos o con espacios.</p>`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  allowOutsideClick: false
+               })
+            } else {
+               Swal.fire({
+                  title: `ELIMINAR ACTA DE CONFIRMACIÓN`,
+                  html: `<p style="font-size: 1rem;">¿Deseas eliminar el registro de confirmación de <b>${apell} ${name}</b>?</p>`,
+                  imageUrl: '/img/SMMIglesia.png',
+                  imageWidth: 80,
+                  imageHeight: 100,
+                  imageAlt: 'SMM Iglesia',
+                  showCancelButton: true,
+                  confirmButtonColor: '#049947',
+                  cancelButtonColor: '#f34943',
+                  confirmButtonText: 'Sí, eliminar!',
+                  cancelButtonText: 'No, cancelar!',
+                  reverseButtons: true,
+                  focusConfirm: false,
+                  focusCancel: true,
+                  allowOutsideClick: false
+               }).then((result) => {
+                  if (result.value == true) {
+                     $.ajax({
+                        url: `/s/deleteConfirmacion`,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                           cedula
+                        }
+                     })
+                     .done(function(res) {
+                        desbloqueointerface();
+                        
+                        if (res.res === 'img') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              imageUrl: res.icon,
+                              imageWidth: 100,
+                              imageHeight: 100,
+                              imageAlt: 'SMM Iglesia',
+                              allowOutsideClick: false
+                           }).then((result) => {
+                              if (result.value == true) {
+                                 $("#modalNewUsers").modal('hide');
+                                 listConfirmacion.ajax.reload(null, false);
+                              }
+                           })
+                        }
+
+                        if (res.res === 'icon') {
+                           Swal.fire({
+                              title: res.tittle,
+                              html: `<p style="font-size: 1rem;">${res.description}</p>`,
+                              icon: res.icon,
+                              allowOutsideClick: false
+                           })
+                        }
+                     })
+                     .fail(function() {
+                        desbloqueointerface();
+                        console.log("Error");
+                     });
+                  }
+               })
+            }
+         }
+      </script> --}}

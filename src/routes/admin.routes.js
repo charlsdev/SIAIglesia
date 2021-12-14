@@ -11,6 +11,11 @@ const {
    redirectWelcome,
    renderWelcome,
 
+   renderServices,
+   searchUsers,
+   saveNewUser,
+   searchOneUser,
+
    renderProfile,
    photoProfile,
    dataProfile,
@@ -26,6 +31,11 @@ const {
 
 router.get('/', isAuthenticated, authAdministrador, redirectWelcome);
 router.get('/welcome', isAuthenticated, authAdministrador, renderWelcome);
+
+router.get('/services', isAuthenticated, authAdministrador, renderServices);
+router.get('/searchUsers', isAuthenticated, authAdministrador, searchUsers);
+router.post('/saveNewUser', isAuthenticated, authAdministrador, saveNewUser);
+router.get('/searchOneUser', isAuthenticated, authAdministrador, searchOneUser);
 
 router.get('/profile', isAuthenticated, authAdministrador, renderProfile);
 router.post('/profile', isAuthenticated, authAdministrador, uploadEvents.single('photo'), photoProfile);

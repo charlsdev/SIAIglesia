@@ -1,4 +1,5 @@
 const { nanoid } = require('nanoid');
+const nodemailer = require('nodemailer');
 const path = require('path');
 const fse = require('fs-extra');
 const moment = require('moment');
@@ -13,7 +14,7 @@ const {
 } = require('../helpers/encryptPass');
 
 const {
-   // cedulaVal,
+   cedulaVal,
    numbersVer,
    spaceLetersVer,
    // verNumberAndLetters,
@@ -69,6 +70,245 @@ adminControllers.renderWelcome = async (req, res) => {
       cedula, apellidos, nombres, privilegio, estado, photoProfile,
       est, admin, sace, secre
    });
+};
+
+adminControllers.renderServices = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      privilegio,
+      estado,
+      photoProfile,
+   } = req.user;
+
+   let /*nowFecha = moment()
+         .format('YYYY-MM-DD'),*/
+      est = (estado == 'Enabled') ? true : false;
+   
+   res.render('admin/services', {
+      cedula, apellidos, nombres, privilegio, estado, photoProfile,
+      est,
+   });
+};
+
+adminControllers.searchUsers = async (req, res) => {
+   let usersFind;
+
+   try {
+      usersFind = await connectionDB.query(` SELECT
+                                                cedula, apellidos, nombres, email, privilegio, estado
+                                             FROM usuarios
+                                             WHERE cedula != ?`, req.user.cedula);
+      
+      res.json(usersFind);
+   } catch (e) {
+      console.log(e);
+   }
+};
+
+adminControllers.saveNewUser = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      fech_nacimiento,
+      genero,
+      telefono,
+      email,
+      privilegio,
+      estado
+   } = req.body;
+
+   let errors = 0,
+      transporte, 
+      info,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      fech_nacimientoN = fech_nacimiento.trim(),
+      generoN = genero.trim(),
+      telefonoN = telefono.trim(),
+      emailN = email.trim(),
+      privilegioN = privilegio.trim(),
+      estadoN = estado.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      fech_nacimientoN === '' || 
+      generoN === '' || 
+      telefonoN === '' || 
+      emailN === '' || 
+      privilegioN === '' || 
+      estadoN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!moment(fech_nacimientoN).isValid()) ? 1 : 0;
+      errors += (!spaceLetersVer(generoN)) ? 1 : 0;
+      errors += (!numbersVer(telefonoN)) ? 1 : 0;
+      errors += (!emailVer(emailN)) ? 1 : 0;
+      errors += (!spaceLetersVer(privilegioN)) ? 1 : 0;
+      errors += (!spaceLetersVer(estadoN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const reviewUser = await connectionDB.query(`SELECT cedula 
+                                                         FROM usuarios 
+                                                         WHERE cedula = ?`, cedulaN);
+            // console.log(reviewUser);
+
+            if (reviewUser.length > 0) {
+               res.json({
+                  res: 'icon',
+                  tittle: 'USUARIO YA REGISTRADO',
+                  icon: 'info',
+                  description: 'El usuario con la cédula a registrar ya se encuentra en el sistema.'
+               });
+            } else {
+               let passEncrypt = await encryptPassword(cedulaN);
+
+               const newUser = {
+                  cedula: cedulaN,
+                  apellidos: apellidosN,
+                  nombres: nombresN,
+                  fechNacimiento: fech_nacimientoN,
+                  genero: generoN,
+                  telefono: telefonoN,
+                  email: emailN,
+                  password: passEncrypt,
+                  privilegio: privilegioN,
+                  estado: estadoN,
+                  photoProfile: 'profile.svg'
+               };
+
+               const userSave = await connectionDB.query(`INSERT 
+                                                         INTO usuarios
+                                                         SET ?`, [newUser]);
+               // console.log(userSave);
+
+               if (userSave.affectedRows === 1) {
+                  try {
+                     transporte = nodemailer.createTransport({
+                        host: 'mail.privateemail.com',
+                        port: 587,
+                        secure: false,
+                        auth: {
+                           user: `${process.env.userMail}`,
+                           pass: `${process.env.passMail}`
+                        },
+                        tls: {
+                           rejectUnauthorized: false
+                        }
+                     });
+                  
+                     info = await transporte.sendMail({
+                        from: `Santa María Madre <${process.env.userMail}>`,
+                        to: `${emailN}`,
+                        subject: 'Registro exitoso',
+                        html: require('../templates/emails/newUser.tpl')({
+                           nameUser: `${nombresN} ${apellidosN}`,
+                           passNew: `${cedulaN}`
+                        })
+                     });
+   
+                     console.log(info.response);
+                  }
+                  catch (e) {
+                     console.log(e);
+                  }
+
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'USUARIO REGISTRADO',
+                     description: 'Se ha registrado un nuevo usuario con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'USUARIO NO REGISTRADO',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido registrar al nuevo usuario.'
+                  });
+               }
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+adminControllers.searchOneUser = async (req, res) => {
+   const {
+      cedula
+   } = req.query;
+
+   let cedulaN = cedula.trim();
+
+   if (
+      cedulaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      if (!cedulaVal(cedulaN)) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'CÉDULA INCORRECTA',
+            description: 'La cédula es incorrecta o no válida.'
+         });
+      } else {
+         const searchData = await connectionDB.query(`SELECT
+                                                         cedula, apellidos, nombres, privilegio, fechNacimiento, genero, telefono, email, estado
+                                                      FROM usuarios 
+                                                      WHERE cedula = ?`, cedulaN);
+         console.log(searchData);
+
+         if (searchData.length > 0) {
+            res.json({
+               res: 'data',
+               searchData: searchData[0]
+            });
+         } else {
+            res.json({
+               res: 'icon',
+               icon: 'error',
+               tittle: 'USUARIO NO ENCONTRADO',
+               description: 'El usuario no se encuntra registrado en el sistema.'
+            });
+         }
+      }
+   }
 };
 
 adminControllers.renderProfile = async (req, res) => {
