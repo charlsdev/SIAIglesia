@@ -15,6 +15,9 @@ const {
    searchUsers,
    saveNewUser,
    searchOneUser,
+   updateUser,
+   generatePassword,
+   changeEstado,
 
    renderProfile,
    photoProfile,
@@ -36,6 +39,9 @@ router.get('/services', isAuthenticated, authAdministrador, renderServices);
 router.get('/searchUsers', isAuthenticated, authAdministrador, searchUsers);
 router.post('/saveNewUser', isAuthenticated, authAdministrador, saveNewUser);
 router.get('/searchOneUser', isAuthenticated, authAdministrador, searchOneUser);
+router.post('/updateUser', isAuthenticated, authAdministrador, updateUser);
+router.post('/generatePassword', isAuthenticated, authAdministrador, generatePassword);
+router.post('/changeEstado', isAuthenticated, authAdministrador, changeEstado);
 
 router.get('/profile', isAuthenticated, authAdministrador, renderProfile);
 router.post('/profile', isAuthenticated, authAdministrador, uploadEvents.single('photo'), photoProfile);

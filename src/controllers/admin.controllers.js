@@ -116,8 +116,7 @@ adminControllers.saveNewUser = async (req, res) => {
       genero,
       telefono,
       email,
-      privilegio,
-      estado
+      privilegio
    } = req.body;
 
    let errors = 0,
@@ -130,8 +129,7 @@ adminControllers.saveNewUser = async (req, res) => {
       generoN = genero.trim(),
       telefonoN = telefono.trim(),
       emailN = email.trim(),
-      privilegioN = privilegio.trim(),
-      estadoN = estado.trim();
+      privilegioN = privilegio.trim();
 
    if (
       cedulaN === '' || 
@@ -141,8 +139,7 @@ adminControllers.saveNewUser = async (req, res) => {
       generoN === '' || 
       telefonoN === '' || 
       emailN === '' || 
-      privilegioN === '' || 
-      estadoN === ''
+      privilegioN === ''
    ) {
       res.json({
          res: 'icon',
@@ -159,7 +156,6 @@ adminControllers.saveNewUser = async (req, res) => {
       errors += (!numbersVer(telefonoN)) ? 1 : 0;
       errors += (!emailVer(emailN)) ? 1 : 0;
       errors += (!spaceLetersVer(privilegioN)) ? 1 : 0;
-      errors += (!spaceLetersVer(estadoN)) ? 1 : 0;
 
       if (errors > 0) {
          res.json({
@@ -195,7 +191,7 @@ adminControllers.saveNewUser = async (req, res) => {
                   email: emailN,
                   password: passEncrypt,
                   privilegio: privilegioN,
-                  estado: estadoN,
+                  estado: 'Enabled',
                   photoProfile: 'profile.svg'
                };
 
@@ -292,7 +288,7 @@ adminControllers.searchOneUser = async (req, res) => {
                                                          cedula, apellidos, nombres, privilegio, fechNacimiento, genero, telefono, email, estado
                                                       FROM usuarios 
                                                       WHERE cedula = ?`, cedulaN);
-         console.log(searchData);
+         // console.log(searchData);
 
          if (searchData.length > 0) {
             res.json({
@@ -305,6 +301,345 @@ adminControllers.searchOneUser = async (req, res) => {
                icon: 'error',
                tittle: 'USUARIO NO ENCONTRADO',
                description: 'El usuario no se encuntra registrado en el sistema.'
+            });
+         }
+      }
+   }
+};
+
+adminControllers.updateUser = async (req, res) => {
+   const {
+      cedula,
+      apellidos,
+      nombres,
+      fech_nacimiento,
+      genero,
+      telefono,
+      email,
+      privilegio
+   } = req.body;
+
+   let errors = 0,
+      cedulaN = cedula.trim(),
+      apellidosN = apellidos.trim(),
+      nombresN = nombres.trim(),
+      fech_nacimientoN = fech_nacimiento.trim(),
+      generoN = genero.trim(),
+      telefonoN = telefono.trim(),
+      emailN = email.trim(),
+      privilegioN = privilegio.trim();
+
+   if (
+      cedulaN === '' || 
+      apellidosN === '' || 
+      nombresN === '' || 
+      fech_nacimientoN === '' || 
+      generoN === '' || 
+      telefonoN === '' || 
+      emailN === '' || 
+      privilegioN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+      errors += (!spaceLetersVer(apellidosN)) ? 1 : 0;
+      errors += (!spaceLetersVer(nombresN)) ? 1 : 0;
+      errors += (!moment(fech_nacimientoN).isValid()) ? 1 : 0;
+      errors += (!spaceLetersVer(generoN)) ? 1 : 0;
+      errors += (!numbersVer(telefonoN)) ? 1 : 0;
+      errors += (!emailVer(emailN)) ? 1 : 0;
+      errors += (!spaceLetersVer(privilegioN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'DATOS INCORRECTOS',
+            description: 'Los tipos de datos solicitados y enviados son incorrectos.'
+         });
+      } else {
+         try {
+            const updateUser = {
+               apellidos: apellidosN,
+               nombres: nombresN,
+               fechNacimiento: fech_nacimientoN,
+               genero: generoN,
+               telefono: telefonoN,
+               email: emailN,
+               privilegio: privilegioN
+            };
+
+            const userUpdate = await connectionDB.query(`UPDATE usuarios 
+                                                         SET ?
+                                                         WHERE cedula = ?`, [updateUser, cedulaN]);
+            // console.log(userUpdate);
+
+            if (userUpdate.affectedRows > 0) {
+               res.json({
+                  res: 'img',
+                  icon: '/img/SMMIglesia.png',
+                  tittle: 'USUARIO ACTUALIZADO',
+                  description: 'Se ha actualizado los datos del usuario con éxito.'
+               });
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'USUARIO NO ACTUALIZADO',
+                  icon: 'error',
+                  description: 'Upss! No se ha podido actualizar los datos del usuario.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+adminControllers.generatePassword = async (req, res) => {
+   const {
+      cedula
+   } = req.body;
+
+   let errors = 0,
+      transporte, 
+      info,
+      cedulaN = cedula.trim();
+
+   if (
+      cedulaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'CÉDULA INCORRECTA',
+            description: 'Cédula incorrecta o no válida.'
+         });
+      } else {
+         try {
+            const reviewUser = await connectionDB.query(`SELECT * 
+                                                         FROM usuarios 
+                                                         WHERE cedula = ?`, cedulaN);
+            // console.log(reviewUser);
+
+            if (reviewUser.length > 0) {
+               const passwordG = `SMMIglesia/${nanoid(10)}`;
+               let passEncrypt = await encryptPassword(passwordG);
+
+               const updatePass = {
+                  password: passEncrypt
+               };
+
+               const saveNewPass = await connectionDB.query(`UPDATE usuarios 
+                                                            SET ?
+                                                            WHERE cedula = ?`, [updatePass, cedulaN]);
+               // console.log(saveNewPass);
+
+               if (saveNewPass.affectedRows > 0) {
+                  try {
+                     transporte = nodemailer.createTransport({
+                        host: 'mail.privateemail.com',
+                        port: 587,
+                        secure: false,
+                        auth: {
+                           user: `${process.env.userMail}`,
+                           pass: `${process.env.passMail}`
+                        },
+                        tls: {
+                           rejectUnauthorized: false
+                        }
+                     });
+                  
+                     info = await transporte.sendMail({
+                        from: `Santa María Madre <${process.env.userMail}>`,
+                        to: `${reviewUser[0].email}`,
+                        subject: 'Contraseña generada',
+                        html: require('../templates/emails/newPassword.tpl')({
+                           nameUser: `${reviewUser[0].nombres} ${reviewUser[0].apellidos}`,
+                           passNew: `${passwordG}`
+                        })
+                     });
+   
+                     console.log(info.response);
+                  }
+                  catch (e) {
+                     console.log(e);
+                  }
+
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: 'CONTRASEÑA GENERADA',
+                     description: 'Se ha generado la nueva contraseña con éxito.'
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'CONTRASEÑA NO GENERADA',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido generar la nueva contraseña.'
+                  });
+               }
+               
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'USUARIO NO ENCONTRADO',
+                  icon: 'info',
+                  description: 'El usuario no se encuentra registrado dentro del sistema.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
+            });
+         }
+      }
+   }
+};
+
+adminControllers.changeEstado = async (req, res) => {
+   const {
+      cedula
+   } = req.body;
+
+   let errors = 0,
+      transporte, 
+      info,
+      cedulaN = cedula.trim();
+
+   if (
+      cedulaN === ''
+   ) {
+      res.json({
+         res: 'icon',
+         icon: 'info',
+         tittle: 'CAMPOS VACIOS',
+         description: 'Los campos no pueden ir vacios o con espacios.'
+      });
+   } else {
+      errors += (!cedulaVal(cedulaN)) ? 1 : 0;
+
+      if (errors > 0) {
+         res.json({
+            res: 'icon',
+            icon: 'error',
+            tittle: 'CÉDULA INCORRECTA',
+            description: 'Cédula incorrecta o no válida.'
+         });
+      } else {
+         try {
+            const reviewUser = await connectionDB.query(`SELECT * 
+                                                         FROM usuarios 
+                                                         WHERE cedula = ?`, cedulaN);
+            // console.log(reviewUser);
+
+            if (reviewUser.length > 0) {
+               const newEstado = 
+                  (reviewUser[0].estado === 'Enabled')
+                     ? 'Disabled'
+                     : 'Enabled';
+               
+               const estadoSend = 
+                     (reviewUser[0].estado === 'Enabled')
+                        ? 'Desactivada'
+                        : 'Activada';
+
+               const updateEst = {
+                  estado: newEstado
+               };
+
+               const saveNewEst = await connectionDB.query(`UPDATE usuarios 
+                                                            SET ?
+                                                            WHERE cedula = ?`, [updateEst, cedulaN]);
+               // console.log(saveNewEst);
+
+               if (saveNewEst.affectedRows > 0) {
+                  try {
+                     transporte = nodemailer.createTransport({
+                        host: 'mail.privateemail.com',
+                        port: 587,
+                        secure: false,
+                        auth: {
+                           user: `${process.env.userMail}`,
+                           pass: `${process.env.passMail}`
+                        },
+                        tls: {
+                           rejectUnauthorized: false
+                        }
+                     });
+                  
+                     info = await transporte.sendMail({
+                        from: `Santa María Madre <${process.env.userMail}>`,
+                        to: `${reviewUser[0].email}`,
+                        subject: `Cuenta ${estadoSend}`,
+                        html: require('../templates/emails/changeEstado.tpl')({
+                           nameUser: `${reviewUser[0].nombres} ${reviewUser[0].apellidos}`,
+                           estadoNew: `${estadoSend}`
+                        })
+                     });
+   
+                     console.log(info.response);
+                  }
+                  catch (e) {
+                     console.log(e);
+                  }
+
+                  res.json({
+                     res: 'img',
+                     icon: '/img/SMMIglesia.png',
+                     tittle: `CUENTA ${estadoSend.toUpperCase()}`,
+                     description: `La cuenta de <b>${reviewUser[0].nombres} ${reviewUser[0].apellidos}</b> ha sido <b>${estadoSend}</b>.`
+                  });
+               } else {
+                  res.json({
+                     res: 'icon',
+                     tittle: 'CONTRASEÑA NO GENERADA',
+                     icon: 'error',
+                     description: 'Upss! No se ha podido generar la nueva contraseña.'
+                  });
+               }
+               
+            } else {
+               res.json({
+                  res: 'icon',
+                  tittle: 'SERVER ERROR',
+                  icon: 'error',
+                  description: 'Upss! Error interno x_x. Intentelo más luego.'
+               });
+            }
+         } catch (e) {
+            console.log(e);
+            res.json({
+               res: 'icon',
+               tittle: 'SERVER ERROR',
+               icon: 'error',
+               description: 'Upss! Error interno x_x. Intentelo más luego.'
             });
          }
       }
