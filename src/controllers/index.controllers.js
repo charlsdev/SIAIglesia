@@ -24,8 +24,6 @@ indexControllers.renderIndex = async (req, res) => {
                                              ORDER BY fecha ASC`);
    } catch (e) {
       console.log(e);
-      req.flash('error_msg', 'No se ha podido cargar el contenido...');
-      res.redirect('/s/welcome');
    }
 
    res.render('index', {
