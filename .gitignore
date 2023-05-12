@@ -7,3 +7,5 @@ src/public/!events/notImage.png
 src/utils
 src/public/temp
 src/public/!profile/profile.svg
+pnpm-lock.yaml
+package-lock.json
